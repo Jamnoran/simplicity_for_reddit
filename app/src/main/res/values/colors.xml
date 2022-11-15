@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="post_title">@color/white</color>
+    <color name="post_content">@color/white</color>
+    <color name="post_background">@color/colorBackground</color>
+    <color name="comment_background">@color/colorBackground</color>
+    <color name="comment_background_minimized">#F22B2B2B</color>
+    <color name="comment_line">#F2AAAAAA</color>
+    <color name="comment_author">@color/colorSecondary</color>
+    <color name="comment_posted">#F2AAAAAA</color>
+    <color name="comment_body">@color/white</color>
+    <color name="background">@color/black</color>
+    <color name="sub_color">@color/colorSecondary</color>
+    <color name="post_vote_active_color">@color/colorHighlight</color>
+    <color name="post_vote_de_active_color">#777777</color>
+    <color name="post_comment_counter">#FF838383</color>
+    <color name="post_vote_counter">#FF838383</color>
+    <color name="post_vote_up_color">#43A810</color>
+    <color name="post_vote_down_color">#BD2020</color>
+    <color name="post_vote_default_color">@color/white</color>
+
+    <!--                BACKGROUNDS                -->
+    <color name="colorBackground">#F2535353</color>
+    <color name="secondaryBackground">#F2292929</color>
+
+    <!--                TEXT                -->
+    <color name="primary_text_color">#B5B5B5</color>
+    <color name="secondary_text_color">#FF000000</color>
+    <color name="highlight_text_color">#FF018786</color>
+    <color name="flashy_text_color">#2B9E68</color>
+
+    <!--                COLORS                -->
+    <color name="colorPrimary">#0A1C72</color>
+    <color name="colorPrimaryVariant">#F2AAAAAA</color>
+    <color name="colorOnPrimary">@color/primary_text_color</color>
+    <color name="colorAccent">#A06D21</color>
+    <color name="colorPrimaryDark">#520147</color>
+
+    <color name="colorSecondary">#7E9DD1</color>
+    <color name="colorSecondaryVariant">#F2AAAAAA</color>
+    <color name="colorOnSecondary">@color/black</color>
+
+    <color name="colorHighlight">#FF018786</color>
+
+
+    <color name="white_alpha">#92FFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="transparent_black">#9A000000</color>
+    <color name="divider_color">#363636</color>
+</resources>

@@ -1,0 +1,222 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'com.google.gms.google-services'
+}
+
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
+
+android {
+    compileSdkVersion 33
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.simplicity.simplicityaclientforreddit"
+        minSdkVersion 23
+        targetSdkVersion 31
+        versionCode 8
+        versionName "1.8.4"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+    signingConfigs {
+        debug {
+            storeFile file("devlin.keystore")
+            storePassword "tes8TongAh"
+            keyAlias "eric"
+            keyPassword "tes8TongAh"
+        }
+        release {
+            storeFile = file("keystore/devlin.keystore")
+            storePassword System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
+
+    flavorDimensions += "version"
+    productFlavors {
+        create("Pro") {
+            dimension = "version"
+            versionNameSuffix = "-pro"
+            applicationId "com.simplicity.simplicityaclientforreddit"
+        }
+        create("Dev") {
+            dimension = "version"
+            versionNameSuffix = "-dev"
+            applicationId "com.simplicity.simplicityaclientforreddit"
+        }
+    }
+
+    viewBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            debuggable false
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.3.2'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+// add the gradle task
+project.task("getVersion") {
+    project.gradle.projectsEvaluated {
+        println "$project.android.defaultConfig.versionName"
+    }
+}
+project.task("getMinVersion") {
+    project.gradle.projectsEvaluated {
+        println "min_version=$project.android.defaultConfig.minSdkVersion.mApiLevel"
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.test:core-ktx:1.4.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
+    implementation 'com.google.firebase:firebase-firestore:24.3.1'
+    implementation 'com.google.firebase:firebase-analytics:21.1.1'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.6'
+    implementation 'com.google.firebase:firebase-database:20.0.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+    implementation "androidx.compose.ui:ui:1.2.1"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.2.1"
+    implementation 'androidx.compose.material3:material3:1.0.0-rc01'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha02'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    // Multidex
+    implementation "androidx.multidex:multidex:2.0.1"
+
+    // Picasso - Showing images
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Network
+    implementation 'com.loopj.android:android-async-http:1.4.11'
+    implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    // Gif support
+    implementation 'com.github.bumptech.glide:glide:4.14.2'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+    // com.simplicity.simplicityaclientforreddit.ui.main.models.external.posts.Media player
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+
+
+    // ROOM
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+//    ksp("androidx.room:room-compiler:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    // optional - RxJava2 support for Room
+//    implementation("androidx.room:room-rxjava2:$room_version")
+    // optional - RxJava3 support for Room
+//    implementation("androidx.room:room-rxjava3:$room_version")
+    // optional - Guava support for Room, including Optional and ListenableFuture
+//    implementation("androidx.room:room-guava:$room_version")
+    // optional - Test helpers
+//    testImplementation("androidx.room:room-testing:$room_version")
+    // optional - Paging 3 Integration
+//    implementation("androidx.room:room-paging:2.5.0-beta01")
+
+    // Volley
+    implementation("com.android.volley:volley:1.2.1")
+
+    // ExoPlayer
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+
+    // Async
+    implementation "org.jetbrains.anko:anko-commons:0.10.0"
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:30.5.0')
+
+    // Declare the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Time ago
+    implementation 'org.ocpsoft.prettytime:prettytime:5.0.4.Final'
+
+    // Youtube player
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
+
+    // Compose
+    // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.6.0'
+    // Compose Material Design
+    implementation 'androidx.compose.material:material:1.2.1'
+    // Animations
+    implementation 'androidx.compose.animation:animation:1.2.1'
+    // Tooling support (Previews, etc.)
+    implementation 'androidx.compose.ui:ui-tooling:1.2.1'
+    // Integration with ViewModels
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
+    // UI Tests
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.2.1'
+    // Compose navigation
+    def nav_version = "2.5.2"
+    implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    implementation "androidx.compose.ui:ui-viewbinding:1.2.1"
+
+    // Coil for images
+    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("io.coil-kt:coil-gif:2.2.2")
+
+    // Markdown text https://github.com/jeziellago/compose-markdown
+    implementation 'com.github.jeziellago:compose-markdown:0.3.1'
+
+}

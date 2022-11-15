@@ -1,0 +1,70 @@
+package com.simplicity.simplicityaclientforreddit.main.screen.search
+
+import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
+import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
+import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
+import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
+import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
+
+@Composable
+fun SearchScreen(navigator: NavHostController, logic: SearchLogic) {
+    logic.stateFlow.collectAsState().value.let { state ->
+        when (state) {
+            is UiState.Loading -> Loading(state.loadingMessage)
+            is UiState.Error -> Error()
+            is UiState.Success -> Show(navigator, state.data, "", logic)
+        }
+    }
+}
+
+@Composable
+fun Show(navigator: NavHostController, listOfSubs: List<String>, query: String, logic: SearchLogic) {
+    DefaultScreen(modifier = Modifier) {
+        Column {
+            Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                BasicTextField(value = query, textStyle = TextStyle(color = OnBackground), onValueChange = {
+                    Log.i("SearchScreen", "Input changed to : $it")
+                    logic.updatedInput(it)
+                })
+                Spacer(modifier = Modifier.weight(1f))
+                Button(onClick = { navigator.popBackStack() }) {
+                    CText(text = "NSFW", color = OnBackground)
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+            LazyColumn(content = {
+                items(listOfSubs) {
+                    CText(Modifier.padding(8.dp).clickable { navigator.navigate(NavRoute.POSTS_LIST.withArgs(it)) }, text = "r/$it", color = OnBackground)
+                    Divider()
+                }
+            })
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultPreview() {
+    SimplicityAClientForRedditTheme {
+        Show(rememberNavController(), listOf("Testing"), "", SearchLogic())
+    }
+}
