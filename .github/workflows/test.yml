@@ -32,12 +32,12 @@ jobs:
     needs: [ job1, job2 ]
     steps:
       - name: Sending mattermost for job1
-        if: (needs.job1.result == "successful")
+        if: (needs.job1..result == 'success')
         id: metadata
         run: |
           echo "${{ needs.job1.outputs.output1 || 'Could not find output'}}"
       - name: Sending mattermost for job2
-        if: (needs.job2.result == "successful")
+        if: (needs.job2..result == 'success')
         id: metadata
         run: |
           echo "${{ needs.job2.outputs.output1 || 'Could not find output'}}"
