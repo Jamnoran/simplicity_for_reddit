@@ -18,26 +18,26 @@ jobs:
       - name: Gradle task test
         id: test
         run: echo "test=job1" >> $GITHUB_OUTPUT
-    job2:
-      runs-on: ubuntu-latest
-      outputs:
-        output1: ${{ steps.test.outputs.test  }}
-      steps:
-        - name: Gradle task test
-          id: test
-          run: echo "test=job2" >> $GITHUB_OUTPUT
+  job2:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.test.outputs.test  }}
+    steps:
+      - name: Gradle task test
+        id: test
+        run: echo "test=job2" >> $GITHUB_OUTPUT
 
   showing:
     runs-on: ubuntu-latest
     needs: [ job1, job2 ]
     steps:
       - name: Sending mattermost for job1
-        if: ${{ needs.job1.result == "successful" }}
+        if: (needs.job1.result == "successful")
         id: metadata
         run: |
           echo "${{ needs.job1.outputs.output1 || 'Could not find output'}}"
       - name: Sending mattermost for job2
-        if: ${{ needs.job2.result == "successful" }}
+        if: (needs.job2.result == "successful")
         id: metadata
         run: |
           echo "${{ needs.job2.outputs.output1 || 'Could not find output'}}"
