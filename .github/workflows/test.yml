@@ -23,9 +23,8 @@ jobs:
     outputs:
       output1: ${{ steps.test.outputs.test  }}
     steps:
-      - name: Gradle task test
-        id: test
-        run: echo "test=job2" >> $GITHUB_OUTPUT
+      - name: Try to fail
+        run: exit 1
 
   showing:
     runs-on: ubuntu-latest
