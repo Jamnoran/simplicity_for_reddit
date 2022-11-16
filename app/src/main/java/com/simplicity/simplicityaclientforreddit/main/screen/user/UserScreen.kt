@@ -17,8 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.images.CImage
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Error
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.theme.BodyLarge
@@ -29,7 +28,8 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUs
 fun UserScreen(navController: NavHostController, navigationListener: NavigationListener, logic: UserLogic, state: UiState<Data>) {
     when (state) {
         is UiState.Error -> Error()
-        is UiState.Loading -> Loading()
+        is UiState.Loading -> ScreenLoading()
+        is UiState.Empty -> {}
         is UiState.Success -> Show(navController, navigationListener, logic, state.data)
     }
 }

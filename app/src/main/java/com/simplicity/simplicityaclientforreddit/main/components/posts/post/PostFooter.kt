@@ -2,7 +2,10 @@ package com.simplicity.simplicityaclientforreddit.main.components.posts.post
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -10,8 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.R
+import com.simplicity.simplicityaclientforreddit.main.components.buttons.CTextButton
 import com.simplicity.simplicityaclientforreddit.main.components.buttons.CToggleButton
-import com.simplicity.simplicityaclientforreddit.main.components.buttons.TextButton
 import com.simplicity.simplicityaclientforreddit.main.components.images.CImage
 import com.simplicity.simplicityaclientforreddit.main.components.texts.OnSurfaceText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
@@ -26,7 +29,6 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
     val context = LocalContext.current
     Row(
         Modifier
-            .padding(start = 8.dp, end = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -50,16 +52,16 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
         Comments(post, listener)
         Spacer(Modifier.weight(1f))
         // Share
-        TextButton(text = "Share") { listener.shareClick.invoke(post) }
+        CTextButton(text = "Share") { listener.shareClick.invoke(post) }
         Spacer(Modifier.width(8.dp))
         // Hide
-        TextButton(text = "Hide") {
+        CTextButton(text = "Hide") {
             Toast.makeText(context, "Hiding sub ${post.data.subredditPrefixed}", Toast.LENGTH_LONG).show()
             listener.hideSubClick.invoke(post)
         }
         Spacer(Modifier.width(8.dp))
         // Go to reddit
-        TextButton(text = "Red") { listener.redditClick.invoke(post) }
+        CTextButton(text = "Red") { listener.redditClick.invoke(post) }
     }
 }
 
@@ -87,10 +89,10 @@ fun CommentFooter(comment: ChildrenData, listener: RedditCommentListener) {
         // Comments
         Spacer(Modifier.weight(1f))
         // Share
-        TextButton(text = "Share") { listener.shareClick.invoke(comment) }
+        CTextButton(text = "Share") { listener.shareClick.invoke(comment) }
         Spacer(Modifier.width(8.dp))
         // Go to reddit
-        TextButton(text = "Red") { listener.redditClick.invoke(comment) }
+        CTextButton(text = "Red") { listener.redditClick.invoke(comment) }
     }
 }
 
@@ -100,7 +102,7 @@ fun Comments(post: RedditPost, listener: RedditPostListener) {
         CImage(iconResource = R.drawable.chat_icon)
         Spacer(Modifier.width(4.dp))
         val numberOfComments = NumberFormat.getInstance().format((post.data.numComments))
-        TextButton(text = numberOfComments) { listener.readComments.invoke(post) }
+        CTextButton(text = numberOfComments) { listener.readComments.invoke(post) }
     }
 }
 

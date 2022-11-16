@@ -1,7 +1,13 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.posts.single
 
 import android.util.Log
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
@@ -17,7 +23,9 @@ import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.menu.NavigationDrawer
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.Post
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenEmpty
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
@@ -32,8 +40,9 @@ fun SingleListScreen(navigator: NavHostController, logic: SingleListLogic, uiSta
     val listener = getListener(logic, navigator)
     uiState.let {
         when (it) {
-            is UiState.Loading -> Loading(it.loadingMessage)
-            is UiState.Error -> Error()
+            is UiState.Loading -> ScreenLoading(it.loadingMessage)
+            is UiState.Error -> ScreenError()
+            is UiState.Empty -> { ScreenEmpty() }
             is UiState.Success -> Screen(
                 navigator = navigator,
                 data = it.data,

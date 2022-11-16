@@ -1,7 +1,11 @@
 package com.simplicity.simplicityaclientforreddit.main.components.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -12,14 +16,14 @@ import com.simplicity.simplicityaclientforreddit.main.theme.Background
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 
 @Composable
-fun Loading(loadingMessage: String? = null) {
+fun ScreenEmpty(emptyMessage: String? = null) {
     DefaultScreen(modifier = Modifier) {
         Column {
             Spacer(modifier = Modifier.height(400.dp))
             CText(
                 modifier = Modifier
                     .fillMaxWidth().fillMaxHeight(),
-                text = loadingMessage ?: "Loading",
+                text = emptyMessage ?: "",
                 color = OnBackground,
                 textAlign = TextAlign.Center
             )
@@ -29,8 +33,8 @@ fun Loading(loadingMessage: String? = null) {
 
 @Preview
 @Composable
-fun PreviewLoading() {
+fun PreviewEmpty() {
     Column(Modifier.fillMaxWidth().fillMaxHeight().background(Background)) {
-        Loading("Loading message")
+        ScreenEmpty("Empty")
     }
 }

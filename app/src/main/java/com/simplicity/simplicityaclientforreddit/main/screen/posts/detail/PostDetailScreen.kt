@@ -1,10 +1,14 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.posts.detail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
@@ -22,7 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.menu.NavigationDrawer
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.Post
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
@@ -38,8 +42,9 @@ fun PostDetailScreen(navigator: NavHostController, logic: PostDetailLogic) {
     val uiState: UiState<RedditPost> by logic.stateFlow.collectAsStateWithLifecycle()
     uiState.let {
         when (it) {
-            is UiState.Loading -> Loading(it.loadingMessage)
+            is UiState.Loading -> ScreenLoading(it.loadingMessage)
             is UiState.Error -> Error()
+            is UiState.Empty -> {}
             is UiState.Success -> Screen(
                 navController = navigator,
                 data = it.data,
@@ -86,15 +91,13 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         downVote = { logic.downVote(it) },
         upVote = { logic.upVote(it) },
         redditClick = {},
-        authorClick = {},
+        authorClick = { it.data.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
         shareClick = {},
-        readComments = {},
+        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.data.id, it.data.subreddit)) },
         linkClick = {
-            val encodedUrl = URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())
-            Log.i("PostDetailScreen", "Sending this encoded url as param $encodedUrl")
-            navigator.navigate(NavRoute.WEB_VIEW.withArgsFormat(encodedUrl))
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
         },
-        subredditClick = {},
+        subredditClick = { navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit)) },
         showError = {},
         hideSubClick = {},
         postHidden = {},

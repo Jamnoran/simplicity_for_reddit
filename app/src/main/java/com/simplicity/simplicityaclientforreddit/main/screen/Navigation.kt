@@ -2,11 +2,25 @@ package com.simplicity.simplicityaclientforreddit.main.screen
 
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
-import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.*
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.COMMENTS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.HIDDEN_SUBS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.MY_PROFILE
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POSTS_LIST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POST_DETAIL
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SEARCH
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SETTINGS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SINGLE_LIST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.TEST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.USER
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.WEB_VIEW
 import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.PostDetailNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.list.PostsListNavigation
@@ -20,8 +34,8 @@ import com.simplicity.simplicityaclientforreddit.main.screen.user.UserNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavigation
 
 @Composable
-fun Navigation(navigationListener: NavigationListener, navController: NavHostController) { //SINGLE_LIST
-    NavHost(navController = navController, startDestination = POST_DETAIL.path) {
+fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
+    NavHost(navController = navController, startDestination = SINGLE_LIST.path) { // SINGLE_LIST POST_DETAIL
         composable(POSTS_LIST.path) {
             PostsListNavigation(navController, navigationListener, "").Launch()
         }

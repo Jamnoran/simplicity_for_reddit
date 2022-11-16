@@ -2,7 +2,12 @@ package com.simplicity.simplicityaclientforreddit.main.screen.search
 
 import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
@@ -19,7 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
@@ -29,8 +34,9 @@ import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientFor
 fun SearchScreen(navigator: NavHostController, logic: SearchLogic) {
     logic.stateFlow.collectAsState().value.let { state ->
         when (state) {
-            is UiState.Loading -> Loading(state.loadingMessage)
+            is UiState.Loading -> ScreenLoading(state.loadingMessage)
             is UiState.Error -> Error()
+            is UiState.Empty -> {}
             is UiState.Success -> Show(navigator, state.data, "", logic)
         }
     }
