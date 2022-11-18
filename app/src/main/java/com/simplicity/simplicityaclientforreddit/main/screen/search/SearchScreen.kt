@@ -14,7 +14,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -24,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
@@ -31,19 +31,19 @@ import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
-fun SearchScreen(navigator: NavHostController, logic: SearchLogic) {
-    logic.stateFlow.collectAsState().value.let { state ->
-        when (state) {
-            is UiState.Loading -> ScreenLoading(state.loadingMessage)
-            is UiState.Error -> Error()
-            is UiState.Empty -> {}
-            is UiState.Success -> Show(navigator, state.data, "", logic)
-        }
+fun SearchScreen(navigator: NavHostController, logic: SearchLogic, state: UiState<List<String>>) {
+    Log.i("SearchScreen", "State is being updated to -> $state")
+    when (state) {
+        is UiState.Loading -> ScreenLoading(state.loadingMessage)
+        is UiState.Error -> ScreenError()
+        is UiState.Empty -> {}
+        is UiState.Success -> Show(navigator, state.data, "", logic)
     }
 }
 
 @Composable
 fun Show(navigator: NavHostController, listOfSubs: List<String>, query: String, logic: SearchLogic) {
+    Log.i("SearchScreen", "Updating list with count : ${listOfSubs.count()}")
     DefaultScreen(modifier = Modifier) {
         Column {
             Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -52,14 +52,18 @@ fun Show(navigator: NavHostController, listOfSubs: List<String>, query: String, 
                     logic.updatedInput(it)
                 })
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = { navigator.popBackStack() }) {
+                Button(onClick = { logic.getNsfwList() }) {
                     CText(text = "NSFW", color = OnBackground)
                 }
             }
             Spacer(Modifier.height(16.dp))
             LazyColumn(content = {
                 items(listOfSubs) {
-                    CText(Modifier.padding(8.dp).clickable { navigator.navigate(NavRoute.POSTS_LIST.withArgs(it)) }, text = "r/$it", color = OnBackground)
+                    CText(
+                        Modifier.padding(8.dp).clickable { navigator.navigate(NavRoute.POSTS_LIST.withArgs(it)) },
+                        text = "r/$it",
+                        color = OnBackground
+                    )
                     Divider()
                 }
             })

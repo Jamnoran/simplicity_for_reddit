@@ -7,6 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,21 +36,8 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var ownVote = 0
-        // Upvote
-        CToggleButton(isChecked = false, onClick = {
-            listener.upVote.invoke(post)
-            if (ownVote == 0) ownVote++
-        }, disabledIcon = R.drawable.up_arrow_disabled, enabledIcon = R.drawable.up_arrow_clicked)
-        Spacer(Modifier.width(4.dp))
-        val descriptiveNumber = NumberFormat.getInstance().format((post.data.score + ownVote))
-        OnSurfaceText(text = descriptiveNumber)
-        Spacer(Modifier.width(4.dp))
-        // DowVote
-        CToggleButton(isChecked = false, onClick = {
-            listener.downVote.invoke(post)
-            if (ownVote == 0) ownVote--
-        }, disabledIcon = R.drawable.down_arrow_disabled, enabledIcon = R.drawable.down_arrow_clicked)
+        var ownVote by remember { mutableStateOf(0) }
+        Voting(post, listener, 0, ownVote = ownVote) { ownVote = it }
         // Comments
         Spacer(Modifier.width(4.dp))
         Comments(post, listener)
@@ -66,15 +57,46 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
 }
 
 @Composable
+fun Voting(post: RedditPost, listener: RedditPostListener, initialVoteValue: Int = 0, ownVote: Int = 0, onVote: (Int) -> Unit) {
+//    var ownVote by remember { mutableStateOf(initialVoteValue) }
+    // Upvote
+    CToggleButton(isChecked = ownVote == 1, onClick = {
+        onVote(if (it) 1 else 0)
+//        ownVote = if (it) {
+//            listener.upVote.invoke(post)
+//            1
+//        } else {
+//            listener.clearVote.invoke(post)
+//            0
+//        }
+    }, disabledIcon = R.drawable.up_arrow_disabled, enabledIcon = R.drawable.up_arrow_clicked)
+    Spacer(Modifier.width(4.dp))
+    val descriptiveNumber = NumberFormat.getInstance().format((post.data.score + ownVote))
+    OnSurfaceText(text = descriptiveNumber)
+    Spacer(Modifier.width(4.dp))
+    // DownVote
+    CToggleButton(isChecked = ownVote == -1, onClick = {
+        onVote(if (it) -1 else 0)
+//        ownVote = if (it) {
+//            listener.downVote.invoke(post)
+//            -1
+//        } else {
+//            listener.clearVote.invoke(post)
+//            0
+//        }
+    }, disabledIcon = R.drawable.down_arrow_disabled, enabledIcon = R.drawable.down_arrow_clicked)
+}
+
+@Composable
 fun CommentFooter(comment: ChildrenData, listener: RedditCommentListener) {
     Row(
         Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        var ownVote = 0
+        var ownVote by remember { mutableStateOf(0) } // Could check on the actual comment
         // Scores
-        CToggleButton(isChecked = false, onClick = {
+        CToggleButton(isChecked = ownVote == 1, onClick = {
             listener.upVote.invoke(comment)
             if (ownVote == 0) ownVote++
         }, disabledIcon = R.drawable.up_arrow_disabled, enabledIcon = R.drawable.up_arrow_clicked)

@@ -48,7 +48,7 @@ fun Screen(
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerContent = { NavigationDrawer(navigator) }
+        drawerContent = { NavigationDrawer(navigator) {} }
     ) { paddingValues ->
         Column(Modifier.padding(paddingValues)) {
             LazyColumn {
@@ -77,7 +77,8 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
         showError = {},
         hideSubClick = {},
         postHidden = {},
-        nextPost = {}
+        nextPost = {},
+        clearVote = {}
     )
 }
 

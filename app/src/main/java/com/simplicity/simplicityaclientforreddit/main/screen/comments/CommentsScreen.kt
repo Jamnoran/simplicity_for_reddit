@@ -70,7 +70,7 @@ fun Comment(comment: ChildrenData) {
         // Comment
         CText(text = comment.body ?: "[deleted]")
         // Bottom bar
-        val listener = RedditCommentListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+        val listener = RedditCommentListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
         CommentFooter(comment = comment, listener = listener)
         // Children
         ShowChildren(comment.repliesCustomParsed?.repliesData?.children)

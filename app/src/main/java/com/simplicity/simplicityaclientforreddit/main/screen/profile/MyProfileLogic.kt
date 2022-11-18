@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class MyProfileLogic : BaseLogic() {
-    private val _stateFlow = MutableStateFlow<UiState<String>>(UiState.Loading())
-    val stateFlow: StateFlow<UiState<String>> = _stateFlow
+    private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
+    val state: StateFlow<UiState<Data>> = _state
 
     fun start() {
         background {
@@ -18,12 +18,12 @@ class MyProfileLogic : BaseLogic() {
             val call = APIAuthenticated().userMe()
             call.enqueue(object : CustomResponseCompose<User>(this) {
                 override fun success(responseBody: User) {
-                    Log.i(TAG, "Got comments $responseBody")
+                    Log.i(TAG, "Got user $responseBody")
+                    foreground {
+                        _state.emit(UiState.Success(Data("User: ${responseBody.name}")))
+                    }
                 }
             })
-            foreground {
-                _stateFlow.emit(UiState.Success("Hidden!"))
-            }
         }
     }
 

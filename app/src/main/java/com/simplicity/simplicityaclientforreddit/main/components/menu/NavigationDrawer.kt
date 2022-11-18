@@ -1,15 +1,27 @@
 package com.simplicity.simplicityaclientforreddit.main.components.menu
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,14 +39,14 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.Remove
 import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 
 @Composable
-fun NavigationDrawer(navigator: NavHostController) {
+fun NavigationDrawer(navigator: NavHostController, close: () -> Unit) {
     Column(
         Modifier
             .background(Background)
             .padding(16.dp)
             .fillMaxHeight()
     ) {
-        Profile(navigator)
+        Profile(navigator, close)
         VisitedSubs(navigator)
         Spacer(modifier = Modifier.weight(1f))
         BottomNavigationButtons(navigator)
@@ -42,10 +54,17 @@ fun NavigationDrawer(navigator: NavHostController) {
 }
 
 @Composable
-fun Profile(navigator: NavHostController) {
+fun Profile(navigator: NavHostController, close: () -> Unit) {
     val loggedIn = IsLoggedInUseCase().execute()
     if (loggedIn) {
-        CText(modifier = Modifier.clickable { navigator.navigate(NavRoute.MY_PROFILE.path) }, text = "You are logged in")
+        CText(
+            modifier = Modifier.clickable {
+                Log.i("NavigationDrawer", "Going to my profile")
+                close.invoke()
+                navigator.navigate(NavRoute.MY_PROFILE.path)
+            },
+            text = "You are logged in"
+        )
     } else {
         CText(text = "Log in by clicking here")
     }
@@ -110,7 +129,7 @@ fun BottomNavigationButtons(navigator: NavHostController) {
 @Composable
 fun PreviewNavigationDrawer() {
     Column() {
-        NavigationDrawer(navigator = rememberNavController())
+        NavigationDrawer(navigator = rememberNavController()) {}
     }
 }
 

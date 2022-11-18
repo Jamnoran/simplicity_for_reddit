@@ -8,7 +8,11 @@ import com.simplicity.simplicityaclientforreddit.main.io.retrofit.APIAuthenticat
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.APIInterface
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.lang.reflect.Type
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext

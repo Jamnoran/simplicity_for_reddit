@@ -13,6 +13,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,25 +33,24 @@ import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostLis
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.BottomBar
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.AddSubRedditVisitedUseCase
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
 fun SingleListScreen(navigator: NavHostController, logic: SingleListLogic, uiState: UiState<Data>) {
     val listener = getListener(logic, navigator)
-    uiState.let {
-        when (it) {
-            is UiState.Loading -> ScreenLoading(it.loadingMessage)
-            is UiState.Error -> ScreenError()
-            is UiState.Empty -> { ScreenEmpty() }
-            is UiState.Success -> Screen(
-                navigator = navigator,
-                data = it.data,
-                listener = listener,
-                nextItem = { logic.nextPost() },
-                previousItem = { logic.previousPost() }
-            )
-        }
+    when (uiState) {
+        is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
+        is UiState.Error -> ScreenError()
+        is UiState.Empty -> { ScreenEmpty() }
+        is UiState.Success -> Screen(
+            navigator = navigator,
+            data = uiState.data,
+            listener = listener,
+            nextItem = { logic.nextPost() },
+            previousItem = { logic.previousPost() }
+        )
     }
 }
 
@@ -64,9 +64,16 @@ fun Screen(
 ) {
     Log.i("SingleListScreen", "Showing post with url : https://www.reddit.com${data.redditPost.data.permalink}")
     val scaffoldState = rememberScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerContent = { NavigationDrawer(navigator) }
+        drawerContent = {
+            NavigationDrawer(navigator = navigator) {
+                coroutineScope.launch {
+                    scaffoldState.drawerState.close()
+                }
+            }
+        }
     ) { paddingValues ->
         DefaultScreen(Modifier.padding(paddingValues)) {
             Box(
@@ -98,6 +105,7 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
     return RedditPostListener(
         downVote = { logic.downVote(it) },
         upVote = { logic.upVote(it) },
+        clearVote = { logic.clearVote(it) },
         redditClick = { logic.goToReddit(it) },
         authorClick = { it.data.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
         shareClick = { logic.sharePost(it) },

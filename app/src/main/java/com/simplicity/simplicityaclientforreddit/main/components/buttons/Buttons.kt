@@ -56,20 +56,18 @@ fun CButton(
 @Composable
 fun CToggleButton(
     isChecked: Boolean,
-    onClick: () -> Unit,
+    onClick: (Boolean) -> Unit,
     disabledIcon: Int,
     enabledIcon: Int
 ) {
-    var toggled by remember { mutableStateOf(isChecked) }
     TextButton(
         modifier = Modifier.background(Color.Transparent),
         onClick = {
-            toggled = !toggled
-            onClick.invoke()
+            onClick.invoke(!isChecked)
         }
     ) {
         CImage(
-            iconResource = if (toggled) enabledIcon else disabledIcon
+            iconResource = if (isChecked) enabledIcon else disabledIcon
         )
     }
 }

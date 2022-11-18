@@ -63,7 +63,7 @@ fun Screen(
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerContent = { NavigationDrawer(navController) }
+        drawerContent = { NavigationDrawer(navController) {} }
     ) { paddingValues ->
         Column(Modifier.padding(paddingValues).verticalScroll(rememberScrollState())) {
             Post(post = data, listener)
@@ -101,7 +101,8 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         showError = {},
         hideSubClick = {},
         postHidden = {},
-        nextPost = {}
+        nextPost = {},
+        clearVote = {}
     )
 }
 

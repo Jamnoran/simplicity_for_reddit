@@ -6,7 +6,6 @@ import android.util.Log
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
-import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.VotePayload
 import com.simplicity.simplicityaclientforreddit.main.io.room.RoomDB
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -19,7 +18,7 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.post.FilterPostsU
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SingleListLogic() : BaseLogic() {
+class SingleListLogic : BaseLogic() {
     private lateinit var navigationListener: NavigationListener
     var subReddit: String = ""
     private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
@@ -130,10 +129,7 @@ class SingleListLogic() : BaseLogic() {
     }
 
     fun upVote(it: RedditPost) {
-//        val body = "dir=1&id=t3_fmlk3&rank=2"
-//        val body = "dir=1&id=${it.data.id}&rank=2"
-//        val call = APIAuthenticated().vote(VoteObject(it.data.id, "1"))
-        val call = APIAuthenticated().vote(VotePayload(it.data.id, "1"))
+        val call = APIAuthenticated().upVote("t3_${it.data.id}")
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "UpVoted")
@@ -142,12 +138,15 @@ class SingleListLogic() : BaseLogic() {
     }
 
     fun downVote(it: RedditPost) {
-        val call = APIAuthenticated().downVote(it.data.id)
+        val call = APIAuthenticated().downVote("t3_${it.data.id}")
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
-                Log.i(TAG, "UpVoted")
+                Log.i(TAG, "DownVote")
             }
         })
+    }
+
+    fun clearVote(post: RedditPost) {
     }
 
     fun nextPost() {
