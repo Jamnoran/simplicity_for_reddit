@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.menu.NavigationDrawer
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.Post
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -32,7 +33,7 @@ fun PostsListScreen(navigator: NavHostController, logic: PostsListLogic) {
     uiState.let {
         when (it) {
             is UiState.Loading -> ScreenLoading(it.loadingMessage)
-            is UiState.Error -> Error()
+            is UiState.Error -> ScreenError()
             is UiState.Empty -> {}
             is UiState.Success -> Screen(navigator, it.data, getListener(logic, navigator))
         }

@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
@@ -39,7 +40,7 @@ fun SettingsScreen(navController: NavHostController, logic: SettingsLogic) {
     logic.stateFlow.collectAsState().value.let { state ->
         when (state) {
             is UiState.Loading -> ScreenLoading()
-            is UiState.Error -> Error()
+            is UiState.Error -> ScreenError()
             is UiState.Empty -> {}
             is UiState.Success -> Show(navController, state.data) { logic.test(it) }
         }

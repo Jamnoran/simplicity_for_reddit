@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
@@ -14,7 +15,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientFor
 fun MyProfileScreen(navigator: NavHostController, logic: MyProfileLogic, uiState: UiState<Data>) {
     when (uiState) {
         is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
-        is UiState.Error -> Error()
+        is UiState.Error -> ScreenError()
         is UiState.Empty -> {}
         is UiState.Success -> Show(navigator, uiState.data)
     }

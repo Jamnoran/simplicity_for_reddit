@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.CommentFooter
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
@@ -36,7 +37,7 @@ fun CommentsScreen(logic: CommentsLogic) {
     logic.stateFlow.collectAsState().value.let { state ->
         when (state) {
             is UiState.Loading -> ScreenLoading(state.loadingMessage)
-            is UiState.Error -> Error()
+            is UiState.Error -> ScreenError()
             is UiState.Empty -> {}
             is UiState.Success -> Show(state.data)
         }

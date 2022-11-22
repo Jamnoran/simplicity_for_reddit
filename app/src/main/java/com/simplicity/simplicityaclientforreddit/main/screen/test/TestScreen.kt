@@ -17,6 +17,7 @@ import androidx.navigation.NavHostController
 import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.images.CImage
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
@@ -24,7 +25,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientFor
 fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiState<String>) {
     when (state) {
         is UiState.Loading -> ScreenLoading(state.loadingMessage)
-        is UiState.Error -> Error()
+        is UiState.Error -> ScreenError()
         is UiState.Empty -> {}
         is UiState.Success -> Show(navController, state.data)
     }
