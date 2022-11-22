@@ -10,7 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenL
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
+import com.simplicity.simplicityaclientforreddit.main.theme.Primary
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
@@ -43,11 +45,10 @@ fun SearchScreen(navigator: NavHostController, logic: SearchLogic, state: UiStat
 
 @Composable
 fun Show(navigator: NavHostController, listOfSubs: List<String>, query: String, logic: SearchLogic) {
-    Log.i("SearchScreen", "Updating list with count : ${listOfSubs.count()}")
     DefaultScreen(modifier = Modifier) {
         Column {
             Row(Modifier.fillMaxWidth().padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
-                BasicTextField(value = query, textStyle = TextStyle(color = OnBackground), onValueChange = {
+                OutlinedTextField(colors = TextFieldDefaults.outlinedTextFieldColors(textColor = Primary), value = query, textStyle = TextStyle(color = OnBackground), onValueChange = {
                     Log.i("SearchScreen", "Input changed to : $it")
                     logic.updatedInput(it)
                 })
@@ -60,11 +61,11 @@ fun Show(navigator: NavHostController, listOfSubs: List<String>, query: String, 
             LazyColumn(content = {
                 items(listOfSubs) {
                     CText(
-                        Modifier.padding(8.dp).clickable { navigator.navigate(NavRoute.POSTS_LIST.withArgs(it)) },
+                        Modifier.padding(top = 8.dp).padding(8.dp).clickable { navigator.navigate(NavRoute.POSTS_LIST.withArgs(it)) },
                         text = "r/$it",
                         color = OnBackground
                     )
-                    Divider()
+                    Divider(modifier = Modifier.padding(bottom = 8.dp))
                 }
             })
         }

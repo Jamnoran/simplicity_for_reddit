@@ -13,4 +13,4 @@ data class Data(val user: User? = null, val posts: List<RedditPost> = emptyList(
     }
 }
 
-class Input(val userName: String) : BaseInput
+class UserInput(val userName: String) : BaseInput

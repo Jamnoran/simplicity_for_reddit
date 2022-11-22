@@ -1,6 +1,5 @@
 package com.simplicity.simplicityaclientforreddit.main.screen
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
@@ -52,7 +51,6 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
         composable(SETTINGS.path) { SettingsNavigation(navController).Launch() }
         composable(MY_PROFILE.path) { MyProfileNavigation(navController).Launch() }
         composable(USER.withArgsFormat(USER.userName), NavRoute.getArguments(USER.userName)) { stack ->
-            Log.i("Navigation", "User is called to start")
             UserNavigation(navController, navigationListener, stack.arg(USER.userName)).Launch()
         }
         composable(SEARCH.path) { SearchNavigation(navController).Launch() }

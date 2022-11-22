@@ -1,7 +1,7 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.user
 
 import android.util.Log
-import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
+import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomCallback
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -14,7 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserLogic : BaseLogic() {
+class UserLogic : BaseComposeLogic<UserInput>() {
     private val _stateFlow = MutableStateFlow<UiState<Data>>(UiState.Loading())
     val stateFlow: StateFlow<UiState<Data>> = _stateFlow
 
@@ -23,7 +23,7 @@ class UserLogic : BaseLogic() {
     private var _cursor = ""
     private var _posts = ArrayList<RedditPost>()
 
-    fun start(input: Input) {
+    fun start(input: UserInput) {
         Log.i(TAG, "Init is called with username: $input.userName")
         _userName = input.userName
         background {
