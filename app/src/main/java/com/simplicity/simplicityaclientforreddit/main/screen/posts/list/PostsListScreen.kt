@@ -77,7 +77,7 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
         subredditClick = {},
         showError = {},
         hideSubClick = {},
-        postHidden = {},
+        postHiddenFromView = {},
         nextPost = {},
         clearVote = {}
     )

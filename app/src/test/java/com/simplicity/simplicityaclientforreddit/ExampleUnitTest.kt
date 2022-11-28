@@ -1,10 +1,10 @@
 package com.simplicity.simplicityaclientforreddit
 
 import com.google.gson.Gson
-import com.simplicity.simplicityaclientforreddit.ui.main.models.external.posts.RedditPost
-import com.simplicity.simplicityaclientforreddit.ui.main.usecases.post.GetPostYoutubeIDUseCase
-import com.simplicity.simplicityaclientforreddit.ui.main.usecases.post.IsPostYoutubeUseCase
 import com.simplicity.simplicityaclientforreddit.main.media.VideoHelper
+import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
+import com.simplicity.simplicityaclientforreddit.main.usecases.post.GetPostYoutubeIDUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.post.IsPostYoutubeUseCase
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

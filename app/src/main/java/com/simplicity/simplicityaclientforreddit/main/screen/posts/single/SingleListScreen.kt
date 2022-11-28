@@ -62,9 +62,16 @@ fun Screen(
     nextItem: () -> Unit,
     previousItem: () -> Unit
 ) {
-    Log.i("SingleListScreen", "Showing post with url : https://www.reddit.com${data.redditPost.data.permalink}")
+    Log.i("SingleListScreen", "Showing post with url : https://www.reddit.com${data.redditPost?.data?.permalink}")
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
+    data.scrollToTop?.let {
+        Log.i("SingleListScreen", "Trying to scroll to the top!")
+        coroutineScope.launch {
+            scrollState.scrollTo(0)
+        }
+    }
     Scaffold(
         scaffoldState = scaffoldState,
         drawerContent = {
@@ -81,18 +88,18 @@ fun Screen(
                     .fillMaxWidth()
                     .fillMaxHeight()
             ) {
-                Column(Modifier.verticalScroll(rememberScrollState())) {
-                    Post(post = data.redditPost, listener)
+                Column(Modifier.verticalScroll(scrollState)) {
+                    data.redditPost?.let { Post(post = it, listener) }
                     Spacer(modifier = Modifier.height(100.dp))
                 }
                 BottomBar(
                     Modifier.align(Alignment.BottomCenter),
                     navigateToNext = {
-                        listener.postHidden.invoke()
+                        listener.postHiddenFromView.invoke()
                         nextItem.invoke()
                     },
                     navigateToPrevious = {
-                        listener.postHidden.invoke()
+                        listener.postHiddenFromView.invoke()
                         previousItem.invoke()
                     }
                 )
@@ -119,7 +126,7 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         },
         showError = { },
         hideSubClick = { logic.hideReddit(it.data.subreddit) },
-        postHidden = {},
+        postHiddenFromView = {},
         nextPost = { logic.nextPost() }
     )
 }

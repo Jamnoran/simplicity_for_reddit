@@ -38,7 +38,7 @@ fun OnSurfaceText(modifier: Modifier = Modifier, text: String, textAlign: TextAl
 }
 
 @Composable
-fun MarkDownText(modifier: Modifier, text: String) {
+fun OldMarkDownText(modifier: Modifier, text: String) {
     val markdownText = MarkdownText()
     Text(
         text = buildAnnotatedString {
@@ -118,7 +118,7 @@ fun MarkDownPreview() {
     Column(Modifier.fillMaxWidth()) {
         val sampleData = "**Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~\n>Quote\n\n\n# Header 1\n## Header 2\n ### Header 3\n"
 
-        MarkDownText(
+        OldMarkDownText(
             modifier = Modifier,
             text = sampleData
         )

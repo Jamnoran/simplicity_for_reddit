@@ -15,7 +15,7 @@ class RedditPostListener(
     val redditClick: (post: RedditPost) -> Unit,
     val linkClick: (post: RedditPost) -> Unit,
     val showError: (errorMessage: String) -> Unit,
-    var postHidden: () -> Unit,
+    var postHiddenFromView: () -> Unit,
     var nextPost: () -> Unit
 ) {
     companion object {

@@ -101,7 +101,7 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         subredditClick = { navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit)) },
         showError = {},
         hideSubClick = {},
-        postHidden = {},
+        postHiddenFromView = {},
         nextPost = {},
         clearVote = {}
     )

@@ -49,7 +49,6 @@ fun SettingsScreen(navController: NavHostController, logic: SettingsLogic) {
 
 @Composable
 fun Show(navController: NavHostController, data: String, test: (String) -> Unit) {
-    var dataRemembered by remember { mutableStateOf(data) }
     DefaultScreen(Modifier) {
         Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())) {
             Button(onClick = {
@@ -58,17 +57,29 @@ fun Show(navController: NavHostController, data: String, test: (String) -> Unit)
                 Text("Show my hidden subs")
             }
             Spacer(Modifier.height(32.dp))
-            SettingsItem(SettingsSP.KEY_SETTINGS_SCROLL_BOTTOM, stringResource(R.string.settings_scroll_bottom), SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SCROLL_BOTTOM, true))
-            SettingsItem(SettingsSP.KEY_SETTINGS_USE_CACHE, stringResource(R.string.settings_use_cache_for_posts), SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_CACHE, true))
-            SettingsItem(SettingsSP.KEY_SETTINGS_USE_LIST, stringResource(R.string.settings_show_list_or_single), SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_LIST, true))
-            CText(text = "Testing \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTest end")
-            Button(onClick = {
-                test.invoke("Button pressed!")
-                navController.navigate(HIDDEN_SUBS.path)
-            }) {
-                Text(dataRemembered)
-            }
-            CText(text = "Testing \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTest end")
+            // Scroll by using bottom part of app
+            SettingsItem(
+                SettingsSP.KEY_SETTINGS_SCROLL_BOTTOM,
+                stringResource(R.string.settings_scroll_bottom),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SCROLL_BOTTOM, true)
+            )
+            // Use caching within app
+            SettingsItem(
+                SettingsSP.KEY_SETTINGS_USE_CACHE,
+                stringResource(R.string.settings_use_cache_for_posts),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_CACHE, true)
+            )
+            // Navigate by using list or single detail
+            SettingsItem(
+                SettingsSP.KEY_SETTINGS_USE_LIST,
+                stringResource(R.string.settings_show_list_or_single),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_LIST, true)
+            )
+            SettingsItem(
+                SettingsSP.KEY_SHOW_LINKS_UNDER_POST,
+                stringResource(R.string.settings_show_list_or_single),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_LIST, true)
+            )
         }
     }
 }

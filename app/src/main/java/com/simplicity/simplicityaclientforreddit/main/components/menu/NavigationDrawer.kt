@@ -1,6 +1,5 @@
 package com.simplicity.simplicityaclientforreddit.main.components.menu
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -47,9 +46,9 @@ fun NavigationDrawer(navigator: NavHostController, close: () -> Unit) {
             .fillMaxHeight()
     ) {
         Profile(navigator, close)
-        VisitedSubs(navigator)
+        VisitedSubs(navigator, close)
         Spacer(modifier = Modifier.weight(1f))
-        BottomNavigationButtons(navigator)
+        BottomNavigationButtons(navigator, close)
     }
 }
 
@@ -59,7 +58,6 @@ fun Profile(navigator: NavHostController, close: () -> Unit) {
     if (loggedIn) {
         CText(
             modifier = Modifier.clickable {
-                Log.i("NavigationDrawer", "Going to my profile")
                 close.invoke()
                 navigator.navigate(NavRoute.MY_PROFILE.path)
             },
@@ -73,11 +71,11 @@ fun Profile(navigator: NavHostController, close: () -> Unit) {
 }
 
 @Composable
-fun VisitedSubs(navigator: NavHostController) {
+fun VisitedSubs(navigator: NavHostController, close: () -> Unit) {
     var visitedSubs by remember { mutableStateOf(GetSubRedditVisitedUseCase().execute()) }
     LazyColumn() {
         items(visitedSubs) {
-            SubRedditMenuItem(it, navigator) {
+            SubRedditMenuItem(it, navigator, close) {
                 visitedSubs = GetSubRedditVisitedUseCase().execute()
             }
         }
@@ -85,7 +83,7 @@ fun VisitedSubs(navigator: NavHostController) {
 }
 
 @Composable
-fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, subredditListUpdate: () -> Unit) {
+fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: () -> Unit, subredditListUpdate: () -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CText(
@@ -97,7 +95,10 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, subreddit
             )
             Spacer(
                 modifier = Modifier
-                    .clickable { NavigationToShowPostsUseCase(navigator, subreddit).execute() }
+                    .clickable {
+                        close.invoke()
+                        NavigationToShowPostsUseCase(navigator, subreddit).execute()
+                    }
                     .padding(top = 16.dp, bottom = 16.dp)
                     .weight(1f)
             )
@@ -117,7 +118,7 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, subreddit
 }
 
 @Composable
-fun BottomNavigationButtons(navigator: NavHostController) {
+fun BottomNavigationButtons(navigator: NavHostController, close: () -> Unit) {
     Row() {
         CText(Modifier.clickable { navigator.navigate(NavRoute.SETTINGS.path) }, text = "Settings", color = OnPrimary)
         Spacer(Modifier.width(16.dp))
@@ -137,6 +138,6 @@ fun PreviewNavigationDrawer() {
 @Composable
 fun PreviewNavigationDrawerItems() {
     Column() {
-        SubRedditMenuItem(subreddit = "Aww", navigator = rememberNavController()) {}
+        SubRedditMenuItem(subreddit = "Aww", navigator = rememberNavController(), {}) {}
     }
 }

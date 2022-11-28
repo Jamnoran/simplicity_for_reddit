@@ -20,6 +20,7 @@ import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.main.components.buttons.CTextButton
 import com.simplicity.simplicityaclientforreddit.main.components.buttons.CToggleButton
 import com.simplicity.simplicityaclientforreddit.main.components.images.CImage
+import com.simplicity.simplicityaclientforreddit.main.components.images.CImageButton
 import com.simplicity.simplicityaclientforreddit.main.components.texts.OnSurfaceText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -43,16 +44,23 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
         Comments(post, listener)
         Spacer(Modifier.weight(1f))
         // Share
-        CTextButton(text = "Share") { listener.shareClick.invoke(post) }
+        CImageButton(iconResource = android.R.drawable.ic_menu_share) { listener.shareClick.invoke(post) }
+//        CTextButton(text = "Share") { listener.shareClick.invoke(post) }
         Spacer(Modifier.width(8.dp))
         // Hide
-        CTextButton(text = "Hide") {
+        CImageButton(iconResource = android.R.drawable.ic_menu_close_clear_cancel) {
             Toast.makeText(context, "Hiding sub ${post.data.subredditPrefixed}", Toast.LENGTH_LONG).show()
             listener.hideSubClick.invoke(post)
         }
+//        CTextButton(text = "Hide") {
+//            Toast.makeText(context, "Hiding sub ${post.data.subredditPrefixed}", Toast.LENGTH_LONG).show()
+//            listener.hideSubClick.invoke(post)
+//        }
         Spacer(Modifier.width(8.dp))
         // Go to reddit
-        CTextButton(text = "Red") { listener.redditClick.invoke(post) }
+//        CTextButton(text = "Red") { listener.redditClick.invoke(post) }
+        CImageButton(iconResource = R.drawable.reddit_logo) { listener.redditClick.invoke(post) }
+        Spacer(Modifier.width(8.dp))
     }
 }
 
@@ -70,10 +78,10 @@ fun Voting(post: RedditPost, listener: RedditPostListener, initialVoteValue: Int
 //            0
 //        }
     }, disabledIcon = R.drawable.up_arrow_disabled, enabledIcon = R.drawable.up_arrow_clicked)
-    Spacer(Modifier.width(4.dp))
+//    Spacer(Modifier.width(4.dp))
     val descriptiveNumber = NumberFormat.getInstance().format((post.data.score + ownVote))
     OnSurfaceText(text = descriptiveNumber)
-    Spacer(Modifier.width(4.dp))
+//    Spacer(Modifier.width(4.dp))
     // DownVote
     CToggleButton(isChecked = ownVote == -1, onClick = {
         onVote(if (it) -1 else 0)
