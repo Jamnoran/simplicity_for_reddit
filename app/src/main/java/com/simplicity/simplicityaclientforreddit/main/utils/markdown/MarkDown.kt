@@ -12,7 +12,7 @@ enum class MarkDownType(val preFix: String?, val postFix: String?) {
 
 fun getMarkDown(listOfMarkDownsAlready: ArrayList<MarkDownData>, body: String, index: Int): MarkDownData {
     val restOfString = body.substring(index)
-    val arrayOfMarkDowns = listOf(MarkDownType.BOLD, MarkDownType.ITALIC_SECONDARY)
+    val arrayOfMarkDowns = listOf(MarkDownType.BOLD, MarkDownType.ITALIC_SECONDARY, MarkDownType.ITALIC)
 
     for (markDown in arrayOfMarkDowns) {
         val startsWithAlreadyAdded = startsWithAdded(listOfMarkDownsAlready, markDown, restOfString)
