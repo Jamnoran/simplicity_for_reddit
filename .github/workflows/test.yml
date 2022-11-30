@@ -22,6 +22,8 @@ jobs:
           ref: ${{ GITHUB_REF#refs/heads/ }}
           distribution: temurin
           java-version: 11
+      - name: Echo name of workflow
+        run: echo "Name of branch ${{ GITHUB_REF#refs/heads/ }}"
   job2:
     runs-on: ubuntu-latest
     outputs:
