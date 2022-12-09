@@ -4,12 +4,12 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 import java.text.NumberFormat
 
-class CustomPostBottomSectionView(val binding: RedditPostBinding, val post: RedditPost, var listener: RedditPostListener) {
+class CustomPostBottomSectionView(val binding: RedditPostBinding, val post: RedditPost, var listener: OldRedditPostListener) {
     var ownVote = 0
     fun init() {
         updateButton(binding.bottomLayout.downVoteButton, R.drawable.down_arrow_disabled, R.color.post_vote_default_color)

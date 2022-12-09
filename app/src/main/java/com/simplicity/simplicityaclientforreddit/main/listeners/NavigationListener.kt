@@ -7,7 +7,7 @@ class NavigationListener(
 ) {
     companion object {
         fun preview(): NavigationListener {
-            return NavigationListener {  }
+            return NavigationListener { }
         }
     }
 }

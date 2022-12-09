@@ -128,9 +128,9 @@ class MainViewModel : ViewModel() {
     }
 
     private fun authenticate(code: String) {
-        Log.i(TAG, "Getting reddit posts with this cursor: $code")
+        Log.i(TAG, "Authenticating with code: $code")
 
-        val service = com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
+        val service = RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
         val call = service.accessToken(GetAccessTokenAuthenticationUseCase().getAuth(), GetAccessTokenBodyUseCase().getBody(code))
         call.enqueue(object : Callback<AccessToken> {
             override fun onResponse(

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.simplicity.simplicityaclientforreddit.main.models.internal.MarkDownSigns
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownData
@@ -75,6 +76,7 @@ fun replaceBaseCharacters(body: String): String {
 fun getStyle(listOfMarkDowns: java.util.ArrayList<MarkDownData>): SpanStyle {
     var fontWeight = FontWeight.Normal
     var fontStyle = FontStyle.Normal
+    var fontSize = 16.sp
     for (markDown in listOfMarkDowns) {
         when (markDown.type) {
             MarkDownType.BOLD -> fontWeight = FontWeight.Bold
@@ -85,11 +87,13 @@ fun getStyle(listOfMarkDowns: java.util.ArrayList<MarkDownData>): SpanStyle {
             MarkDownType.NONE,
             MarkDownType.SKIP -> {
             }
+            MarkDownType.HEADER_1 -> fontSize = 20.sp
         }
     }
     return SpanStyle(
         fontWeight = fontWeight,
-        fontStyle = fontStyle
+        fontStyle = fontStyle,
+        fontSize = fontSize
     )
 }
 

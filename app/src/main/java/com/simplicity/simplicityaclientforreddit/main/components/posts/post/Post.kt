@@ -34,7 +34,7 @@ fun Post(post: RedditPost, listener: RedditPostListener) {
             PostHeader(post, listener, type)
             PostBody(post, listener, type)
             if (type != PostType.NONE && post.data.selftext?.isNotBlank() == true) { // Description text
-                CText(modifier = Modifier.padding(8.dp).fillMaxWidth().background(Surface), text = "SelfText: ${post.data.selftext}")
+                CText(modifier = Modifier.padding(8.dp).fillMaxWidth().background(Surface), text = "${post.data.selftext}")
             }
             PostFooter(post, listener)
             Spacer(Modifier.height(8.dp))

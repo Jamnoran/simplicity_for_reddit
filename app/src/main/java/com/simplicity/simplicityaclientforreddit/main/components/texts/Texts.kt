@@ -18,7 +18,18 @@ import com.simplicity.simplicityaclientforreddit.main.theme.OnPrimary
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 
 @Composable
-fun CText(modifier: Modifier = Modifier, text: String, style: TextStyle = BodyNormal, color: Color = OnBackground, textAlign: TextAlign? = TextAlign.Start) {
+fun CText(text: String, style: TextStyle = BodyNormal, color: Color = OnBackground, textAlign: TextAlign? = TextAlign.Start) {
+    Text(text = text, color = color, style = style, textAlign = textAlign)
+}
+
+@Composable
+fun CText(
+    modifier: Modifier = Modifier,
+    text: String,
+    style: TextStyle = BodyNormal,
+    color: Color = OnBackground,
+    textAlign: TextAlign? = TextAlign.Start
+) {
     Text(modifier = modifier, text = text, color = color, style = style, textAlign = textAlign)
 }
 
@@ -116,7 +127,8 @@ class MarkdownText {
 @Composable
 fun MarkDownPreview() {
     Column(Modifier.fillMaxWidth()) {
-        val sampleData = "**Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~\n>Quote\n\n\n# Header 1\n## Header 2\n ### Header 3\n"
+        val sampleData =
+            "**Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~\n>Quote\n\n\n# Header 1\n## Header 2\n ### Header 3\n"
 
         OldMarkDownText(
             modifier = Modifier,

@@ -3,13 +3,20 @@ package com.simplicity.simplicityaclientforreddit.main.base.compose
 open class BaseComposeLogic<Input> : BaseLogic() {
     var started = false
 
-    fun init(input: Input) {
+    fun init(input: Input? = null) {
         if (!checkIfStarted()) {
-            ready(input)
+            if (input != null) {
+                ready(input)
+            } else {
+                ready()
+            }
         }
     }
 
     open fun ready(input: Input) {
+    }
+
+    open fun ready() {
     }
 
     fun checkIfStarted(): Boolean {

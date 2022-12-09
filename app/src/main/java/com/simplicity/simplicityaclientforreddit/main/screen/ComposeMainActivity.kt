@@ -4,12 +4,13 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeActivity
+import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 
 class ComposeMainActivity : BaseComposeActivity() {
@@ -35,6 +36,15 @@ class ComposeMainActivity : BaseComposeActivity() {
         Log.i("ComposeMainActivity", "Init")
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.i("ComposeMainActivity", "We got a resume with code : ${SettingsSP().loadSetting(SettingsSP.KEY_CODE, null)}")
+        if (SettingsSP().loadSetting(SettingsSP.KEY_CODE, null) != null) {
+            Log.i("ComposeMainActivity", "Starting AUTHENTICATION_RESULT")
+            navController?.navigate(NavRoute.AUTHENTICATION_RESULT.path)
+        }
+    }
+
     @Composable
     override fun Screen() {
         val navigationListener = NavigationListener { intent ->
@@ -46,4 +56,3 @@ class ComposeMainActivity : BaseComposeActivity() {
         }
     }
 }
-

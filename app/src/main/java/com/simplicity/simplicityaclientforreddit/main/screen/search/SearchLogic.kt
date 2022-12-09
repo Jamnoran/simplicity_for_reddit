@@ -14,14 +14,14 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchLogic : BaseComposeLogic<SearchInput>() {
-    private val _state = MutableStateFlow<UiState<List<String>>>(UiState.Loading())
-    val state: StateFlow<UiState<List<String>>> = _state
+    private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
+    val state: StateFlow<UiState<Data>> = _state
 
-    override fun ready(input: SearchInput) {
+    override fun ready() {
         background {
             // Do something in the background
             foreground {
-                _state.emit(UiState.Success(emptyList()))
+                _state.emit(UiState.Success(Data(emptyList(), "")))
             }
         }
     }
@@ -34,8 +34,8 @@ class SearchLogic : BaseComposeLogic<SearchInput>() {
                 response: Response<SearchRedditResponse>
             ) {
                 viewModelScope.launch(Dispatchers.IO) {
-                    response.body()?.names?.let { data ->
-                        _state.emit(UiState.Success(data))
+                    response.body()?.names?.let { resultList ->
+                        _state.emit(UiState.Success(Data(searchResult = resultList, query = query)))
                     }
                     setIsFetching(false)
                 }
@@ -55,11 +55,7 @@ class SearchLogic : BaseComposeLogic<SearchInput>() {
         val array = nsfwReddits.split(",")
         foreground {
             // use result here if you want to update ui
-            _state.emit(UiState.Success(array))
+            _state.emit(UiState.Success(Data(searchResult = array, query = "")))
         }
     }
 }
-data class SearchInput(
-    val placeName: String,
-    val placeId: String
-)

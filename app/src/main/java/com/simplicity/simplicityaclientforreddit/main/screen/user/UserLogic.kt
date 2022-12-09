@@ -1,5 +1,7 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.user
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
@@ -10,22 +12,20 @@ import com.simplicity.simplicityaclientforreddit.main.models.external.responses.
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.posts.UserPostsResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class UserLogic : BaseComposeLogic<UserInput>() {
-    private val _stateFlow = MutableStateFlow<UiState<Data>>(UiState.Loading())
-    val stateFlow: StateFlow<UiState<Data>> = _stateFlow
+    private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
+    val state: StateFlow<UiState<Data>> = _state
 
-    private var _userName = "jamnoran"
+    private lateinit var _input: UserInput
+
     private var _user: User? = null
     private var _cursor = ""
     private var _posts = ArrayList<RedditPost>()
 
-    fun start(input: UserInput) {
-        Log.i(TAG, "Init is called with username: $input.userName")
-        _userName = input.userName
+    override fun ready(input: UserInput) {
+        _input = input
+        Log.i(TAG, "Init is called with username: ${_input.userName}")
         background {
             fetchUser()
             fetchPosts()
@@ -33,57 +33,82 @@ class UserLogic : BaseComposeLogic<UserInput>() {
     }
 
     private fun fetchUser() {
-        val call = APIAuthenticated().getUser(_userName)
+        val call = APIAuthenticated().getUser(_input.userName)
         call.enqueue(
             object : CustomCallback<UserResponse> {
                 override fun onSuccess(responseBody: UserResponse) {
                     responseBody.data.let { userData ->
                         _user = userData
                     }
-                    updateUi()
                 }
 
                 override fun onUnauthorized() {
                     Log.e(TAG, "onUnauthorized")
                     networkError.postValue(Unit)
+                    foreground {
+                        _state.emit(UiState.Error("onUnauthorized"))
+                    }
                 }
 
                 override fun onFailed(throwable: Throwable) {
                     Log.e(TAG, "Error: ", throwable)
+                    foreground {
+                        _state.emit(UiState.Error(throwable.toString()))
+                    }
                 }
             }
         )
     }
 
+    fun goToReddit(post: RedditPost) {
+        val convertedUrl = "https://www.reddit.com${post.data.permalink}"
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
+        _input.navigationListener.navigate.invoke(browserIntent)
+    }
+
     private fun updateUi() {
         foreground {
-            _stateFlow.emit(UiState.Success(Data(user = _user, _posts)))
+            Log.i("UserLogic", "Emitting posts $_posts")
+            _state.emit(UiState.Success(Data(user = _user, _posts)))
         }
     }
 
     private fun fetchPosts() {
-        val call = APIAuthenticated().getUserPosts(_userName, _cursor)
-        call.enqueue(object : Callback<UserPostsResponse> {
-            override fun onResponse(
-                call: Call<UserPostsResponse>,
-                response: Response<UserPostsResponse>
-            ) {
-                response.body()?.data?.let { data ->
+        val call = APIAuthenticated().getUserPosts(_input.userName, _cursor)
+        call.enqueue(object : CustomCallback<UserPostsResponse> {
+            override fun onSuccess(responseBody: UserPostsResponse) {
+                responseBody.data.let { data ->
                     _cursor = data.after
                     processFetchedPosts(data.children)
+                    Log.i("UserLogic", "Posts fetched, showing list with a size of ${_posts.size}")
                     updateUi()
                 }
             }
 
-            override fun onFailure(call: Call<UserPostsResponse>, t: Throwable) {
-                Log.e(TAG, "Error : ", t)
+            override fun onUnauthorized() {
+                Log.e(TAG, "onUnauthorized")
+                networkError.postValue(Unit)
+                foreground {
+                    _state.emit(UiState.Error("onUnauthorized"))
+                }
+            }
+
+            override fun onFailed(throwable: Throwable) {
+                Log.e(TAG, "Error : ", throwable)
                 setIsFetching(false)
+                foreground {
+                    _state.emit(UiState.Error(throwable.toString()))
+                }
             }
         })
     }
 
     private fun processFetchedPosts(children: List<RedditPost>) {
         _posts.addAll(children)
+    }
+
+    fun updateScreen() {
+        updateUi()
     }
 
     companion object {

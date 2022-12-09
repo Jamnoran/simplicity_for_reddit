@@ -5,7 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.google.gson.Gson
 import com.simplicity.simplicityaclientforreddit.databinding.MediaVideoPlayerBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetFormattedTextUseCase
 import org.junit.Assert.assertEquals
@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FormattingInstrumentedTest {
     private val TAG = "FormattingInstrumentedTest"
-    private val listener = object : RedditPostListener {
+    private val listener = object : OldRedditPostListener {
         override fun voteUp(post: RedditPost) {}
 
         override fun voteDown(post: RedditPost) { }

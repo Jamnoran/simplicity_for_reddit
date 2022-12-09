@@ -7,6 +7,7 @@ import com.simplicity.simplicityaclientforreddit.main.models.external.responses.
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponseData
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Replies
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.RepliesData
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.Subreddit
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
 
 class TesterHelper {
@@ -61,7 +62,10 @@ class TesterHelper {
                 name = "Bosse",
                 created = 1667757291805,
                 bannerImg = "http://www.google.com",
-                totalKarma = 1234
+                totalKarma = 1234,
+                subreddit = Subreddit(
+                    publicDescription = "This is a users detail pages public description"
+                )
             )
         }
     }

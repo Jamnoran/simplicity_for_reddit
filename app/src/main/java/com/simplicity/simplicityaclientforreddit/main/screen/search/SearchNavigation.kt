@@ -14,7 +14,7 @@ class SearchNavigation(private val navigator: NavHostController) {
         val logic: SearchLogic = viewModel()
         val state = logic.state.collectAsStateWithLifecycle()
         val screen = SearchScreen(navigator, logic, state.value)
-        logic.init(SearchInput("", ""))
+        logic.init()
         return screen
     }
 }

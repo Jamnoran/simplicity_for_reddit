@@ -11,9 +11,9 @@ import androidx.core.text.bold
 import androidx.core.text.italic
 import com.simplicity.simplicityaclientforreddit.main.custom.CustomFormatType
 import com.simplicity.simplicityaclientforreddit.main.custom.FormatIdentifier
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 
-class GetFormattedTextUseCase(val listener: RedditPostListener) {
+class GetFormattedTextUseCase(val listener: OldRedditPostListener) {
     fun execute(it: String): SpannableStringBuilder {
         return main(it)
 //        return main("Test *italic* **bold** \n#Title \n##Title2\n####Title3\nnew line \n&gt;This is quote \n&#x200B;Edit: Testing a little")

@@ -8,16 +8,20 @@ import android.widget.ImageView
 import com.simplicity.simplicityaclientforreddit.databinding.MediaCustomPlayerBinding
 import com.simplicity.simplicityaclientforreddit.databinding.MediaVideoPlayerBinding
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.media.CustomPlayer
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
-import com.simplicity.simplicityaclientforreddit.main.usecases.media.*
+import com.simplicity.simplicityaclientforreddit.main.usecases.media.GetGalleryImageUrlUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.media.GetMediaBaseValuesUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.media.GetMediaDataUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.media.MediaBaseValues
+import com.simplicity.simplicityaclientforreddit.main.usecases.media.MediaData
 
 class MediaTypeVideo(
     post: RedditPost,
     binding: RedditPostBinding,
     layoutInflater: LayoutInflater,
-    listener: RedditPostListener
+    listener: OldRedditPostListener
 ) : BaseMediaType(post, binding, layoutInflater, listener) {
     var mediaVideoPlayerBinding: MediaVideoPlayerBinding? = null
     override fun show() {

@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import com.simplicity.simplicityaclientforreddit.databinding.MediaLinkLayoutBinding
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.squareup.picasso.Picasso
 
-class MediaTypeLink(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: RedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
+class MediaTypeLink(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: OldRedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
     lateinit var mediaLinkLayoutBinding: MediaLinkLayoutBinding
     override fun show() {
         mediaLinkLayoutBinding = MediaLinkLayoutBinding.inflate(layoutInflater)

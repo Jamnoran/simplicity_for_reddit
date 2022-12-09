@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
 import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.util.PostViewHolder
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.RemoveCachedPostUseCase
 
-class RedditListAdapter(val listener: RedditPostListener, val layoutInflater: LayoutInflater) : ListAdapter<RedditPost, PostViewHolder>(PostDiffCallback) {
+class RedditListAdapter(val listener: OldRedditPostListener, val layoutInflater: LayoutInflater) : ListAdapter<RedditPost, PostViewHolder>(PostDiffCallback) {
 
     /* Creates and inflates view and return FlowerViewHolder. */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {

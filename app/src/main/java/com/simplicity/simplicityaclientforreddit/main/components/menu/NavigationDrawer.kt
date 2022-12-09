@@ -30,7 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.theme.Background
-import com.simplicity.simplicityaclientforreddit.main.theme.OnPrimary
+import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
 import com.simplicity.simplicityaclientforreddit.main.usecases.compose.NavigationToShowPostsUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.GetSubRedditVisitedUseCase
@@ -64,7 +64,13 @@ fun Profile(navigator: NavHostController, close: () -> Unit) {
             text = "You are logged in"
         )
     } else {
-        CText(text = "Log in by clicking here")
+        CText(
+            modifier = Modifier.clickable {
+                close.invoke()
+                navigator.navigate(NavRoute.AUTHENTICATION.path)
+            },
+            text = "Log in by clicking here"
+        )
     }
     Spacer(Modifier.height(20.dp))
     Divider()
@@ -91,7 +97,7 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: ()
                     .clickable { NavigationToShowPostsUseCase(navigator, subreddit).execute() }
                     .padding(top = 16.dp, bottom = 16.dp),
                 text = "r/$subreddit",
-                color = OnPrimary
+                color = OnBackground
             )
             Spacer(
                 modifier = Modifier
@@ -120,9 +126,23 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: ()
 @Composable
 fun BottomNavigationButtons(navigator: NavHostController, close: () -> Unit) {
     Row() {
-        CText(Modifier.clickable { navigator.navigate(NavRoute.SETTINGS.path) }, text = "Settings", color = OnPrimary)
+        CText(
+            Modifier.clickable {
+                close.invoke()
+                navigator.navigate(NavRoute.SETTINGS.path)
+            },
+            text = "Settings",
+            color = OnBackground
+        )
         Spacer(Modifier.width(16.dp))
-        CText(Modifier.clickable { navigator.navigate(NavRoute.SEARCH.path) }, text = "Search", color = OnPrimary)
+        CText(
+            Modifier.clickable {
+                close.invoke()
+                navigator.navigate(NavRoute.SEARCH.path)
+            },
+            text = "Search",
+            color = OnBackground
+        )
     }
 }
 

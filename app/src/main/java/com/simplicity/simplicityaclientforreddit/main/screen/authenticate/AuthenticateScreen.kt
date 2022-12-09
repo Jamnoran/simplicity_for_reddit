@@ -1,4 +1,4 @@
-package ${PACKAGE_NAME}
+package com.simplicity.simplicityaclientforreddit.main.screen.authenticate
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -13,7 +13,7 @@ import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
-fun ${NAME}Screen(navController: NavHostController, logic: ${NAME}Logic, state: UiState<Data>) {
+fun AuthenticateScreen(navController: NavHostController, logic: AuthenticateLogic, state: UiState<Data>) {
     when (state) {
         is UiState.Error -> ScreenError()
         is UiState.Loading -> ScreenLoading()
@@ -23,10 +23,10 @@ fun ${NAME}Screen(navController: NavHostController, logic: ${NAME}Logic, state: 
 }
 
 @Composable
-fun Show(navController: NavHostController?, logic: ${NAME}Logic, data: Data) {
+fun Show(navController: NavHostController?, logic: AuthenticateLogic, data: Data) {
     DefaultScreen {
         Column {
-            CText(text = data.data)
+            CText(text = "Authenticating")
         }
     }
 }
@@ -35,6 +35,6 @@ fun Show(navController: NavHostController?, logic: ${NAME}Logic, data: Data) {
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Show(rememberNavController(), ${NAME}Logic(), Data.preview())
+        Show(rememberNavController(), AuthenticateLogic(), Data.preview())
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -70,14 +71,16 @@ fun PostGallery(post: RedditPost, listener: RedditPostListener) {
 
 @Composable
 fun NavigationLeft(modifier: Modifier, click: () -> Unit) {
-    Box(modifier.background(Transparent).fillMaxWidth().clickable { click.invoke() }) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Box(modifier.background(Transparent).fillMaxWidth().clickable(interactionSource = interactionSource, indication = null) { click.invoke() }) {
         OnSurfaceText(text = "")
     }
 }
 
 @Composable
 fun NavigationRight(modifier: Modifier, click: () -> Unit) {
-    Box(modifier.background(Transparent).fillMaxWidth().clickable { click.invoke() }) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Box(modifier.background(Transparent).fillMaxWidth().clickable(interactionSource = interactionSource, indication = null) { click.invoke() }) {
         OnSurfaceText(text = "")
     }
 }

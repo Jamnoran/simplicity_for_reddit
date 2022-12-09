@@ -1,8 +1,8 @@
 package ${PACKAGE_NAME}
 
-data class {$NAME}Input(
-    val inputData: String
-)
+import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic.BaseInput
+
+class ${NAME}Input(val inputData: String = "") : BaseInput
 
 data class Data(val data: String){
     companion object {

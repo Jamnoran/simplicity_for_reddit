@@ -6,7 +6,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.simplicity.simplicityaclientforreddit.databinding.MediaYoutubeLayoutBinding
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.GetPostYoutubeIDUseCase
 
@@ -14,7 +14,7 @@ class MediaTypeYoutube(
     data: RedditPost,
     binding: RedditPostBinding,
     layoutInflater: LayoutInflater,
-    listener: RedditPostListener
+    listener: OldRedditPostListener
 ) : BaseMediaType(data, binding, layoutInflater, listener) {
     var player: YouTubePlayer? = null
     var mediaYoutubeLayoutBinding: MediaYoutubeLayoutBinding? = null
