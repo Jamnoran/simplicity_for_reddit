@@ -20,7 +20,7 @@ jobs:
           java-version: 11
       - name: Check if there is any change
         id: get_changes
-        run: echo "changed=5" >> $GITHUB_ENV
+        run: echo "changed=5"
       - name: Echo changes
         if: env.changed != 0
         id: echo_changes
