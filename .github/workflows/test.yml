@@ -11,17 +11,9 @@ on:
 jobs:
   synchronize_with_lokalise:
     runs-on: ubuntu-latest
-      - name: Check if there is any change
-        id: get_changes
-        run: echo "changed=5"
-
-    outputs:
-      has_changes: steps.get_changes.outputs.changed != 0
-
-  create_and_open_pull_request:
-    runs-on: ubuntu-latest
-    needs: [ synchronize_with_lokalise ]
-    steps:
-
-      - name: Print changed name
-        run: echo ${{ needs.synchronize_with_lokalise.outputs.has_changes }}
+    - name: Check if there is any change
+      id: get_changes
+      run: echo "changed=5"
+    - if: env.changed != 0
+      id: echo_changes
+        run: echo "It has changed!"
