@@ -16,4 +16,4 @@ jobs:
       run: echo "changed=5"
     - if: env.changed != 0
       id: echo_changes
-        run: echo "It has changed!"
+      run: echo "It has changed!"
