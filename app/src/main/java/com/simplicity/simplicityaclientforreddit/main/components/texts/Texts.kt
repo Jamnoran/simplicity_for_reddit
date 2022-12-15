@@ -6,11 +6,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.simplicity.simplicityaclientforreddit.main.theme.BodyNormal
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
@@ -48,52 +45,6 @@ fun OnSurfaceText(modifier: Modifier = Modifier, text: String, textAlign: TextAl
     Text(modifier = modifier, textAlign = textAlign, text = text, color = Color.White, style = style)
 }
 
-@Composable
-fun OldMarkDownText(modifier: Modifier, text: String) {
-    val markdownText = MarkdownText()
-    Text(
-        text = buildAnnotatedString {
-            pushStyle(SpanStyle(color = markdownText.textColor))
-            for (char in text) {
-                if (markdownText.checkChar(char)) {
-                    pushStyle(SpanStyle(textDecoration = markdownText.textDecoration))
-                }
-
-                if (markdownText.addChar) {
-                    append(
-                        char.toString()
-                    )
-                }
-            }
-        }
-    )
-}
-
-class MarkdownText {
-    // STRIKETHROUGH / UNDERLINE
-    val defaultTextDecoration = TextDecoration.None
-    var textDecoration = defaultTextDecoration
-
-    // TEXT COLOR
-    val defaultTextColor = Color.White
-    val textColor = defaultTextColor
-
-    var addChar = true
-
-    fun checkChar(char: Char): Boolean {
-        addChar = true
-        if (char == '*') {
-            textDecoration = if (textDecoration == defaultTextDecoration) {
-                TextDecoration.Underline
-            } else {
-                defaultTextDecoration
-            }
-            addChar = false
-            return true
-        }
-        return false
-    }
-}
 
 // Here's an example of some reddit formatting tricks:
 // **Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~
@@ -127,12 +78,6 @@ class MarkdownText {
 @Composable
 fun MarkDownPreview() {
     Column(Modifier.fillMaxWidth()) {
-        val sampleData =
-            "**Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~\n>Quote\n\n\n# Header 1\n## Header 2\n ### Header 3\n"
-
-        OldMarkDownText(
-            modifier = Modifier,
-            text = sampleData
-        )
+        CText("Some text")
     }
 }

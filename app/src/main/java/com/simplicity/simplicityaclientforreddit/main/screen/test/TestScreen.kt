@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +29,7 @@ fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiStat
 
 @Composable
 fun Show(navController: NavHostController?, data: String) {
-    Column(Modifier.fillMaxWidth().background(Background)) {
+    Column(Modifier.fillMaxWidth().background(Background).verticalScroll(rememberScrollState())) {
         MarkDownText(Modifier.fillMaxSize(), body = data)
     }
 }

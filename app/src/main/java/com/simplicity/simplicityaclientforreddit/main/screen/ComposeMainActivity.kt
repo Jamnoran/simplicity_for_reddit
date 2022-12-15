@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.simplicity.simplicityaclientforreddit.main.Global
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeActivity
 import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
@@ -18,7 +19,7 @@ class ComposeMainActivity : BaseComposeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        com.simplicity.simplicityaclientforreddit.main.Global.applicationContext = applicationContext
+        Global.applicationContext = applicationContext
         // Set up coil gif handling
         val imageLoader = ImageLoader.Builder(this)
             .components {
@@ -29,7 +30,7 @@ class ComposeMainActivity : BaseComposeActivity() {
                 }
             }
             .build()
-        com.simplicity.simplicityaclientforreddit.main.Global.imageLoader = imageLoader
+        Global.imageLoader = imageLoader
     }
 
     override fun init() {
