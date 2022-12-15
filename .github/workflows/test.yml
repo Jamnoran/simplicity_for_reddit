@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     - name: Check if there is any change
       id: get_changes
-      run: echo "changed=5"
+      run: echo "changed=5"  >> $GITHUB_ENV
     - name: Echo changes
       if: env.changed != 0
       id: echo_changes
