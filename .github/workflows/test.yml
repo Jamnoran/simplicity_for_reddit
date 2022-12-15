@@ -8,13 +8,20 @@ on:
         type: boolean
         required: true
         default: false
+
 jobs:
-  synchronize_with_lokalise:
+  build:
     runs-on: ubuntu-latest
-    - name: Check if there is any change
-      id: get_changes
-      run: echo "changed=5" >> $GITHUB_ENV
-    - name: Echo changes
-      if: env.changed != 0
-      id: echo_changes
-      run: echo "It has changed!"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          distribution: temurin
+          java-version: 11
+      - name: Check if there is any change
+        id: get_changes
+        run: echo "changed=5" >> $GITHUB_ENV
+      - name: Echo changes
+        if: env.changed != 0
+        id: echo_changes
+        run: echo "It has changed!"
