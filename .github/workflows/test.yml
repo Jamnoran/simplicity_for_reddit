@@ -14,6 +14,7 @@ jobs:
     - name: Check if there is any change
       id: get_changes
       run: echo "changed=5"
-    - if: env.changed != 0
+    - name: Echo changes
+      if: env.changed != 0
       id: echo_changes
       run: echo "It has changed!"
