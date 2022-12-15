@@ -35,7 +35,7 @@ val Surface = DarkGray
 val LinkColor = Blue
 
 // On colors
-val OnPrimary = Purple80
+val OnPrimary = Black
 val OnSecondary = Gray
 val OnTertiary = Gray
 val OnBackground = LightGray

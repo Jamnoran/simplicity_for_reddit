@@ -1,7 +1,12 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.comments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -12,22 +17,28 @@ import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.CommentFooter
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Children
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.ChildrenData
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditCommentListener
-import com.simplicity.simplicityaclientforreddit.main.theme.*
+import com.simplicity.simplicityaclientforreddit.main.theme.Background
+import com.simplicity.simplicityaclientforreddit.main.theme.Primary
+import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
+import com.simplicity.simplicityaclientforreddit.main.theme.Surface
+import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUseCase
 
 @Composable
 fun CommentsScreen(logic: CommentsLogic) {
     logic.stateFlow.collectAsState().value.let { state ->
         when (state) {
-            is UiState.Loading -> Loading(state.loadingMessage)
-            is UiState.Error -> Error()
+            is UiState.Loading -> ScreenLoading(state.loadingMessage)
+            is UiState.Error -> ScreenError()
+            is UiState.Empty -> {}
             is UiState.Success -> Show(state.data)
         }
     }
@@ -60,7 +71,7 @@ fun Comment(comment: ChildrenData) {
         // Comment
         CText(text = comment.body ?: "[deleted]")
         // Bottom bar
-        val listener = RedditCommentListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+        val listener = RedditCommentListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
         CommentFooter(comment = comment, listener = listener)
         // Children
         ShowChildren(comment.repliesCustomParsed?.repliesData?.children)

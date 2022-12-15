@@ -1,7 +1,13 @@
 ﻿package com.simplicity.simplicityaclientforreddit.main.media
 
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
-import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.*
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Children
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.ChildrenData
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponseData
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Replies
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.RepliesData
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.Subreddit
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
 
 class TesterHelper {
@@ -20,6 +26,7 @@ class TesterHelper {
                     preview = null,
                     galleryData = null,
                     media = null,
+                    selftext = "This is a selftext",
                     created = 1667757291805,
                     mediaMetadata = null,
                     secureMediaEmbed = null,
@@ -55,7 +62,10 @@ class TesterHelper {
                 name = "Bosse",
                 created = 1667757291805,
                 bannerImg = "http://www.google.com",
-                totalKarma = 1234
+                totalKarma = 1234,
+                subreddit = Subreddit(
+                    publicDescription = "This is a users detail pages public description"
+                )
             )
         }
     }

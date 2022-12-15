@@ -42,7 +42,7 @@ fun ShowVideo(post: RedditPost, listener: RedditPostListener) {
                 MediaCustomPlayerBinding::inflate
             ) {
                 val audioPlayer = AudioPlayer(post)
-                listener.postHidden = {
+                listener.postHiddenFromView = {
                     Log.i("PostVideo", "Post is hidden, lets pause music")
                     audioPlayer.pause()
                     videoMediaPlayer?.pause()

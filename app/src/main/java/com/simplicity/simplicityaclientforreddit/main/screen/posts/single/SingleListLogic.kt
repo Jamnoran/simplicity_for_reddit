@@ -6,162 +6,81 @@ import android.util.Log
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
-import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.VotePayload
 import com.simplicity.simplicityaclientforreddit.main.io.room.RoomDB
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
-import com.simplicity.simplicityaclientforreddit.main.models.external.responses.FetchPostsResponse
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.JsonResponse
-import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.AddCachedPostUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.GetCachedPostUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.RemoveCachedPostUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.post.FilterPostsUseCase
+import com.simplicity.simplicityaclientforreddit.main.utils.RedditListLogic
+import com.simplicity.simplicityaclientforreddit.main.utils.RedditListLogicListener
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SingleListLogic() : BaseLogic() {
+class SingleListLogic : BaseLogic() {
     private lateinit var navigationListener: NavigationListener
     var subReddit: String = ""
+    var redditListLogic: RedditListLogic = RedditListLogic()
+
     private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
     val state: StateFlow<UiState<Data>> = _state
 
-    private var _posts = ArrayList<RedditPost>()
-    private var _cursor: String? = ""
-    private var _positionOfCurrentPost = 0
-
     fun start(navigationListener: NavigationListener, subReddit: String = "") {
+        val listener = RedditListLogicListener(
+            activePost = {
+                foreground {
+                    _state.emit(UiState.Success(Data(it)))
+                }
+            },
+            activePosts = {},
+            error = {
+                foreground {
+                    _state.tryEmit(UiState.Error(it))
+                }
+            }
+        )
+        redditListLogic.init(subReddit = subReddit, api = API(), logic = this, listener = listener)
+        background { redditListLogic.initList() }
+
         this.navigationListener = navigationListener
-        this.subReddit = subReddit
-        if (_posts.size == 0) {
-            background {
-                if (subReddit.isEmpty()) {
-                    val readPosts = GetCachedPostUseCase().execute()
-                    Log.i(TAG, "We got this many cached posts: ${readPosts.size}")
-                    _posts.addAll(readPosts)
-                }
-                showFirstPost()
-                if (_posts.size < 4) {
-                    fetchPosts()
-                }
-            }
-        }
-    }
-
-    fun fetchPosts() {
-        if (isFetching().value == false || isFetching().value == null) {
-            background {
-                _cursor?.let {
-                    fetchPosts(it)
-                }
-            }
-        }
-    }
-
-    private fun showFirstPost() {
-        foreground {
-            if (_posts.isNotEmpty()) {
-                _posts.first().let { firstItem ->
-                    RemoveCachedPostUseCase(firstItem).execute()
-                    _state.emit(UiState.Success(Data(firstItem)))
-                }
-            }
-        }
-    }
-
-    private fun fetchPosts(cursor: String) {
-        setIsFetching(true)
-        Log.i(TAG, "Getting reddit posts with this cursor: $cursor")
-        val call = API().getPosts(subReddit.ifEmpty { "all" }, cursor, "on")
-        call.enqueue(object : CustomResponseCompose<FetchPostsResponse>(this) {
-            override fun success(responseBody: FetchPostsResponse) {
-                handleResponse(responseBody)
-            }
-        })
-    }
-
-    private fun handleResponse(response: FetchPostsResponse) {
-        val hasShownPostAlready = (_posts.size > 0)
-        response.data.let { data ->
-            _cursor = data.after
-            data.children?.let { processFetchedPosts(it) }
-            if (data.after == null || data.after.isEmpty()) {
-                Log.i(TAG, "There is no posts to show.")
-                _state.tryEmit(UiState.Error("There is no posts to show."))
-            }
-        }
-        // Show first item if there is any if we have not already showed a cached post
-        if (_posts.size > 0 && !hasShownPostAlready) {
-            showFirstPost()
-        }
-        if ((_posts.size - _positionOfCurrentPost) < 8) {
-            // Fetching next set of posts.
-            _cursor?.let {
-                fetchPosts(it)
-            }
-        } else {
-            setIsFetching(false)
-        }
-    }
-
-    private fun processFetchedPosts(children: List<RedditPost>) {
-        for (child in children) {
-            if (FilterPostsUseCase().canDisplay(child, true, true)) {
-                _posts.add(child)
-                if (subReddit.isEmpty()) { // We are in /all feed, we can cache these posts safely
-                    AddCachedPostUseCase(child).execute()
-                }
-            }
-        }
-        Log.i(TAG, "We now got ${_posts.size} posts to show")
-    }
-
-    private fun updateUiWithNextItem() {
-        foreground {
-            if (_posts.isNotEmpty() && _posts.size > (_positionOfCurrentPost + 1)) {
-                _positionOfCurrentPost++
-                val postToShow = _posts[_positionOfCurrentPost]
-                _state.tryEmit(UiState.Success(Data(postToShow)))
-                RemoveCachedPostUseCase(postToShow).execute()
-            }
-            if ((_posts.size - _positionOfCurrentPost) < 4) {
-                _cursor?.let { fetchPosts(it) }
-            }
-        }
-    }
-
-    fun upVote(it: RedditPost) {
-//        val body = "dir=1&id=t3_fmlk3&rank=2"
-//        val body = "dir=1&id=${it.data.id}&rank=2"
-//        val call = APIAuthenticated().vote(VoteObject(it.data.id, "1"))
-        val call = APIAuthenticated().vote(VotePayload(it.data.id, "1"))
-        call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
-            override fun success(responseBody: JsonResponse) {
-                Log.i(TAG, "UpVoted")
-            }
-        })
-    }
-
-    fun downVote(it: RedditPost) {
-        val call = APIAuthenticated().downVote(it.data.id)
-        call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
-            override fun success(responseBody: JsonResponse) {
-                Log.i(TAG, "UpVoted")
-            }
-        })
     }
 
     fun nextPost() {
-        updateUiWithNextItem()
+        foreground { _state.emit(UiState.Success(Data(redditPost = null, scrollToTop = Unit))) }
+        background {
+            Thread.sleep(20)
+            redditListLogic.showNextPost()
+        }
     }
 
     fun previousPost() {
-        foreground {
-            if (_posts.isNotEmpty() && _positionOfCurrentPost > 1) {
-                _positionOfCurrentPost--
-                val postToShow = _posts[_positionOfCurrentPost]
-                _state.tryEmit(UiState.Success(Data(postToShow)))
+        foreground { _state.emit(UiState.Success(Data(redditPost = null, scrollToTop = Unit))) }
+        background { redditListLogic.showPreviousPost() }
+    }
+
+    fun upVote(post: RedditPost) {
+        val call = APIAuthenticated().upVote("t3_${post.data.id}")
+        call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
+            override fun success(responseBody: JsonResponse) {
+                Log.i(TAG, "UpVoted")
             }
-        }
+        })
+    }
+
+    fun downVote(post: RedditPost) {
+        val call = APIAuthenticated().downVote("t3_${post.data.id}")
+        call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
+            override fun success(responseBody: JsonResponse) {
+                Log.i(TAG, "DownVote")
+            }
+        })
+    }
+
+    fun clearVote(post: RedditPost) {
+        val call = APIAuthenticated().clearVote("t3_${post.data.id}")
+        call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
+            override fun success(responseBody: JsonResponse) {
+                Log.i(TAG, "Cleared vote")
+            }
+        })
     }
 
     fun sharePost(redditPost: RedditPost) {

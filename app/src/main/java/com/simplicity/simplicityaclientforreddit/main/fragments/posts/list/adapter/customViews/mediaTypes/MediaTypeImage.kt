@@ -2,10 +2,10 @@ package com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adap
 
 import android.view.LayoutInflater
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 
-class MediaTypeImage(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: RedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
+class MediaTypeImage(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: OldRedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
     override fun show() {
 //        post.data.urlOverriddenByDest?.let { url ->
 //            val mediaImageLayoutBinding: MediaImageLayoutBinding = MediaImageLayoutBinding.inflate(layoutInflater)

@@ -3,7 +3,13 @@ package com.simplicity.simplicityaclientforreddit.main.components.posts.post
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.*
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostGallery
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostImage
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostImgur
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostLink
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostNone
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostVideo
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.types.PostYoutube
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -36,9 +42,6 @@ fun PostBody(post: RedditPost, listener: RedditPostListener, type: PostType) {
             }
             PostType.IMGUR_LINK -> {
                 PostImgur(post = post, listener = listener)
-//                data.urlOverriddenByDest?.let {
-//                    media = MediaTypeLink(post, binding, inflater, listener)
-//                }
             }
             PostType.YOUTUBE -> {
                 PostYoutube(post, listener)

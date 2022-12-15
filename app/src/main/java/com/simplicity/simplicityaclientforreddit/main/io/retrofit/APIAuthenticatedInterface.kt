@@ -7,7 +7,13 @@ import com.simplicity.simplicityaclientforreddit.main.models.external.responses.
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.UserResponse
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.posts.UserPostsResponse
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface APIAuthenticatedInterface {
     @GET("api/v1/me")

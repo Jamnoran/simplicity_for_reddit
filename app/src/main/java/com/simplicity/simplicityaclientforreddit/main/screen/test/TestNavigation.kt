@@ -1,7 +1,6 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.test
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,9 +14,7 @@ class TestNavigation(private val navController: NavHostController) {
         val logic: TestLogic = viewModel()
         val state = logic.stateFlow.collectAsStateWithLifecycle()
         val screen = TestScreen(navController, logic, state.value)
-        LaunchedEffect(Unit) {
-            logic.start()
-        }
+        logic.start()
         return screen
     }
 }

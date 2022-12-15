@@ -1,6 +1,7 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.user
 
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic.BaseInput
+import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
@@ -13,4 +14,4 @@ data class Data(val user: User? = null, val posts: List<RedditPost> = emptyList(
     }
 }
 
-class Input(val userName: String) : BaseInput
+class UserInput(val userName: String, val navigationListener: NavigationListener) : BaseInput

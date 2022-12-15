@@ -1,7 +1,7 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.user
 
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -14,11 +14,10 @@ class UserNavigation(private val navController: NavHostController, private val n
     @Composable
     fun Launch() {
         val logic: UserLogic = viewModel()
-        val state = logic.stateFlow.collectAsStateWithLifecycle()
+        val state = logic.state.collectAsStateWithLifecycle()
+        Log.i("UserNavigation", "Getting updated state with posts: ${state.value}")
         val screen = UserScreen(navController, navigationListener, logic, state.value)
-        LaunchedEffect(Unit) {
-            logic.start(Input(userName))
-        }
+        logic.init(UserInput(userName, navigationListener))
         return screen
     }
 }

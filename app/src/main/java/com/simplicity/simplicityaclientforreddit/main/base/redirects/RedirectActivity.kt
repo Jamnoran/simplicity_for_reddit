@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.simplicity.simplicityaclientforreddit.main.Global
 import com.simplicity.simplicityaclientforreddit.main.MainActivity
 import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
 
@@ -13,7 +14,7 @@ class RedirectActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Check to see if this Activity is the root activity
-        com.simplicity.simplicityaclientforreddit.main.Global.applicationContext = applicationContext
+        Global.applicationContext = applicationContext
         saveData(intent)
         if (isTaskRoot) {
             // This Activity is the only Activity, so

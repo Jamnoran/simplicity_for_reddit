@@ -9,14 +9,14 @@ import com.bumptech.glide.Glide
 import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
 import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.GetGalleryImageUrlUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.MediaBaseValues
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.MediaData
 import com.squareup.picasso.Picasso
 
-open class BaseMediaType(var post: RedditPost, var binding: RedditPostBinding, val layoutInflater: LayoutInflater, val listener: RedditPostListener) {
+open class BaseMediaType(var post: RedditPost, var binding: RedditPostBinding, val layoutInflater: LayoutInflater, val listener: OldRedditPostListener) {
     init { }
     open fun show() {}
 

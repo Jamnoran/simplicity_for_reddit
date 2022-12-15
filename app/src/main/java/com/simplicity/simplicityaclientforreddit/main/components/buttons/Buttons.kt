@@ -1,22 +1,26 @@
 package com.simplicity.simplicityaclientforreddit.main.components.buttons
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconToggleButton
-import androidx.compose.runtime.*
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.R
+import com.simplicity.simplicityaclientforreddit.main.components.images.CImage
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 
 @Composable
@@ -49,53 +53,27 @@ fun CButton(
     }
 }
 
-@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun CToggleButton(
     isChecked: Boolean,
-    onClick: () -> Unit,
+    onClick: (Boolean) -> Unit,
     disabledIcon: Int,
     enabledIcon: Int
 ) {
-    IconToggleButton(
-        checked = isChecked,
-        onCheckedChange = { onClick() }
-    ) {
-        val transition = updateTransition(isChecked, label = "Checked indicator")
-
-        val tint by transition.animateColor(
-            label = "Tint"
-        ) { isChecked ->
-            if (isChecked) Color.Red else Color.Black
+    TextButton(
+        modifier = Modifier.background(Color.Transparent),
+        onClick = {
+            onClick.invoke(!isChecked)
         }
-
-        val size by transition.animateDp(
-            transitionSpec = {
-                if (false isTransitioningTo true) {
-                    keyframes {
-                        durationMillis = 250
-                        30.dp at 0 with LinearOutSlowInEasing // for 0-15 ms
-                        35.dp at 15 with FastOutLinearInEasing // for 15-75 ms
-                        40.dp at 75 // ms
-                        35.dp at 150 // ms
-                    }
-                } else {
-                    spring(stiffness = Spring.StiffnessVeryLow)
-                }
-            },
-            label = "Size"
-        ) { 30.dp }
-        Image(
-            modifier = Modifier
-                .size(24.dp),
-            contentDescription = "",
-            painter = painterResource(if (isChecked) enabledIcon else disabledIcon)
+    ) {
+        CImage(
+            iconResource = if (isChecked) enabledIcon else disabledIcon
         )
     }
 }
 
 @Composable
-fun TextButton(modifier: Modifier = Modifier, text: String, click: () -> Unit) {
+fun CTextButton(modifier: Modifier = Modifier, text: String, click: () -> Unit) {
     CText(modifier.clickable { click.invoke() }, text = text)
 }
 

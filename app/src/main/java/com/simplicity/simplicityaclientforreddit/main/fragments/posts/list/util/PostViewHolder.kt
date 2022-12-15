@@ -10,12 +10,12 @@ import com.simplicity.simplicityaclientforreddit.R
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
 import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.RedditMedia
 import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeVideo
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetFormattedTextUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUseCase
 
-class PostViewHolder(val listener: RedditPostListener, var binding: RedditPostBinding, val layoutInflater: LayoutInflater) : RecyclerView.ViewHolder(binding.root) {
+class PostViewHolder(val listener: OldRedditPostListener, var binding: RedditPostBinding, val layoutInflater: LayoutInflater) : RecyclerView.ViewHolder(binding.root) {
     private lateinit var redditMedia: RedditMedia
     var showed: Boolean = false
     private val TAG = "PostViewHolder"

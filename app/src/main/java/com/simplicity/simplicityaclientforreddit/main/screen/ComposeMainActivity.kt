@@ -4,12 +4,14 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import com.simplicity.simplicityaclientforreddit.main.Global
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeActivity
+import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 
 class ComposeMainActivity : BaseComposeActivity() {
@@ -17,7 +19,7 @@ class ComposeMainActivity : BaseComposeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        com.simplicity.simplicityaclientforreddit.main.Global.applicationContext = applicationContext
+        Global.applicationContext = applicationContext
         // Set up coil gif handling
         val imageLoader = ImageLoader.Builder(this)
             .components {
@@ -28,11 +30,20 @@ class ComposeMainActivity : BaseComposeActivity() {
                 }
             }
             .build()
-        com.simplicity.simplicityaclientforreddit.main.Global.imageLoader = imageLoader
+        Global.imageLoader = imageLoader
     }
 
     override fun init() {
         Log.i("ComposeMainActivity", "Init")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("ComposeMainActivity", "We got a resume with code : ${SettingsSP().loadSetting(SettingsSP.KEY_CODE, null)}")
+        if (SettingsSP().loadSetting(SettingsSP.KEY_CODE, null) != null) {
+            Log.i("ComposeMainActivity", "Starting AUTHENTICATION_RESULT")
+            navController?.navigate(NavRoute.AUTHENTICATION_RESULT.path)
+        }
     }
 
     @Composable
@@ -46,4 +57,3 @@ class ComposeMainActivity : BaseComposeActivity() {
         }
     }
 }
-

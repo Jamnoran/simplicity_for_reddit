@@ -6,14 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.*
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.BaseMediaType
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeGallery
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeImage
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeLink
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeVideo
+import com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.adapter.customViews.mediaTypes.MediaTypeYoutube
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.internal.enums.PostType
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.GetPostTypeUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetFormattedTextUseCase
 
-class RedditMedia(val post: RedditPost, val listener: RedditPostListener) {
+class RedditMedia(val post: RedditPost, val listener: OldRedditPostListener) {
     private lateinit var inflater: LayoutInflater
     lateinit var binding: RedditPostBinding
     var media: BaseMediaType? = null

@@ -2,10 +2,10 @@ package com.simplicity.simplicityaclientforreddit.main.fragments.posts.list.util
 
 import com.simplicity.simplicityaclientforreddit.databinding.MediaVideoPlayerBinding
 import com.simplicity.simplicityaclientforreddit.main.base.BasePostsListViewModel
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 
-class RedditPostListenerImpl(private val viewModel: BasePostsListViewModel<*>) : RedditPostListener {
+class RedditPostListenerImpl(private val viewModel: BasePostsListViewModel<*>) : OldRedditPostListener {
     override fun voteUp(post: RedditPost) {
         viewModel.upVote(post)
     }

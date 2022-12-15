@@ -7,12 +7,12 @@ import android.view.View
 import com.simplicity.simplicityaclientforreddit.databinding.MediaGalleryLayoutBinding
 import com.simplicity.simplicityaclientforreddit.databinding.MediaImageLayoutBinding
 import com.simplicity.simplicityaclientforreddit.databinding.RedditPostBinding
-import com.simplicity.simplicityaclientforreddit.main.listeners.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.listeners.OldRedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.GalleryItem
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.GetGalleryImageUrlUseCase
 
-class MediaTypeGallery(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: RedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
+class MediaTypeGallery(post: RedditPost, binding: RedditPostBinding, layoutInflater: LayoutInflater, listener: OldRedditPostListener) : BaseMediaType(post, binding, layoutInflater, listener) {
     lateinit var mediaGalleryLayoutBinding: MediaGalleryLayoutBinding
     lateinit var primaryMediaGalleryLayoutBinding: MediaImageLayoutBinding
     lateinit var secondaryMediaGalleryLayoutBinding: MediaImageLayoutBinding

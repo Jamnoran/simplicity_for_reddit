@@ -1,13 +1,30 @@
 package com.simplicity.simplicityaclientforreddit.main.screen
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.navigation.*
+import androidx.navigation.NamedNavArgument
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
-import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.*
-import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.AUTHENTICATION
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.COMMENTS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.HIDDEN_SUBS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.MY_PROFILE
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POSTS_LIST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POST_DETAIL
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SEARCH
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SETTINGS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SINGLE_LIST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.TEST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.USER
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.WEB_VIEW
+import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.AuthenticateNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.result.AuthenticationResultNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.comments2.Comments2Input
+import com.simplicity.simplicityaclientforreddit.main.screen.comments2.Comments2Navigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.PostDetailNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.list.PostsListNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.single.SingleListNavigation
@@ -20,8 +37,8 @@ import com.simplicity.simplicityaclientforreddit.main.screen.user.UserNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavigation
 
 @Composable
-fun Navigation(navigationListener: NavigationListener, navController: NavHostController) { //SINGLE_LIST
-    NavHost(navController = navController, startDestination = POST_DETAIL.path) {
+fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
+    NavHost(navController = navController, startDestination = TEST.path) { // SINGLE_LIST POST_DETAIL
         composable(POSTS_LIST.path) {
             PostsListNavigation(navController, navigationListener, "").Launch()
         }
@@ -38,7 +55,6 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
         composable(SETTINGS.path) { SettingsNavigation(navController).Launch() }
         composable(MY_PROFILE.path) { MyProfileNavigation(navController).Launch() }
         composable(USER.withArgsFormat(USER.userName), NavRoute.getArguments(USER.userName)) { stack ->
-            Log.i("Navigation", "User is called to start")
             UserNavigation(navController, navigationListener, stack.arg(USER.userName)).Launch()
         }
         composable(SEARCH.path) { SearchNavigation(navController).Launch() }
@@ -46,9 +62,11 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
             COMMENTS.withArgsFormat(COMMENTS.postId, COMMENTS.subReddit),
             NavRoute.run { getArguments(listOf(COMMENTS.postId, COMMENTS.subReddit)) }
         ) { stack ->
-            CommentsNavigation(navController, stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)).Launch()
+            Comments2Navigation(navController).Launch(Comments2Input(stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)))
         }
         composable(TEST.path) { TestNavigation(navController).Launch() }
+        composable(AUTHENTICATION.path) { AuthenticateNavigation(navController, navigationListener).Launch() }
+        composable(NavRoute.AUTHENTICATION_RESULT.path) { AuthenticationResultNavigation(navController).Launch() }
         composable(HIDDEN_SUBS.path) { HiddenSubsNavigation(navController).Launch() }
         composable(WEB_VIEW.withArgsFormat(WEB_VIEW.url), NavRoute.getArguments(WEB_VIEW.url)) { stack ->
             WebViewNavigation(navController, stack.arg(WEB_VIEW.url)).Launch()
@@ -87,6 +105,8 @@ sealed class NavRoute(val path: String) {
     }
 
     object TEST : NavRoute("test")
+    object AUTHENTICATION : NavRoute("authentication")
+    object AUTHENTICATION_RESULT : NavRoute("authentication_result")
 
     // build navigation path (for screen navigation)
     fun withArgs(vararg args: String): String {

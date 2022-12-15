@@ -9,9 +9,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 
+data class Items(
 
-data class Items (
-
-	val media_id : String,
-	val id : Int
+    val media_id: String,
+    val id: Int,
+    val caption: String? = null
 )

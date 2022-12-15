@@ -10,14 +10,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
-import com.simplicity.simplicityaclientforreddit.main.components.screens.Loading
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
+import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
 fun WebViewScreen(navigator: NavHostController, logic: WebViewLogic, state: UiState<Data>) {
     when (state) {
-        is UiState.Loading -> Loading(state.loadingMessage)
-        is UiState.Error -> Error()
+        is UiState.Loading -> ScreenLoading(state.loadingMessage)
+        is UiState.Error -> ScreenError()
+        is UiState.Empty -> {}
         is UiState.Success -> Show(navigator, state.data)
     }
 }

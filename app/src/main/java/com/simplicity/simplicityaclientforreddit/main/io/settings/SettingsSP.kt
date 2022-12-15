@@ -61,6 +61,7 @@ class SettingsSP {
         const val KEY_SETTINGS_SCROLL_VOLUME = "SETTINGS_SCROLL_VOLUME"
         const val KEY_SETTINGS_USE_CACHE = "SETTINGS_USE_CACHE"
         const val KEY_SETTINGS_USE_LIST = "SETTINGS_USE_LIST"
+        const val KEY_SHOW_LINKS_UNDER_POST = "SHOW_LINKS_UNDER_POST"
         const val KEY_SETTINGS_NSFW = "NSFW_key"
         const val KEY_SETTINGS_SFW = "SFW_key"
         const val KEY_ID = "id_key"
