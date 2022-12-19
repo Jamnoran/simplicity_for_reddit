@@ -9,6 +9,7 @@ import com.simplicity.simplicityaclientforreddit.main.models.external.responses.
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.RepliesData
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.Subreddit
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
+import com.simplicity.simplicityaclientforreddit.main.models.internal.HiddenSubs
 
 class TesterHelper {
 
@@ -40,18 +41,32 @@ class TesterHelper {
             )
         }
 
+        fun getHiddenSub(): HiddenSubs {
+            return HiddenSubs(
+                123,
+                "boring_sub"
+            )
+        }
+
         fun getChildrenData(body: String? = "This is a comment", author: String? = "Bosse"): ChildrenData {
             return ChildrenData(body = body, author = author, createdUtc = 1667757291805)
         }
 
         fun getComments(): CommentResponse {
             val replyReplyChildrenData = ChildrenData(body = "This is a reply to a reply", author = "Berit", createdUtc = 1667757291805)
-            val replyReplyChildren = arrayListOf(Children(kind = "t3", childrenData = replyReplyChildrenData), Children(kind = "t3", childrenData = replyReplyChildrenData))
+            val replyReplyChildren = arrayListOf(
+                Children(kind = "t3", childrenData = replyReplyChildrenData),
+                Children(kind = "t3", childrenData = replyReplyChildrenData)
+            )
             val replyChildrenData = ChildrenData(body = "This is a reply", author = "Göran", createdUtc = 1667757291805)
             replyChildrenData.repliesCustomParsed = Replies(kind = "t3", RepliesData(children = replyReplyChildren))
-            val replyChildren = arrayListOf(Children(kind = "t3", childrenData = replyChildrenData), Children(kind = "t3", childrenData = replyChildrenData))
+            val replyChildren = arrayListOf(
+                Children(kind = "t3", childrenData = replyChildrenData),
+                Children(kind = "t3", childrenData = replyChildrenData)
+            )
             val childrenData = getChildrenData()
-            val children = arrayListOf(Children(kind = "t3", childrenData = childrenData), Children(kind = "t3", childrenData = childrenData))
+            val children =
+                arrayListOf(Children(kind = "t3", childrenData = childrenData), Children(kind = "t3", childrenData = childrenData))
             childrenData.repliesCustomParsed = Replies("t3", RepliesData(children = replyChildren))
             val commentResponseData = CommentResponseData(after = "", before = "", children = children)
             return CommentResponse("t1", commentResponseData, getPost())

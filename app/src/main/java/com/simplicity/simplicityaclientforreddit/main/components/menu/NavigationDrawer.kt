@@ -38,27 +38,27 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.Remove
 import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 
 @Composable
-fun NavigationDrawer(navigator: NavHostController, close: () -> Unit) {
+fun NavigationDrawer(navigator: NavHostController, closeDrawer: () -> Unit) {
     Column(
         Modifier
             .background(Background)
             .padding(16.dp)
             .fillMaxHeight()
     ) {
-        Profile(navigator, close)
-        VisitedSubs(navigator, close)
+        Profile(navigator, closeDrawer)
+        VisitedSubs(navigator, closeDrawer)
         Spacer(modifier = Modifier.weight(1f))
-        BottomNavigationButtons(navigator, close)
+        BottomNavigationButtons(navigator, closeDrawer)
     }
 }
 
 @Composable
-fun Profile(navigator: NavHostController, close: () -> Unit) {
+fun Profile(navigator: NavHostController, closeDrawer: () -> Unit) {
     val loggedIn = IsLoggedInUseCase().execute()
     if (loggedIn) {
         CText(
             modifier = Modifier.clickable {
-                close.invoke()
+                closeDrawer.invoke()
                 navigator.navigate(NavRoute.MY_PROFILE.path)
             },
             text = "You are logged in"
@@ -66,7 +66,7 @@ fun Profile(navigator: NavHostController, close: () -> Unit) {
     } else {
         CText(
             modifier = Modifier.clickable {
-                close.invoke()
+                closeDrawer.invoke()
                 navigator.navigate(NavRoute.AUTHENTICATION.path)
             },
             text = "Log in by clicking here"
@@ -77,11 +77,11 @@ fun Profile(navigator: NavHostController, close: () -> Unit) {
 }
 
 @Composable
-fun VisitedSubs(navigator: NavHostController, close: () -> Unit) {
+fun VisitedSubs(navigator: NavHostController, closeDrawer: () -> Unit) {
     var visitedSubs by remember { mutableStateOf(GetSubRedditVisitedUseCase().execute()) }
     LazyColumn() {
         items(visitedSubs) {
-            SubRedditMenuItem(it, navigator, close) {
+            SubRedditMenuItem(it, navigator, closeDrawer) {
                 visitedSubs = GetSubRedditVisitedUseCase().execute()
             }
         }
@@ -89,12 +89,15 @@ fun VisitedSubs(navigator: NavHostController, close: () -> Unit) {
 }
 
 @Composable
-fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: () -> Unit, subredditListUpdate: () -> Unit) {
+fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, closeDrawer: () -> Unit, subredditListUpdate: () -> Unit) {
     Column(Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CText(
                 modifier = Modifier
-                    .clickable { NavigationToShowPostsUseCase(navigator, subreddit).execute() }
+                    .clickable {
+                        closeDrawer.invoke()
+                        NavigationToShowPostsUseCase(navigator, subreddit).execute()
+                    }
                     .padding(top = 16.dp, bottom = 16.dp),
                 text = "r/$subreddit",
                 color = OnBackground
@@ -102,7 +105,7 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: ()
             Spacer(
                 modifier = Modifier
                     .clickable {
-                        close.invoke()
+                        closeDrawer.invoke()
                         NavigationToShowPostsUseCase(navigator, subreddit).execute()
                     }
                     .padding(top = 16.dp, bottom = 16.dp)
@@ -124,11 +127,11 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, close: ()
 }
 
 @Composable
-fun BottomNavigationButtons(navigator: NavHostController, close: () -> Unit) {
+fun BottomNavigationButtons(navigator: NavHostController, closeDrawer: () -> Unit) {
     Row() {
         CText(
             Modifier.clickable {
-                close.invoke()
+                closeDrawer.invoke()
                 navigator.navigate(NavRoute.SETTINGS.path)
             },
             text = "Settings",
@@ -137,7 +140,7 @@ fun BottomNavigationButtons(navigator: NavHostController, close: () -> Unit) {
         Spacer(Modifier.width(16.dp))
         CText(
             Modifier.clickable {
-                close.invoke()
+                closeDrawer.invoke()
                 navigator.navigate(NavRoute.SEARCH.path)
             },
             text = "Search",
