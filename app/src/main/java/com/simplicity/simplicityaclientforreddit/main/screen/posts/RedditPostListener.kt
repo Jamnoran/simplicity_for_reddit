@@ -14,12 +14,13 @@ class RedditPostListener(
     val subredditClick: (post: RedditPost) -> Unit,
     val redditClick: (post: RedditPost) -> Unit,
     val linkClick: (post: RedditPost) -> Unit,
+    val linkUrlClick: (url: String) -> Unit,
     val showError: (errorMessage: String) -> Unit,
     var postHiddenFromView: () -> Unit,
     var nextPost: () -> Unit
 ) {
     companion object {
-        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
     }
 }
 class RedditCommentListener(

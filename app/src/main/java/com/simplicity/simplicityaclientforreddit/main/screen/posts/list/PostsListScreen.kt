@@ -21,6 +21,7 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenE
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import java.net.URLEncoder
@@ -73,6 +74,9 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
             val encodedUrl = URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())
 //            navigator.navigate(LINK.plus("/").plus(encodedUrl))
 //            navigator.navigate((navigator, encodedUrl))
+        },
+        linkUrlClick = {
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
         subredditClick = {},
         showError = {},

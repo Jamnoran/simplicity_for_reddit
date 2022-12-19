@@ -120,6 +120,9 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         linkClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
         },
+        linkUrlClick = {
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
+        },
         subredditClick = {
             AddSubRedditVisitedUseCase(it.data.subreddit).execute()
             navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit))

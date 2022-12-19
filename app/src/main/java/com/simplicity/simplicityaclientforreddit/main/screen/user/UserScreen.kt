@@ -30,6 +30,8 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenE
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.theme.BodyLarge
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
@@ -71,14 +73,10 @@ fun Show(
                         onLongClick = { expandeduser = !expandeduser }
                     )
                 ) {
-                    user.bannerImg?.let {
-                        CImage(Modifier.fillMaxWidth(), it, ContentScale.FillWidth)
-                    }
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        user.name?.let { CText(modifier = Modifier.clickable { logic.updateScreen() }, text = "u/$it", style = BodyLarge) }
-                        user.created?.let { CText(text = GetTimeAgoUseCase().execute(it)) }
-                        user.totalKarma?.let { CText(text = "Karma: $it") }
-                        user.subreddit?.publicDescription?.let { CText(text = "Description: $it") }
+                    if (expandeduser) {
+                        ExpandedUser(user, logic)
+                    } else {
+                        CollapsedUser(user, logic)
                     }
                 }
                 // Posts
@@ -99,6 +97,26 @@ fun Show(
     }
 }
 
+@Composable
+fun CollapsedUser(user: User, logic: UserLogic) {
+    Column(modifier = Modifier.padding(8.dp)) {
+        user.name?.let { CText(modifier = Modifier.clickable { logic.updateScreen() }, text = "u/$it", style = BodyLarge) }
+    }
+}
+
+@Composable
+fun ExpandedUser(user: User, logic: UserLogic) {
+    user.bannerImg?.let {
+        CImage(Modifier.fillMaxWidth(), it, ContentScale.FillWidth)
+    }
+    Column(modifier = Modifier.padding(8.dp)) {
+        user.name?.let { CText(modifier = Modifier.clickable { logic.updateScreen() }, text = "u/$it", style = BodyLarge) }
+        user.created?.let { CText(text = GetTimeAgoUseCase().execute(it)) }
+        user.totalKarma?.let { CText(text = "Karma: $it") }
+        user.subreddit?.publicDescription?.let { CText(text = "Description: $it") }
+    }
+}
+
 fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListener {
     return RedditPostListener(
         downVote = { },
@@ -108,9 +126,10 @@ fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListe
         shareClick = {},
         readComments = {},
         linkClick = {
-            val encodedUrl = URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())
-//            navigator.navigate(LINK.plus("/").plus(encodedUrl))
-//            navigator.navigate((navigator, encodedUrl))
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
+        },
+        linkUrlClick = {
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
         subredditClick = {},
         showError = {},

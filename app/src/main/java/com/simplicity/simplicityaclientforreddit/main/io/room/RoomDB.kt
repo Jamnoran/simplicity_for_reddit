@@ -70,6 +70,14 @@ class RoomDB {
         db.close()
     }
 
+    fun showSub(subName: String) {
+        val db = db()
+        val dao = db.hiddenSubsDao()
+        val hiddenSub = dao.findBSub(subName)
+        hiddenSub?.let { dao.delete(hiddenSub = it) }
+        db.close()
+    }
+
     fun deleteAllHiddenSubs() {
         val db = db()
         val dao = db.hiddenSubsDao()

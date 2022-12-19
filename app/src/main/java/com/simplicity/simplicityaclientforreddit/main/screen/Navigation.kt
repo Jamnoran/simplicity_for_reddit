@@ -23,8 +23,8 @@ import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.USER
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.WEB_VIEW
 import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.AuthenticateNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.result.AuthenticationResultNavigation
-import com.simplicity.simplicityaclientforreddit.main.screen.comments2.Comments2Input
-import com.simplicity.simplicityaclientforreddit.main.screen.comments2.Comments2Navigation
+import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsInput
+import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.PostDetailNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.list.PostsListNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.single.SingleListNavigation
@@ -38,7 +38,7 @@ import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavi
 
 @Composable
 fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
-    NavHost(navController = navController, startDestination = TEST.path) { // SINGLE_LIST POST_DETAIL
+    NavHost(navController = navController, startDestination = SINGLE_LIST.path) { // SINGLE_LIST POST_DETAIL
         composable(POSTS_LIST.path) {
             PostsListNavigation(navController, navigationListener, "").Launch()
         }
@@ -62,7 +62,7 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
             COMMENTS.withArgsFormat(COMMENTS.postId, COMMENTS.subReddit),
             NavRoute.run { getArguments(listOf(COMMENTS.postId, COMMENTS.subReddit)) }
         ) { stack ->
-            Comments2Navigation(navController).Launch(Comments2Input(stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)))
+            CommentsNavigation(navController).Launch(CommentsInput(stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)))
         }
         composable(TEST.path) { TestNavigation(navController).Launch() }
         composable(AUTHENTICATION.path) { AuthenticateNavigation(navController, navigationListener).Launch() }
