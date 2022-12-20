@@ -18,8 +18,8 @@ android {
         applicationId "com.simplicity.simplicityaclientforreddit"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 9
-        versionName "1.8.5"
+        versionCode 15
+        versionName "1.8.8"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
