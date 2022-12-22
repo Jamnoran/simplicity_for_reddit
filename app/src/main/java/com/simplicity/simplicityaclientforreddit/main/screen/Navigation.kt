@@ -26,6 +26,8 @@ import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.result
 import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsInput
 import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.PostDetailNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.posts.fullscreen.image.FullScreenImageInput
+import com.simplicity.simplicityaclientforreddit.main.screen.posts.fullscreen.image.FullScreenImageNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.list.PostsListNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.single.SingleListNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.profile.MyProfileNavigation
@@ -71,6 +73,9 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
         composable(WEB_VIEW.withArgsFormat(WEB_VIEW.url), NavRoute.getArguments(WEB_VIEW.url)) { stack ->
             WebViewNavigation(navController, stack.arg(WEB_VIEW.url)).Launch()
         }
+        composable(NavRoute.FULL_SCREEN_IMAGE.withArgsFormat(NavRoute.FULL_SCREEN_IMAGE.url), NavRoute.getArguments(NavRoute.FULL_SCREEN_IMAGE.url)) { stack ->
+            FullScreenImageNavigation(navController).Launch(FullScreenImageInput(stack.arg(NavRoute.FULL_SCREEN_IMAGE.url)))
+        }
     }
 }
 
@@ -96,6 +101,9 @@ sealed class NavRoute(val path: String) {
     object SEARCH : NavRoute("search")
     object HIDDEN_SUBS : NavRoute("hiddenSubs")
     object WEB_VIEW : NavRoute("link") {
+        const val url = "url"
+    }
+    object FULL_SCREEN_IMAGE : NavRoute("full_screen_image") {
         const val url = "url"
     }
 

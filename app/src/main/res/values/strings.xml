@@ -23,6 +23,7 @@
     <string name="settings_scroll_volume">Navigate to next by using volume down</string>
     <string name="settings_use_cache_for_posts">Use cache to filter out read posts</string>
     <string name="settings_show_list_or_single">Show posts using a list or one at a time (Requires restart)</string>
+    <string name="settings_expand_post_link_in_webview">Expand links under post</string>
     <string name="show_full_links_under_post">Show full links under the post</string>
 
     <!--            General                  -->

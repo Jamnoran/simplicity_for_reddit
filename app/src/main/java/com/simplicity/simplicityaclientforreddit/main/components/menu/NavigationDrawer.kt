@@ -35,27 +35,22 @@ import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
 import com.simplicity.simplicityaclientforreddit.main.usecases.compose.NavigationToShowPostsUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.GetSubRedditVisitedUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.RemoveSubRedditVisitedUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 
 @Composable
-fun NavigationDrawer(navigator: NavHostController, closeDrawer: () -> Unit) {
+fun NavigationDrawer(navigator: NavHostController, closeDrawer: () -> Unit, isLoggedIn: Boolean) {
     Column(
-        Modifier
-            .background(Background)
-            .padding(16.dp)
-            .fillMaxHeight()
+        Modifier.background(Background).padding(16.dp).fillMaxHeight()
     ) {
-        Profile(navigator, closeDrawer)
-        VisitedSubs(navigator, closeDrawer)
-        Spacer(modifier = Modifier.weight(1f))
+        Profile(navigator = navigator, closeDrawer = closeDrawer, isLoggedIn = isLoggedIn)
+        VisitedSubs(Modifier.weight(1F), navigator, closeDrawer)
+//        Spacer(modifier = Modifier.weight(1f))
         BottomNavigationButtons(navigator, closeDrawer)
     }
 }
 
 @Composable
-fun Profile(navigator: NavHostController, closeDrawer: () -> Unit) {
-    val loggedIn = IsLoggedInUseCase().execute()
-    if (loggedIn) {
+fun Profile(navigator: NavHostController, closeDrawer: () -> Unit, isLoggedIn: Boolean = true) {
+    if (isLoggedIn) {
         CText(
             modifier = Modifier.clickable {
                 closeDrawer.invoke()
@@ -77,9 +72,9 @@ fun Profile(navigator: NavHostController, closeDrawer: () -> Unit) {
 }
 
 @Composable
-fun VisitedSubs(navigator: NavHostController, closeDrawer: () -> Unit) {
+fun VisitedSubs(modifier: Modifier, navigator: NavHostController, closeDrawer: () -> Unit) {
     var visitedSubs by remember { mutableStateOf(GetSubRedditVisitedUseCase().execute()) }
-    LazyColumn() {
+    LazyColumn(modifier) {
         items(visitedSubs) {
             SubRedditMenuItem(it, navigator, closeDrawer) {
                 visitedSubs = GetSubRedditVisitedUseCase().execute()
@@ -93,23 +88,18 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, closeDraw
     Column(Modifier.fillMaxWidth()) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             CText(
-                modifier = Modifier
-                    .clickable {
-                        closeDrawer.invoke()
-                        NavigationToShowPostsUseCase(navigator, subreddit).execute()
-                    }
-                    .padding(top = 16.dp, bottom = 16.dp),
+                modifier = Modifier.clickable {
+                    closeDrawer.invoke()
+                    NavigationToShowPostsUseCase(navigator, subreddit).execute()
+                }.padding(top = 16.dp, bottom = 16.dp),
                 text = "r/$subreddit",
                 color = OnBackground
             )
             Spacer(
-                modifier = Modifier
-                    .clickable {
-                        closeDrawer.invoke()
-                        NavigationToShowPostsUseCase(navigator, subreddit).execute()
-                    }
-                    .padding(top = 16.dp, bottom = 16.dp)
-                    .weight(1f)
+                modifier = Modifier.clickable {
+                    closeDrawer.invoke()
+                    NavigationToShowPostsUseCase(navigator, subreddit).execute()
+                }.padding(top = 16.dp, bottom = 16.dp).weight(1f)
             )
             Icon(
                 modifier = Modifier.clickable {
@@ -151,16 +141,24 @@ fun BottomNavigationButtons(navigator: NavHostController, closeDrawer: () -> Uni
 
 @Preview
 @Composable
-fun PreviewNavigationDrawer() {
+fun PreviewLoggedOut() {
     Column() {
-        NavigationDrawer(navigator = rememberNavController()) {}
+        NavigationDrawer(navigator = rememberNavController(), isLoggedIn = false, closeDrawer = {})
     }
 }
 
 @Preview
 @Composable
-fun PreviewNavigationDrawerItems() {
+fun PreviewLoggedIn() {
     Column() {
-        SubRedditMenuItem(subreddit = "Aww", navigator = rememberNavController(), {}) {}
+        NavigationDrawer(navigator = rememberNavController(), isLoggedIn = true, closeDrawer = {})
+    }
+}
+
+@Preview
+@Composable
+fun PreviewVisitedSub() {
+    Column() {
+        SubRedditMenuItem(subreddit = "Aww", navigator = rememberNavController(), closeDrawer = {}) {}
     }
 }

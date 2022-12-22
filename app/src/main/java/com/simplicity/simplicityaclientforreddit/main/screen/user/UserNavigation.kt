@@ -8,7 +8,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 
-class UserNavigation(private val navController: NavHostController, private val navigationListener: NavigationListener, private val userName: String) {
+class UserNavigation(
+    private val navController: NavHostController,
+    private val navigationListener: NavigationListener,
+    private val userName: String
+) {
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
     @Composable

@@ -83,5 +83,34 @@ class TesterHelper {
                 )
             )
         }
+
+        fun subRedditVisited(): List<String> {
+            return listOf(
+                "aww",
+                "aww",
+                "aww",
+                "aww",
+                "asdf",
+                "aww",
+                "aww",
+                "aww",
+                "wyretwer",
+                "aww",
+                "afdgsdf",
+                "aww",
+                "aww",
+                "asdgag",
+                "aww",
+                "aww",
+                "aww",
+                "xvbcc",
+                "aww",
+                "aww",
+                "aww",
+                "liasjfdlaksjdflakjsdflkajsdflkajfdslkajdsflkajfdslkajsf",
+                "aww",
+                "coolstuff"
+            )
+        }
     }
 }

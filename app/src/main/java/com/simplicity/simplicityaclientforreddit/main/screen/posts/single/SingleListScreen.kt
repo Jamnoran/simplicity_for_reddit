@@ -33,6 +33,7 @@ import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostLis
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.BottomBar
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.AddSubRedditVisitedUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -43,7 +44,9 @@ fun SingleListScreen(navigator: NavHostController, logic: SingleListLogic, uiSta
     when (uiState) {
         is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
         is UiState.Error -> ScreenError()
-        is UiState.Empty -> { ScreenEmpty() }
+        is UiState.Empty -> {
+            ScreenEmpty()
+        }
         is UiState.Success -> Screen(
             navigator = navigator,
             data = uiState.data,
@@ -72,37 +75,28 @@ fun Screen(
             scrollState.scrollTo(0)
         }
     }
-    Scaffold(
-        scaffoldState = scaffoldState,
-        drawerContent = {
-            NavigationDrawer(navigator = navigator) {
-                coroutineScope.launch {
-                    scaffoldState.drawerState.close()
-                }
+    Scaffold(scaffoldState = scaffoldState, drawerContent = {
+        NavigationDrawer(navigator = navigator, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {
+            coroutineScope.launch {
+                scaffoldState.drawerState.close()
             }
-        }
-    ) { paddingValues ->
+        })
+    }) { paddingValues ->
         DefaultScreen(Modifier.padding(paddingValues)) {
             Box(
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+                Modifier.fillMaxWidth().fillMaxHeight()
             ) {
                 Column(Modifier.verticalScroll(scrollState)) {
                     data.redditPost?.let { Post(post = it, listener) }
                     Spacer(modifier = Modifier.height(100.dp))
                 }
-                BottomBar(
-                    Modifier.align(Alignment.BottomCenter),
-                    navigateToNext = {
-                        listener.postHiddenFromView.invoke()
-                        nextItem.invoke()
-                    },
-                    navigateToPrevious = {
+                BottomBar(Modifier.align(Alignment.BottomCenter), navigateToNext = {
+                    listener.postHiddenFromView.invoke()
+                    nextItem.invoke()
+                }, navigateToPrevious = {
                         listener.postHiddenFromView.invoke()
                         previousItem.invoke()
-                    }
-                )
+                    })
             }
         }
     }
@@ -130,7 +124,13 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         showError = { },
         hideSubClick = { logic.hideReddit(it.data.subreddit) },
         postHiddenFromView = {},
-        nextPost = { logic.nextPost() }
+        nextPost = { logic.nextPost() },
+        fullScreen = {
+            it.data.url?.let { imageUrl ->
+//                navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(imageUrl))
+                navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
+            }
+        }
     )
 }
 
@@ -138,12 +138,6 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Screen(
-            rememberNavController(),
-            Data(TesterHelper.getPost()),
-            RedditPostListener.preview(),
-            nextItem = {},
-            previousItem = {}
-        )
+        Screen(rememberNavController(), Data(TesterHelper.getPost()), RedditPostListener.preview(), nextItem = {}, previousItem = {})
     }
 }

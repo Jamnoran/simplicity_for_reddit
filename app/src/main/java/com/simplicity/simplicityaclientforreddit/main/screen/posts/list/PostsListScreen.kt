@@ -24,6 +24,7 @@ import com.simplicity.simplicityaclientforreddit.main.models.external.posts.Redd
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
+import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -50,7 +51,7 @@ fun Screen(
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        drawerContent = { NavigationDrawer(navigator) {} }
+        drawerContent = { NavigationDrawer(navigator, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {}) }
     ) { paddingValues ->
         Column(Modifier.padding(paddingValues)) {
             LazyColumn {
@@ -83,7 +84,8 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
         hideSubClick = {},
         postHiddenFromView = {},
         nextPost = {},
-        clearVote = {}
+        clearVote = {},
+        fullScreen = {}
     )
 }
 

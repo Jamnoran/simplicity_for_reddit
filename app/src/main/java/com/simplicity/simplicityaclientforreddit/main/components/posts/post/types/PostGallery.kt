@@ -17,9 +17,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -29,6 +29,7 @@ import com.simplicity.simplicityaclientforreddit.main.components.texts.OnSurface
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.theme.CRoundedCorners
 import com.simplicity.simplicityaclientforreddit.main.theme.Surface
 import com.simplicity.simplicityaclientforreddit.main.theme.Transparent
 import com.simplicity.simplicityaclientforreddit.main.usecases.media.GalleryItem
@@ -63,7 +64,11 @@ fun PostGallery(post: RedditPost, listener: RedditPostListener) {
             }
             // GalleryCounter
             val displayPosition = position + 1
-            OnSurfaceText(Modifier.fillMaxWidth().padding(8.dp), textAlign = TextAlign.End, text = "$displayPosition/$itemsInGallery")
+            Box(modifier = Modifier.fillMaxWidth().padding(8.dp), contentAlignment = Alignment.TopEnd) {
+                CRoundedCorners {
+                    CText(modifier = Modifier.padding(5.dp), text = "$displayPosition/$itemsInGallery")
+                }
+            }
         }
         galleryData.current?.caption?.let { CText(modifier = Modifier.padding(8.dp).fillMaxWidth().background(Surface), text = it) }
     }
@@ -72,7 +77,10 @@ fun PostGallery(post: RedditPost, listener: RedditPostListener) {
 @Composable
 fun NavigationLeft(modifier: Modifier, click: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
-    Box(modifier.background(Transparent).fillMaxWidth().clickable(interactionSource = interactionSource, indication = null) { click.invoke() }) {
+    Box(
+        modifier.background(Transparent).fillMaxWidth()
+            .clickable(interactionSource = interactionSource, indication = null) { click.invoke() }
+    ) {
         OnSurfaceText(text = "")
     }
 }
@@ -80,7 +88,10 @@ fun NavigationLeft(modifier: Modifier, click: () -> Unit) {
 @Composable
 fun NavigationRight(modifier: Modifier, click: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
-    Box(modifier.background(Transparent).fillMaxWidth().clickable(interactionSource = interactionSource, indication = null) { click.invoke() }) {
+    Box(
+        modifier.background(Transparent).fillMaxWidth()
+            .clickable(interactionSource = interactionSource, indication = null) { click.invoke() }
+    ) {
         OnSurfaceText(text = "")
     }
 }

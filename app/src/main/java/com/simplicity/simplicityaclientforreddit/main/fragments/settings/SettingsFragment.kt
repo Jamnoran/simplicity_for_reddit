@@ -16,6 +16,7 @@ class SettingsFragment : BaseTestFragment<FragmentSettingsBinding, SettingsViewM
         viewModel.setUpSetting(binding.scrollByVolumeButtons.switch1, getString(R.string.settings_scroll_volume), SettingsSP.KEY_SETTINGS_SCROLL_VOLUME, false)
         viewModel.setUpSetting(binding.useCache.switch1, getString(R.string.settings_use_cache_for_posts), SettingsSP.KEY_SETTINGS_USE_CACHE, true)
         viewModel.setUpSetting(binding.showListOrSingle.switch1, getString(R.string.settings_show_list_or_single), SettingsSP.KEY_SETTINGS_USE_LIST, true)
+        viewModel.setUpSetting(binding.showListOrSingle.switch1, getString(R.string.settings_expand_post_link_in_webview), SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)
 
         // Hidden subs
         binding.hiddenSubsSetting.settingTitle.text = resources.getText(R.string.hidden_subs)

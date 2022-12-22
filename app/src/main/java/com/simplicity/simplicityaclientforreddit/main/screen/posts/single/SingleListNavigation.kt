@@ -10,7 +10,7 @@ import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListen
 class SingleListNavigation(
     private val navigator: NavHostController,
     private val navigationListener: NavigationListener,
-    val subreddit: String
+    val subReddit: String
 ) {
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -19,7 +19,7 @@ class SingleListNavigation(
         val logic: SingleListLogic = viewModel()
         val state = logic.state.collectAsStateWithLifecycle()
         val screen = SingleListScreen(navigator, logic, state.value)
-        logic.start(navigationListener = navigationListener, subReddit = subreddit)
+        logic.init(SingleListInput(navigationListener = navigationListener, subReddit = subReddit))
         return screen
     }
 }

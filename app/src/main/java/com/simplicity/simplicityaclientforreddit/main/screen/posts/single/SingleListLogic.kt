@@ -3,7 +3,7 @@ package com.simplicity.simplicityaclientforreddit.main.screen.posts.single
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
+import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
 import com.simplicity.simplicityaclientforreddit.main.io.room.RoomDB
@@ -15,7 +15,7 @@ import com.simplicity.simplicityaclientforreddit.main.utils.RedditListLogicListe
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class SingleListLogic : BaseLogic() {
+class SingleListLogic : BaseComposeLogic<SingleListInput>() {
     private lateinit var navigationListener: NavigationListener
     var subReddit: String = ""
     var redditListLogic: RedditListLogic = RedditListLogic()
@@ -23,7 +23,8 @@ class SingleListLogic : BaseLogic() {
     private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
     val state: StateFlow<UiState<Data>> = _state
 
-    fun start(navigationListener: NavigationListener, subReddit: String = "") {
+    override fun ready(input: SingleListInput) {
+        subReddit = input.subReddit
         val listener = RedditListLogicListener(
             activePost = {
                 foreground {
@@ -40,7 +41,7 @@ class SingleListLogic : BaseLogic() {
         redditListLogic.init(subReddit = subReddit, api = API(), logic = this, listener = listener)
         background { redditListLogic.initList() }
 
-        this.navigationListener = navigationListener
+        this.navigationListener = input.navigationListener
     }
 
     fun nextPost() {

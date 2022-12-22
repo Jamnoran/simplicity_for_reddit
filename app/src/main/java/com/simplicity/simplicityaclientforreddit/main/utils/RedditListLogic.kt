@@ -116,6 +116,10 @@ class RedditListLogic {
         }
     }
 
+    fun getPosts(): ArrayList<RedditPost> {
+        return _posts
+    }
+
     companion object {
         const val TAG: String = "RedditListLogic"
     }

@@ -80,6 +80,11 @@ fun Show(navController: NavHostController, data: String, test: (String) -> Unit)
                 stringResource(R.string.settings_show_list_or_single),
                 SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_USE_LIST, true)
             )
+            SettingsItem(
+                SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST,
+                stringResource(R.string.settings_expand_post_link_in_webview),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)
+            )
         }
     }
 }

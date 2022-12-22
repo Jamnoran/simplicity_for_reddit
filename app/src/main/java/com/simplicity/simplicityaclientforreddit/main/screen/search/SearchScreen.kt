@@ -77,12 +77,18 @@ fun Show(navigator: NavHostController, listOfSubs: List<String>, logic: SearchLo
             Spacer(Modifier.height(16.dp))
             LazyColumn(content = {
                 items(listOfSubs) {
-                    CText(
-                        Modifier.padding(top = 8.dp).padding(8.dp).clickable { NavigationToShowPostsUseCase(navigator, it).execute() },
-                        text = "r/$it",
-                        color = OnBackground
-                    )
-                    Divider(modifier = Modifier.padding(bottom = 8.dp))
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { NavigationToShowPostsUseCase(navigator, it).execute() }
+                    ) {
+                        CText(
+                            modifier = Modifier.padding(8.dp),
+                            text = "r/$it",
+                            color = OnBackground
+                        )
+                        Divider(modifier = Modifier.padding(bottom = 8.dp))
+                    }
                 }
             })
         }

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
@@ -28,7 +29,7 @@ fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiStat
 }
 
 @Composable
-fun Show(navController: NavHostController?, data: String) {
+fun Show(navigator: NavHostController, data: String) {
     Column(Modifier.fillMaxWidth().background(Background).verticalScroll(rememberScrollState())) {
         MarkDownText(Modifier.fillMaxSize(), body = data) {}
     }
@@ -38,6 +39,6 @@ fun Show(navController: NavHostController?, data: String) {
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Show(null, "Testing")
+        Show(rememberNavController(), "Testing")
     }
 }
