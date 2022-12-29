@@ -11,21 +11,23 @@ import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownTyp
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownType.NONE
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownType.SKIP
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownType.STRIKETHROUGH
+
 val linkDescriptionRegexp = "^\\[.{0,99}\\]".toRegex()
 val linkRegexp = "\\(.{0,99}\\)".toRegex()
 
 data class MarkDownData(val type: MarkDownType, val skipToIndex: Int, val charToAdd: CharSequence?, val removeAtIndex: Int)
+data class MarkDownInfo(val type: MarkDownType, val startIndex: Int, val endIndex: Int)
 
-enum class MarkDownType(val preFix: String?, val postFix: String?) {
-    BOLD("**", "**"),
-    BOLD_SECONDARY("__", "__"),
-    ITALIC("*", "*"),
-    ITALIC_SECONDARY("_", "_"),
-    STRIKETHROUGH("~~", "~~"),
-    HEADER_1("#", "\n"),
-    LINK(null, null),
-    NONE(null, null),
-    SKIP(null, null)
+enum class MarkDownType(val preFix: String?, val postFix: String?, val regExp: Regex) {
+    BOLD("**", "**", "(\\*\\*).{0,99}(\\*\\*)".toRegex()),
+    BOLD_SECONDARY("__", "__", "(__).{0,99}(__)".toRegex()),
+    ITALIC("*", "*", "(\\*).{0,99}(\\*)".toRegex()),
+    ITALIC_SECONDARY("_", "_", "(_).{0,99}(_)".toRegex()),
+    STRIKETHROUGH("~~", "~~", "(~~).{0,99}(~~)".toRegex()),
+    HEADER_1("#", "\n", "(#).{0,99}(\n)".toRegex()),
+    LINK("[", ")", "\\[.{0,99}\\]\\(.{0,99}\\)".toRegex()),
+    NONE(null, null, "".toRegex()),
+    SKIP(null, null, "".toRegex())
 }
 
 fun getMarkDown(listOfMarkDownsAlready: ArrayList<MarkDownData>, body: String, index: Int): MarkDownData {

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -54,7 +55,14 @@ fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
         post.data.url?.let {
             Spacer(modifier = Modifier.height(16.dp))
             if (SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)) {
-                CWebView(url = it)
+                val configuration = LocalConfiguration.current
+                val screenHeight = configuration.screenHeightDp.dp
+                val heightOfContent = 300.dp
+                val webViewHeight = screenHeight - heightOfContent
+                CWebView(
+                    modifier = Modifier.height(webViewHeight),
+                    url = it
+                )
             }
         }
     }
@@ -70,10 +78,7 @@ fun ShowPostLinkWithThumbnail(post: RedditPost, listener: RedditPostListener) {
             OnSurface
         )
         Spacer(Modifier.width(8.dp))
-        Column(
-            Modifier.width(140.dp).background(Primary)
-                .clickable { listener.linkClick.invoke(post) }
-        ) {
+        Column(Modifier.width(140.dp).background(Primary).clickable { listener.linkClick.invoke(post) }) {
             // Preview image
             Box(Modifier.width(140.dp).height(80.dp)) {
                 Image(

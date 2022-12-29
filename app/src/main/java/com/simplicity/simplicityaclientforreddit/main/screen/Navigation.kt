@@ -10,8 +10,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.AUTHENTICATION
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.AUTHENTICATION_RESULT
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.COMMENTS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.FULL_SCREEN_IMAGE
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.HIDDEN_SUBS
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.MENU
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.MY_PROFILE
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POSTS_LIST
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POST_DETAIL
@@ -25,6 +28,7 @@ import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.Authen
 import com.simplicity.simplicityaclientforreddit.main.screen.authenticate.result.AuthenticationResultNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsInput
 import com.simplicity.simplicityaclientforreddit.main.screen.comments.CommentsNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.menu.MenuNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.PostDetailNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.fullscreen.image.FullScreenImageInput
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.fullscreen.image.FullScreenImageNavigation
@@ -40,7 +44,10 @@ import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavi
 
 @Composable
 fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
-    NavHost(navController = navController, startDestination = SINGLE_LIST.path) { // SINGLE_LIST POST_DETAIL
+    var startDestination = SINGLE_LIST.path
+    startDestination = TEST.path
+//    startDestination = POST_DETAIL.path
+    NavHost(navController = navController, startDestination = startDestination) { // SINGLE_LIST POST_DETAIL
         composable(POSTS_LIST.path) {
             PostsListNavigation(navController, navigationListener, "").Launch()
         }
@@ -67,14 +74,15 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
             CommentsNavigation(navController).Launch(CommentsInput(stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)))
         }
         composable(TEST.path) { TestNavigation(navController).Launch() }
+        composable(MENU.path) { MenuNavigation(navController).Launch() }
         composable(AUTHENTICATION.path) { AuthenticateNavigation(navController, navigationListener).Launch() }
-        composable(NavRoute.AUTHENTICATION_RESULT.path) { AuthenticationResultNavigation(navController).Launch() }
+        composable(AUTHENTICATION_RESULT.path) { AuthenticationResultNavigation(navController).Launch() }
         composable(HIDDEN_SUBS.path) { HiddenSubsNavigation(navController).Launch() }
         composable(WEB_VIEW.withArgsFormat(WEB_VIEW.url), NavRoute.getArguments(WEB_VIEW.url)) { stack ->
             WebViewNavigation(navController, stack.arg(WEB_VIEW.url)).Launch()
         }
-        composable(NavRoute.FULL_SCREEN_IMAGE.withArgsFormat(NavRoute.FULL_SCREEN_IMAGE.url), NavRoute.getArguments(NavRoute.FULL_SCREEN_IMAGE.url)) { stack ->
-            FullScreenImageNavigation(navController).Launch(FullScreenImageInput(stack.arg(NavRoute.FULL_SCREEN_IMAGE.url)))
+        composable(FULL_SCREEN_IMAGE.withArgsFormat(FULL_SCREEN_IMAGE.url), NavRoute.getArguments(FULL_SCREEN_IMAGE.url)) { stack ->
+            FullScreenImageNavigation(navController).Launch(FullScreenImageInput(stack.arg(FULL_SCREEN_IMAGE.url)))
         }
     }
 }
@@ -113,6 +121,7 @@ sealed class NavRoute(val path: String) {
     }
 
     object TEST : NavRoute("test")
+    object MENU : NavRoute("menu")
     object AUTHENTICATION : NavRoute("authentication")
     object AUTHENTICATION_RESULT : NavRoute("authentication_result")
 

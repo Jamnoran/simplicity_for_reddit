@@ -4,13 +4,10 @@ import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -21,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
-import com.simplicity.simplicityaclientforreddit.main.components.menu.NavigationDrawer
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.Post
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenEmpty
@@ -30,10 +26,10 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenL
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
-import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.BottomBar
+import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.BottomNavigationBar
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
+import com.simplicity.simplicityaclientforreddit.main.usecases.post.IsPostRequiringFulLScreenUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.AddSubRedditVisitedUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -69,37 +65,50 @@ fun Screen(
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val scrollingEnabled = !IsPostRequiringFulLScreenUseCase(data.redditPost).execute()
+    Log.i("SingleListScreen", "Scrolling enabled = $scrollingEnabled!")
     data.scrollToTop?.let {
         Log.i("SingleListScreen", "Trying to scroll to the top!")
         coroutineScope.launch {
             scrollState.scrollTo(0)
         }
     }
-    Scaffold(scaffoldState = scaffoldState, drawerContent = {
-        NavigationDrawer(navigator = navigator, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {
-            coroutineScope.launch {
-                scaffoldState.drawerState.close()
+//    Scaffold(scaffoldState = scaffoldState, drawerContent = {
+//        NavigationDrawer(navigator = navigator, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {
+//            coroutineScope.launch {
+//                scaffoldState.drawerState.close()
+//            }
+//        })
+//    }) { paddingValues ->
+    DefaultScreen(Modifier) {
+        Box(
+            Modifier.fillMaxSize()
+        ) {
+            val modifier = if (scrollingEnabled) Modifier.verticalScroll(scrollState) else Modifier
+            Column(modifier) {
+                data.redditPost?.let { Post(post = it, listener) }
+                Spacer(modifier = Modifier.height(100.dp))
             }
-        })
-    }) { paddingValues ->
-        DefaultScreen(Modifier.padding(paddingValues)) {
-            Box(
-                Modifier.fillMaxWidth().fillMaxHeight()
-            ) {
-                Column(Modifier.verticalScroll(scrollState)) {
-                    data.redditPost?.let { Post(post = it, listener) }
-                    Spacer(modifier = Modifier.height(100.dp))
-                }
-                BottomBar(Modifier.align(Alignment.BottomCenter), navigateToNext = {
+            BottomNavigationBar(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                navigateToNext = {
                     listener.postHiddenFromView.invoke()
                     nextItem.invoke()
-                }, navigateToPrevious = {
-                        listener.postHiddenFromView.invoke()
-                        previousItem.invoke()
-                    })
-            }
+                    Log.i("TestScreen", "Next")
+                },
+                navigateToPrevious = {
+                    listener.postHiddenFromView.invoke()
+                    previousItem.invoke()
+                    Log.i("TestScreen", "Previous")
+                },
+                navigateToSettings = {
+                    Log.i("TestScreen", "Open Settings")
+                    navigator.navigate(NavRoute.MENU.path)
+                }
+            )
         }
     }
+//    }
 }
 
 fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPostListener {

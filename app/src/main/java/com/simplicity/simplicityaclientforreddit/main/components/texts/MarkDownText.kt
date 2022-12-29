@@ -23,6 +23,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 import com.simplicity.simplicityaclientforreddit.main.theme.Primary
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownData
+import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownInfo
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownType
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.getMarkDown
 
@@ -138,58 +139,40 @@ fun getStyle(listOfMarkDowns: java.util.ArrayList<MarkDownData>): SpanStyle {
     )
 }
 
-// @Composable
-// fun LinkableText(modifier: Modifier, body: String) {
-//    // # Heading\n\n**This is bold text**\n\n*Italic text*\n\n**Mixed bold**
-//    val annotatedLinkString: AnnotatedString = buildAnnotatedString {
-//        pushStyle(style = SpanStyle(color = OnSurface))
-//        var pauseAppendUntilIndex = -1
-//        for (index in body.indices) {
-//            if (pauseAppendUntilIndex == -1) {
-//                pauseAppendUntilIndex = markDown(body, index, this)
-//                if (pauseAppendUntilIndex != -1) {
-//                    Log.i(
-//                        "LinkableText",
-//                        "Found markdown with start index[$index] and end[$pauseAppendUntilIndex]"
-//                    )
-//                }
-//            } else {
-//                if (pauseAppendUntilIndex == index) {
-//                    pauseAppendUntilIndex = -1
-//                }
-//            }
-//        }
-//    }
-//
-//    ClickableText(
-//        modifier = modifier,
-//        text = annotatedLinkString,
-//        onClick = {
-//            Log.i("MarkDownText", "LinkableText on position $it")
-//        }
-//    )
-// }
-
-// fun markDown(body: String, index: Int, builder: AnnotatedString.Builder): Int {
-//    val markDownStart = "**"
-//    val markDownEnd = "**"
-//    val restText = body.substring(index)
-//    if (restText.startsWith(markDownStart)) {
-//        val restOfStringAfterPrefix = restText.substring(markDownStart.length)
-//        val indexOfEnd = restOfStringAfterPrefix.indexOf(markDownEnd)
-//        builder.append(restOfStringAfterPrefix.substring(0, indexOfEnd))
-//        builder.addStyle(
-//            style = SpanStyle(
-//                fontWeight = FontWeight.Bold
-//            ),
-//            start = index,
-//            end = indexOfEnd
-//        )
-//        return index + indexOfEnd + markDownEnd.length + 1
-//    }
-//    builder.append(body[index])
-//    return -1
-// }
+fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
+    // LocalTextStyle.current.copy(textDecoration = TextDecoration.LineThrough)
+    var fontWeight = FontWeight.Normal
+    var fontStyle = FontStyle.Normal
+    var fontColor = OnBackground
+    var textDecoration = TextDecoration.None
+    var fontSize = 16.sp
+    when (markdown.type) {
+        MarkDownType.BOLD,
+        MarkDownType.BOLD_SECONDARY -> fontWeight = FontWeight.Bold
+        MarkDownType.ITALIC,
+        MarkDownType.ITALIC_SECONDARY -> {
+            fontStyle = FontStyle.Italic
+        }
+        MarkDownType.STRIKETHROUGH -> {
+            textDecoration = TextDecoration.LineThrough
+        }
+        MarkDownType.LINK -> {
+            fontColor = Primary
+            textDecoration = TextDecoration.Underline
+        }
+        MarkDownType.NONE,
+        MarkDownType.SKIP -> {
+        }
+        MarkDownType.HEADER_1 -> fontSize = 34.sp
+    }
+    return SpanStyle(
+        fontWeight = fontWeight,
+        fontStyle = fontStyle,
+        fontSize = fontSize,
+        textDecoration = textDecoration,
+        color = fontColor
+    )
+}
 
 @Preview
 @Composable
