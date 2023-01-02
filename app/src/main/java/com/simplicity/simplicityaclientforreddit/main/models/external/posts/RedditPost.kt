@@ -41,6 +41,8 @@ data class RedditPost(
         var galleryData: GalleryData?,
         @SerializedName("post_hint")
         var postHint: String?,
-        var preview: Preview?
+        var preview: Preview?,
+        @SerializedName("crosspost_parent_list")
+        var crosspostParentList: List<Data>?
     )
 }

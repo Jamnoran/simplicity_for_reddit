@@ -13,6 +13,7 @@ class HasPostVideoUseCase {
             PostType.IMGUR_LINK,
             PostType.NONE,
             PostType.DELETED,
+            PostType.REDDIT_REPOST,
             PostType.YOUTUBE -> false
             PostType.IS_VIDEO,
             PostType.RICH_VIDEO -> true

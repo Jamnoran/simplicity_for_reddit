@@ -7,10 +7,11 @@ import com.simplicity.simplicityaclientforreddit.main.base.BaseActivity
 import com.simplicity.simplicityaclientforreddit.main.base.BaseTestFragment
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
 
-class CommentsFragment(var subreddit: String, var postId: String, var author: String) : BaseTestFragment<CommentsFragmentBinding, CommentsViewModel>(
-    CommentsViewModel::class.java,
-    CommentsFragmentBinding::inflate
-) {
+class CommentsFragment(var subreddit: String, var postId: String, var author: String) :
+    BaseTestFragment<CommentsFragmentBinding, CommentsViewModel>(
+        CommentsViewModel::class.java,
+        CommentsFragmentBinding::inflate
+    ) {
     private val TAG: String = "CommentsFragment"
 
     override fun ready(savedInstanceState: Bundle?) {
@@ -34,10 +35,11 @@ class CommentsFragment(var subreddit: String, var postId: String, var author: St
     private fun observeComments(comments: CommentResponse) {
         comments.commentResponseData?.let {
             val wrappedList = ArrayList<CommentViewHolder>()
-            for (child in it.children) {
-                wrappedList.add(CommentViewHolder(CommentViewData(child), viewModel, author))
+            it.children?.let { children ->
+                for (child in children) {
+                    wrappedList.add(CommentViewHolder(CommentViewData(child), viewModel, author))
+                }
             }
-
             submitList(wrappedList as ArrayList<Any>)
         }
     }

@@ -6,30 +6,22 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
-import com.simplicity.simplicityaclientforreddit.main.components.menu.NavigationDrawer
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.Post
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
@@ -37,10 +29,10 @@ import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
+import com.simplicity.simplicityaclientforreddit.main.theme.Shape
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.theme.Transparent
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.IsPostRequiringFulLScreenUseCase
-import com.simplicity.simplicityaclientforreddit.main.usecases.user.IsLoggedInUseCase
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -70,48 +62,12 @@ fun Screen(
     listener: RedditPostListener
 ) {
     val scrollState = rememberScrollState()
-    val scaffoldState = rememberScaffoldState()
     val scrollingEnabled = !IsPostRequiringFulLScreenUseCase(data).execute()
     val modifier = if (scrollingEnabled) Modifier.verticalScroll(scrollState) else Modifier
-    Scaffold(
-        scaffoldState = scaffoldState,
-        drawerContent = { NavigationDrawer(navController, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {}) }
-    ) { paddingValues ->
-        val nestedScrollInterop = rememberNestedScrollInteropConnection()
-        Column(modifier.padding(paddingValues).nestedScroll(nestedScrollInterop)) {
-            Post(post = data, listener)
-        }
+    Column(modifier) {
+        Post(post = data, listener)
+        Spacer(modifier = Modifier.height(Shape.BOTTOM_NAV_HEIGHT))
     }
-
-    val backdropState = rememberBackdropScaffoldState(BackdropValue.Revealed)
-//    val frontLayerHeightDp = LocalConfiguration.current.screenHeightDp / 3
-    val frontLayerHeightDp = 100.dp
-
-//    BackdropScaffold(
-//        modifier = modifier,
-//        scaffoldState = backdropState,
-//        peekHeight = 0.dp,
-//        headerHeight = frontLayerHeightDp,
-//        frontLayerScrimColor = Transparent,
-//        appBar = {},
-//        backLayerContent = {
-//            Column(modifier) {
-//                Post(post = data, listener)
-//            }
-//        },
-//        frontLayerContent = {
-//            Column {
-//                BottomBar(Modifier, navigateToNext = {
-// //                    listener.postHiddenFromView.invoke()
-// //                    nextItem.invoke()
-//                }, navigateToPrevious = {
-// //                    listener.postHiddenFromView.invoke()
-// //                    previousItem.invoke()
-//                })
-//                NavigationDrawer(navController, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {})
-//            }
-//        }
-//    )
 }
 
 @Composable
@@ -122,7 +78,7 @@ fun BottomBar(modifier: Modifier, navigateToNext: () -> Unit, navigateToPrevious
             Modifier
                 .background(Transparent)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(0.3f)
                 .clickable(interactionSource = interactionSource, indication = null) { navigateToPrevious.invoke() }
         )
@@ -130,7 +86,7 @@ fun BottomBar(modifier: Modifier, navigateToNext: () -> Unit, navigateToPrevious
             Modifier
                 .background(Transparent)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(0.7f)
                 .clickable(interactionSource = interactionSource, indication = null) { navigateToNext.invoke() }
         )
@@ -145,7 +101,7 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
             Modifier
                 .background(Transparent)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
                 .clickable(interactionSource = interactionSource, indication = null) { navigateToPrevious.invoke() }
         )
@@ -153,7 +109,7 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
             Modifier
                 .background(Transparent)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
                 .clickable(interactionSource = interactionSource, indication = null) { navigateToSettings.invoke() }
         )
@@ -161,7 +117,7 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
             Modifier
                 .background(Transparent)
                 .fillMaxWidth()
-                .height(100.dp)
+                .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
                 .clickable(interactionSource = interactionSource, indication = null) { navigateToNext.invoke() }
         )

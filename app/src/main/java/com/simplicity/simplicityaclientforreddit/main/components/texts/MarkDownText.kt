@@ -13,68 +13,39 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.google.gson.Gson
 import com.simplicity.simplicityaclientforreddit.main.models.internal.MarkDownSigns
-import com.simplicity.simplicityaclientforreddit.main.models.internal.data.MarkDownLink
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 import com.simplicity.simplicityaclientforreddit.main.theme.Primary
-import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownData
+import com.simplicity.simplicityaclientforreddit.main.theme.Typography.Companion.DEFAULT_TEXT_SIZE
+import com.simplicity.simplicityaclientforreddit.main.theme.Typography.Companion.HEADER_4_TEXT_SIZE
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownInfo
 import com.simplicity.simplicityaclientforreddit.main.utils.markdown.MarkDownType
-import com.simplicity.simplicityaclientforreddit.main.utils.markdown.getMarkDown
 
 class Link(val linkText: String, val externalUrl: String? = null, val onClick: (String) -> Unit)
 
 @Composable
-fun MarkDownText(modifier: Modifier, body: String, linkClicked: (String) -> Unit) {
-    val bodyAfterPreReplacing = replaceBaseCharacters(body)
+fun MarkDownText(modifier: Modifier = Modifier, body: String, linkClicked: (String) -> Unit) {
+    val listOfMarkDowns = ArrayList<MarkDownInfo>()
 
-    var pauseAppendUntilIndex = -1
-    val listOfMarkDowns = ArrayList<MarkDownData>()
+    // Do a rundown of all characters that's should be converted before markdown handling
+    var text = replaceBaseCharacters(body)
+    // Find all markdowns
+    for (style in listOf(MarkDownType.BOLD, MarkDownType.STRIKETHROUGH, MarkDownType.ITALIC, MarkDownType.LINK, MarkDownType.HEADER_1)) {
+        text = markDown(style, listOfMarkDowns, text)
+    }
+
+    // Replace all encapsulated characters
+    text = replaceEncapsulatedCharacters(text)
+
+    // Add all markdown styles
     val annotatedLinkString: AnnotatedString = buildAnnotatedString {
         pushStyle(style = SpanStyle(color = OnSurface))
-        for (index in bodyAfterPreReplacing.indices) {
-            listOfMarkDowns.removeAll { it.removeAtIndex == index }
-            if (pauseAppendUntilIndex == index) {
-                pauseAppendUntilIndex = -1
-            }
-            if (pauseAppendUntilIndex == -1) {
-                val markDownType: MarkDownData = getMarkDown(listOfMarkDowns, bodyAfterPreReplacing, index)
-                markDownType.let { type ->
-                    pauseAppendUntilIndex = type.skipToIndex
-                    if (type.type != MarkDownType.NONE && type.type != MarkDownType.SKIP) {
-                        listOfMarkDowns.add(type)
-                    }
-                    when (type.type) {
-                        MarkDownType.SKIP -> {}
-                        MarkDownType.LINK -> {
-                            val startLinkIndex = length
-                            val markDownLink = Gson().fromJson(type.charToAdd.toString(), MarkDownLink::class.java)
-                            withStyle(getStyle(listOfMarkDowns)) {
-                                append(markDownLink.description)
-                            }
-                            val endLinkIndex = length
-                            addStringAnnotation(
-                                tag = "URL",
-                                annotation = markDownLink.url,
-                                start = startLinkIndex,
-                                end = endLinkIndex
-                            )
-                        }
-                        else -> {
-                            type.charToAdd?.let { char ->
-                                withStyle(getStyle(listOfMarkDowns)) {
-                                    append(char)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        append(text)
+        for (style in listOfMarkDowns) {
+//            Log.i("TestScreen", "Adding style : ${style.type} to index : ${style.startIndex} - ${style.endIndex}")
+            addStyle(getStyleFromInfo(style), style.startIndex, style.endIndex)
         }
     }
 
@@ -82,7 +53,6 @@ fun MarkDownText(modifier: Modifier, body: String, linkClicked: (String) -> Unit
         modifier = modifier,
         text = annotatedLinkString,
         onClick = {
-//            Log.i("MarkDownText", "LinkableText on position $it")
             annotatedLinkString
                 .getStringAnnotations("URL", it, it)
                 .firstOrNull()?.let { markDownClickable ->
@@ -91,6 +61,68 @@ fun MarkDownText(modifier: Modifier, body: String, linkClicked: (String) -> Unit
                 }
         }
     )
+}
+
+fun replaceEncapsulatedCharacters(text: String): String {
+    var replacedText = text
+    replacedText = replacedText.replace("\\[", "[")
+    replacedText = replacedText.replace("\\]", "]")
+    return replacedText
+}
+
+fun markDown(markDownType: MarkDownType, listOfMarkDowns: java.util.ArrayList<MarkDownInfo>, input: String): String {
+    var text = input
+    when (markDownType) {
+        MarkDownType.BOLD_SECONDARY -> return text
+        MarkDownType.ITALIC_SECONDARY -> return text
+        MarkDownType.NONE -> return text
+        MarkDownType.SKIP -> return text
+        else -> {}
+    }
+    val iterator = markDownType.regExp.findAll(text, 0).iterator()
+
+    // Add all markdowns in an array
+    iterator.forEachRemaining { markDownRegExpResult ->
+        val endIndex = markDownRegExpResult.range.last - (markDownType.preFix?.length ?: 1) + 1
+        listOfMarkDowns.add(MarkDownInfo(markDownType, markDownRegExpResult.range.first, endIndex))
+    }
+    // Remove all markdown characters in text making it presentable to user
+    for (style in listOfMarkDowns) {
+        val startPreFixIndex = style.startIndex
+        val endPrefixIndex = style.endIndex
+        style.type.preFix?.let { preFix ->
+            val countOfPrefixChars = preFix.length
+            val endIndex = startPreFixIndex + countOfPrefixChars - 1
+            for (i in startPreFixIndex..endIndex) {
+                text = text.replaceRange(i, i + 1, Char(0).toString())
+            }
+        }
+
+        if (!styleEndsWithNewLine(style.type)) {
+            style.type.postFix?.let { postFix ->
+                val countOfPrefixChars = postFix.length
+                val endIndex = endPrefixIndex + countOfPrefixChars - 1
+                for (i in endPrefixIndex..endIndex) {
+                    text = text.replaceRange(i, i + 1, Char(0).toString())
+                }
+            }
+        }
+        // Special case for hiding text for links
+        if (style.type == MarkDownType.LINK) {
+            val subString = text.substring(style.startIndex, style.endIndex)
+            val indexOfEndOfDescription = subString.indexOf("]")
+            val indexInTextForEndOfDescription = style.startIndex + indexOfEndOfDescription + 1 // Fix this not working to remove first one
+            val endIndex = style.endIndex - 1
+            for (i in indexInTextForEndOfDescription..endIndex) {
+                text = text.replaceRange(i, i + 1, Char(0).toString())
+            }
+        }
+    }
+    return text
+}
+
+fun styleEndsWithNewLine(type: MarkDownType): Boolean {
+    return type.postFix.equals("\n")
 }
 
 fun replaceBaseCharacters(body: String): String {
@@ -102,50 +134,13 @@ fun replaceBaseCharacters(body: String): String {
     return updatedBody
 }
 
-fun getStyle(listOfMarkDowns: java.util.ArrayList<MarkDownData>): SpanStyle {
-    // LocalTextStyle.current.copy(textDecoration = TextDecoration.LineThrough)
-    var fontWeight = FontWeight.Normal
-    var fontStyle = FontStyle.Normal
-    var fontColor = OnBackground
-    var textDecoration = TextDecoration.None
-    var fontSize = 16.sp
-    for (markDown in listOfMarkDowns) {
-        when (markDown.type) {
-            MarkDownType.BOLD,
-            MarkDownType.BOLD_SECONDARY -> fontWeight = FontWeight.Bold
-            MarkDownType.ITALIC,
-            MarkDownType.ITALIC_SECONDARY -> {
-                fontStyle = FontStyle.Italic
-            }
-            MarkDownType.STRIKETHROUGH -> {
-                textDecoration = TextDecoration.LineThrough
-            }
-            MarkDownType.LINK -> {
-                fontColor = Primary
-                textDecoration = TextDecoration.Underline
-            }
-            MarkDownType.NONE,
-            MarkDownType.SKIP -> {
-            }
-            MarkDownType.HEADER_1 -> fontSize = 20.sp
-        }
-    }
-    return SpanStyle(
-        fontWeight = fontWeight,
-        fontStyle = fontStyle,
-        fontSize = fontSize,
-        textDecoration = textDecoration,
-        color = fontColor
-    )
-}
-
 fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
     // LocalTextStyle.current.copy(textDecoration = TextDecoration.LineThrough)
     var fontWeight = FontWeight.Normal
     var fontStyle = FontStyle.Normal
     var fontColor = OnBackground
     var textDecoration = TextDecoration.None
-    var fontSize = 16.sp
+    var fontSize = DEFAULT_TEXT_SIZE
     when (markdown.type) {
         MarkDownType.BOLD,
         MarkDownType.BOLD_SECONDARY -> fontWeight = FontWeight.Bold
@@ -163,7 +158,7 @@ fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
         MarkDownType.NONE,
         MarkDownType.SKIP -> {
         }
-        MarkDownType.HEADER_1 -> fontSize = 34.sp
+        MarkDownType.HEADER_1 -> fontSize = HEADER_4_TEXT_SIZE
     }
     return SpanStyle(
         fontWeight = fontWeight,
@@ -179,7 +174,7 @@ fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
 fun PreviewMarkDown() {
     Column(Modifier.fillMaxWidth()) {
         val sampleData =
-            "# Heading\n\n**This is bold text**\n\n*Italic text*\n\n**Mixed bold** and *italic* text\n\n[Link with desc](https://www.svt.se/)\n\n[https://www.svt.se/](https://www.svt.se/)\n\nText before link [https://www.svt.se/](https://www.svt.se/) and also after\n\n~~Strikethrough~~ text \n\n`This is some inlined` code\n\n^(Superscript is this)\n\n&gt;!This is a spoiler!&lt;\n\n# Header in the middle of the text\n\n* Bullted list\n* with a couple of points\n\n1. Numbered list in a bulleted list\n\n&amp;#x200B;\n\n1. Simple numbered list\n\n&gt; This is a quote from the great emperor\n\n&amp;#x200B;\n\n    Code blocks looks like this\n\nImage:\n\n[With caption](https://preview.redd.it/ndrt8axj4x1a1.jpg?width=658&amp;format=pjpg&amp;auto=webp&amp;s=9a888f4b95dadcf4931a54ca6d3edef85764b93f)\n\n&amp;#x200B;\n\n&amp;#x200B;\n\n|Column 1|Column 2|Column 3|\n|:-|:-|:-|\n|Row 2|Row 2|Row 2|"
+            "#Heading\n\n**This is bold text**\n\n*Italic text*\n\n**Mixed bold** and *italic* text\n\n[Link with desc](https://www.svt.se/)\n\n[https://www.svt.se/](https://www.svt.se/)\n\nText before link [https://www.svt.se/](https://www.svt.se/) and also after\n\n~~Strikethrough~~ text \n\n`This is some inlined` code\n\n^(Superscript is this)\n\n&gt;!This is a spoiler!&lt;\n\n# Header in the middle of the text\n\n* Bullted list\n* with a couple of points\n\n1. Numbered list in a bulleted list\n\n&amp;#x200B;\n\n1. Simple numbered list\n\n&gt; This is a quote from the great emperor\n\n&amp;#x200B;\n\n    Code blocks looks like this\n\nImage:\n\n[With caption](https://preview.redd.it/ndrt8axj4x1a1.jpg?width=658&amp;format=pjpg&amp;auto=webp&amp;s=9a888f4b95dadcf4931a54ca6d3edef85764b93f)\n\n&amp;#x200B;\n\n&amp;#x200B;\n\n|Column 1|Column 2|Column 3|\n|:-|:-|:-|\n|Row 2|Row 2|Row 2|"
 //        val sampleData = "**Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~\n>Quote\n\n\n# Header 1\n## Header 2\n### Header 3\n"
 //        val sampleData = "# Heading\\n\\n**This is bold text**\\n\\n*Italic text*\\n\\n**Mixed bold** and *italic* text\\n\\n[Link with desc](https://www.svt.se/)\\n\\n[https://www.svt.se/](https://www.svt.se/)\\n\\nText before link [https://www.svt.se/](https://www.svt.se/) and also after\\n\\n~~Strikethrough~~ text \\n\\n`This is some inlined` code\\n\\n^(Superscript is this)\\n\\n&gt;!This is a spoiler!&lt;\\n\\n# Header in the middle of the text\\n\\n* Bullted list\\n* with a couple of points\\n\\n1. Numbered list in a bulleted list\\n\\n&amp;#x200B;\\n\\n1. Simple numbered list\\n\\n&gt;This is a quote from the great emperor\\n\\n&amp;#x200B;\\n\\n    Code blocks looks like this\\n\\nImage:\\n\\n[With caption](https://preview.redd.it/ndrt8axj4x1a1.jpg?width=658&amp;format=pjpg&amp;auto=webp&amp;s=9a888f4b95dadcf4931a54ca6d3edef85764b93f)\\n\\n&amp;#x200B;\\n\\n&amp;#x200B;\\n\\n|Column 1|Column 2|Column 3|\\n|:-|:-|:-|\\n|Row 2|Row 2|Row 2|"
 //        val sampleData =

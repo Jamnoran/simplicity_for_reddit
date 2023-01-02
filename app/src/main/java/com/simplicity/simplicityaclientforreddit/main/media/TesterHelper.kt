@@ -36,7 +36,8 @@ class TesterHelper {
                     numComments = 1234,
                     ups = 100,
                     downs = 12,
-                    score = 98172
+                    score = 98172,
+                    crosspostParentList = null
                 )
             )
         }

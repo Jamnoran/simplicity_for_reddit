@@ -1,9 +1,9 @@
 package com.simplicity.simplicityaclientforreddit.main.components.screens
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 
 @Composable
-fun ScreenError() {
-    Text(text = "Error!")
+fun ScreenError(errorMessage: String = "Error!") {
+    CText(text = errorMessage)
 }

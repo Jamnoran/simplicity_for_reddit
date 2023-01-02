@@ -17,3 +17,9 @@ fun CRoundedCorners(content: @Composable () -> Unit) {
         content.invoke()
     }
 }
+
+class Shape {
+    companion object {
+        val BOTTOM_NAV_HEIGHT = 100.dp
+    }
+}

@@ -1,6 +1,12 @@
 package com.simplicity.simplicityaclientforreddit.main.theme
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -12,6 +18,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.simplicity.simplicityaclientforreddit.main.theme.Typography.Companion.HEADER_4_TEXT_SIZE
+
+class Typography {
+    companion object {
+        val DEFAULT_TEXT_SIZE = 20.sp
+        val HEADER_4_TEXT_SIZE = 40.sp
+    }
+}
 
 /**
  * These have not been aligned properly. It's an estimate based on the names of the Text Styles.
@@ -60,7 +74,7 @@ val Header3 = TextStyle(
 val Header4 = TextStyle(
     fontFamily = HeaderFontFamily,
     fontWeight = FontWeight.Bold,
-    fontSize = 40.sp
+    fontSize = HEADER_4_TEXT_SIZE
 )
 val Header5 = TextStyle(
     fontFamily = HeaderFontFamily,

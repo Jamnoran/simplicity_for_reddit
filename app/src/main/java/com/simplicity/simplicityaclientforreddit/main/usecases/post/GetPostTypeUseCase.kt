@@ -16,10 +16,6 @@ class GetPostTypeUseCase {
 //            Log.i("GetPostTypeUseCase", "PostType.IS_VIDEO")
             return PostType.IS_VIDEO
         }
-        if (data.postHint == "link" && containsImgur(data)) {
-//            Log.i("GetPostTypeUseCase", "PostType.IMGUR_LINK")
-            return PostType.IMGUR_LINK
-        }
 
         if (data.is_gallery) {
 //            Log.i("GetPostTypeUseCase", "PostType.GALLERY")
@@ -34,7 +30,13 @@ class GetPostTypeUseCase {
         return when (data.postHint) {
             "link" -> {
 //                Log.i("GetPostTypeUseCase", "PostType.LINK")
-                PostType.LINK
+                if (containsImgur(data)) {
+                    return PostType.IMGUR_LINK
+                }
+                if (containsReddit(data)) {
+                    return PostType.REDDIT_REPOST
+                }
+                return PostType.LINK
             }
             "rich:video" -> {
 //                Log.i("GetPostTypeUseCase", "PostType.RICH_VIDEO")
@@ -54,6 +56,15 @@ class GetPostTypeUseCase {
     private fun containsImgur(data: RedditPost.Data): Boolean {
         if (data.url != null && data.url!!.contains("imgur.com")) {
             return true
+        }
+        return false
+    }
+
+    private fun containsReddit(data: RedditPost.Data): Boolean {
+        data.crosspostParentList?.let { list ->
+            if (list.isNotEmpty()) {
+                return true
+            }
         }
         return false
     }

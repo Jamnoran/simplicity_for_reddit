@@ -63,6 +63,10 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "UpVoted")
             }
+
+            override fun failed(reason: String) {
+                Log.e(TAG, "Failed $reason")
+            }
         })
     }
 
@@ -72,6 +76,10 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "DownVote")
             }
+
+            override fun failed(reason: String) {
+                Log.e(TAG, "Failed $reason")
+            }
         })
     }
 
@@ -80,6 +88,10 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "Cleared vote")
+            }
+
+            override fun failed(reason: String) {
+                Log.e(TAG, "Failed $reason")
             }
         })
     }

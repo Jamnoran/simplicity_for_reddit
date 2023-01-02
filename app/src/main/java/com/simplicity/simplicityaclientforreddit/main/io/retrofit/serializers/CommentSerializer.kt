@@ -18,10 +18,13 @@ class CommentSerializer : JsonDeserializer<CommentResponse?> {
     ): CommentResponse? {
         var commentResponse = Gson().fromJson(json, CommentResponse::class.java)
         var isComment = false
-        commentResponse.commentResponseData?.children?.get(0)?.let {
+        commentResponse.commentResponseData?.children?.get(0)?.let { // Either we have comments
             if (it.kind.equals("t1")) {
                 isComment = true
             }
+        }
+        if (commentResponse.commentResponseData?.children?.isEmpty() == true) { // Or the list is empty, both mean it is a list of comments
+            isComment = true
         }
         commentResponse = if (isComment) {
             addRepliesToCommentObject(commentResponse, json)

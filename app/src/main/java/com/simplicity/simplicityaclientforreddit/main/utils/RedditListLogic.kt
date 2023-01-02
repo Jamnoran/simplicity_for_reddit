@@ -10,6 +10,7 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.AddCa
 import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.GetCachedPostUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.RemoveCachedPostUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.FilterPostsUseCase
+import retrofit2.Call
 
 class RedditListLogic {
     private lateinit var _logic: BaseLogic
@@ -57,6 +58,11 @@ class RedditListLogic {
         call.enqueue(object : CustomResponseCompose<FetchPostsResponse>(_logic) {
             override fun success(responseBody: FetchPostsResponse) {
                 handleResponse(responseBody)
+            }
+
+            override fun failed(reason: String) {
+                Log.i("RedditLogic", "onFailure")
+                _listener.error.invoke("This is a private subreddit")
             }
         })
     }

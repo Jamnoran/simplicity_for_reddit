@@ -31,6 +31,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.BodySmall
 import com.simplicity.simplicityaclientforreddit.main.theme.LinkColor
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 import com.simplicity.simplicityaclientforreddit.main.theme.Primary
+import com.simplicity.simplicityaclientforreddit.main.theme.Shape
 import com.simplicity.simplicityaclientforreddit.main.theme.Surface
 
 @Composable
@@ -57,7 +58,7 @@ fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
             if (SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)) {
                 val configuration = LocalConfiguration.current
                 val screenHeight = configuration.screenHeightDp.dp
-                val heightOfContent = 300.dp
+                val heightOfContent = Shape.BOTTOM_NAV_HEIGHT + 250.dp
                 val webViewHeight = screenHeight - heightOfContent
                 CWebView(
                     modifier = Modifier.height(webViewHeight),

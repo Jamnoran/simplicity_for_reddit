@@ -45,7 +45,7 @@ import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavi
 @Composable
 fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
     var startDestination = SINGLE_LIST.path
-    startDestination = TEST.path
+//    startDestination = TEST.path
 //    startDestination = POST_DETAIL.path
     NavHost(navController = navController, startDestination = startDestination) { // SINGLE_LIST POST_DETAIL
         composable(POSTS_LIST.path) {

@@ -37,13 +37,20 @@ abstract class CustomResponseCompose<T>(val viewModel: BaseLogic) : CustomCallba
     }
 
     abstract fun success(responseBody: T)
+    abstract fun failed(reason: String)
 
     override fun onUnauthorized() {
         viewModel.unAuthorizedError.postValue(Unit)
         viewModel.isFetching.postValue(false)
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            failed("Not authorized")
+        }
     }
 
     override fun onFailed(throwable: Throwable) {
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            failed(throwable.localizedMessage)
+        }
         viewModel.networkError.postValue(Unit)
         viewModel.isFetching.postValue(false)
         Log.e("CustomResponse", "Error parsing request : ", throwable)

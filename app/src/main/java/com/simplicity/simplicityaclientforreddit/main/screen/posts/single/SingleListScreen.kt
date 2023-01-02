@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
@@ -27,6 +25,7 @@ import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.detail.BottomNavigationBar
+import com.simplicity.simplicityaclientforreddit.main.theme.Shape
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.IsPostRequiringFulLScreenUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.AddSubRedditVisitedUseCase
@@ -39,7 +38,7 @@ fun SingleListScreen(navigator: NavHostController, logic: SingleListLogic, uiSta
     val listener = getListener(logic, navigator)
     when (uiState) {
         is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
-        is UiState.Error -> ScreenError()
+        is UiState.Error -> ScreenError(uiState.errorMessage)
         is UiState.Empty -> {
             ScreenEmpty()
         }
@@ -62,24 +61,15 @@ fun Screen(
     previousItem: () -> Unit
 ) {
     Log.i("SingleListScreen", "Showing post with url : https://www.reddit.com${data.redditPost?.data?.permalink}")
-    val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val scrollingEnabled = !IsPostRequiringFulLScreenUseCase(data.redditPost).execute()
     Log.i("SingleListScreen", "Scrolling enabled = $scrollingEnabled!")
     data.scrollToTop?.let {
-        Log.i("SingleListScreen", "Trying to scroll to the top!")
         coroutineScope.launch {
             scrollState.scrollTo(0)
         }
     }
-//    Scaffold(scaffoldState = scaffoldState, drawerContent = {
-//        NavigationDrawer(navigator = navigator, isLoggedIn = IsLoggedInUseCase().execute(), closeDrawer = {
-//            coroutineScope.launch {
-//                scaffoldState.drawerState.close()
-//            }
-//        })
-//    }) { paddingValues ->
     DefaultScreen(Modifier) {
         Box(
             Modifier.fillMaxSize()
@@ -87,7 +77,7 @@ fun Screen(
             val modifier = if (scrollingEnabled) Modifier.verticalScroll(scrollState) else Modifier
             Column(modifier) {
                 data.redditPost?.let { Post(post = it, listener) }
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.height(Shape.BOTTOM_NAV_HEIGHT))
             }
             BottomNavigationBar(
                 modifier = Modifier.align(Alignment.BottomCenter),
@@ -108,7 +98,6 @@ fun Screen(
             )
         }
     }
-//    }
 }
 
 fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPostListener {
