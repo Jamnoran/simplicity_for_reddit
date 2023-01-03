@@ -13,15 +13,28 @@ class MyProfileLogic : BaseLogic() {
     val state: StateFlow<UiState<Data>> = _state
 
     fun start() {
+        // Execute the following code in a background thread
         background {
-            // Do something in the background
+            // Create a new API call to get the user
             val call = APIAuthenticated().userMe()
+            // Enqueue the API call and provide a callback object to handle the response
             call.enqueue(object : CustomResponseCompose<User>(this) {
+                // Called when the API call was successful and the server returned a response
                 override fun success(responseBody: User) {
+                    // Log a message indicating that the user was obtained
                     Log.i(TAG, "Got user $responseBody")
+                    // Execute the following code in the main (foreground) thread
                     foreground {
+                        // Update the state of the UI to show that the request was successful
+                        // and provide the data (the name of the user) to be displayed
                         _state.emit(UiState.Success(Data("User: ${responseBody.name}")))
                     }
+                }
+
+                // Called when the API call failed and the server did not return a response
+                override fun failed(reason: String) {
+                    // Log an error message indicating that the user could not be obtained
+                    Log.e(TAG, "Could not get user")
                 }
             })
         }

@@ -2,14 +2,7 @@ package com.simplicity.simplicityaclientforreddit.main.screen.settings.hiddensub
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
@@ -30,8 +23,8 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenE
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
+import com.simplicity.simplicityaclientforreddit.main.theme.Primary
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
-import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
 
 @Composable
 fun HiddenSubsScreen(navController: NavHostController, logic: HiddenSubsLogic = HiddenSubsLogic()) {
@@ -47,7 +40,11 @@ fun HiddenSubsScreen(navController: NavHostController, logic: HiddenSubsLogic = 
 
 @Composable
 fun Show(navController: NavHostController?, data: Data, logic: HiddenSubsLogic) {
-    Toast.makeText(LocalContext.current, "Got this many subs : ${data.hiddenSubs.size}", Toast.LENGTH_LONG).show()
+    Toast.makeText(
+        LocalContext.current,
+        "Got this many subs : ${data.hiddenSubs.size}",
+        Toast.LENGTH_LONG
+    ).show()
     DefaultScreen {
         Column {
             Row(
@@ -85,7 +82,7 @@ fun Show(navController: NavHostController?, data: Data, logic: HiddenSubsLogic) 
                         Icon(
                             imageVector = Icons.Rounded.Delete,
                             contentDescription = "Remove sub",
-                            tint = Tertiary
+                            tint = Primary
                         )
                     }
                 }

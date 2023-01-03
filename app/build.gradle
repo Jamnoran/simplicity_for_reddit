@@ -215,4 +215,7 @@ dependencies {
     // Markdown text https://github.com/jeziellago/compose-markdown
     implementation 'com.github.jeziellago:compose-markdown:0.3.1'
 
+    // WebView compose
+    implementation "com.google.accompanist:accompanist-webview:0.28.0"
+
 }

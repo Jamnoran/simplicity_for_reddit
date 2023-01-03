@@ -34,7 +34,6 @@ import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditComment
 import com.simplicity.simplicityaclientforreddit.main.theme.Primary
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.theme.Surface
-import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUseCase
 
 @Composable
@@ -104,7 +103,7 @@ fun Comment(comment: ChildrenData) {
 fun ShowChildren(replies: ArrayList<Children>?) {
     if (replies?.isNotEmpty() == true) {
         Row(Modifier.padding(start = 6.dp).fillMaxWidth()) {
-            Column(Modifier.background(Tertiary).padding(start = 2.dp)) {
+            Column(Modifier.background(Primary).padding(start = 2.dp)) {
                 for (reply in replies) {
                     reply.childrenData?.let { childData ->
                         Comment(childData)

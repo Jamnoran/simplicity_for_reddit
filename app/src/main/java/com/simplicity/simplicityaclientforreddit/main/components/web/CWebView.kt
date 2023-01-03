@@ -40,6 +40,12 @@ fun CWebView(modifier: Modifier = Modifier, url: String) {
     val customWebViewClient = CustomWebViewClient()
 
     Column(modifier.fillMaxWidth()) {
+//        val context = LocalContext.current
+//        val state = rememberWebViewState(url)
+//        WebView(
+//            context
+//        ).loadUrl(url)
+
         AndroidView(factory = {
             ProgressBar(it).apply {
                 visibility = if (visibleLoading) View.VISIBLE else View.GONE
@@ -49,8 +55,7 @@ fun CWebView(modifier: Modifier = Modifier, url: String) {
                 settings.javaScriptCanOpenWindowsAutomatically = true
                 settings.domStorageEnabled = true
                 webViewClient = customWebViewClient
-                loadUrl(url)
             }
-        })
+        }, update = { webView -> webView.loadUrl(url) })
     }
 }

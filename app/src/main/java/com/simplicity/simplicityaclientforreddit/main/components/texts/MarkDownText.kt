@@ -150,7 +150,8 @@ fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
         MarkDownType.STRIKETHROUGH -> {
             textDecoration = TextDecoration.LineThrough
         }
-        MarkDownType.LINK -> {
+        MarkDownType.LINK,
+        MarkDownType.URL -> {
             fontColor = Primary
             textDecoration = TextDecoration.Underline
         }

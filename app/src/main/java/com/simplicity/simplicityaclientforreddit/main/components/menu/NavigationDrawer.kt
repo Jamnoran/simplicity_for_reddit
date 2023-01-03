@@ -31,7 +31,7 @@ import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.theme.Background
 import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
-import com.simplicity.simplicityaclientforreddit.main.theme.Tertiary
+import com.simplicity.simplicityaclientforreddit.main.theme.Primary
 import com.simplicity.simplicityaclientforreddit.main.usecases.compose.NavigationToShowPostsUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.GetSubRedditVisitedUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.RemoveSubRedditVisitedUseCase
@@ -109,7 +109,7 @@ fun SubRedditMenuItem(subreddit: String, navigator: NavHostController, closeDraw
                 },
                 imageVector = Icons.Rounded.Delete,
                 contentDescription = "Remove sub",
-                tint = Tertiary
+                tint = Primary
             )
         }
         Divider()

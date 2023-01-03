@@ -26,18 +26,48 @@ val Gray = Color(0xFF535353)
 val DarkGray = Color(0xFF292929)
 val DarkGrayTransparent = Color(0x8C292929)
 
+val A = Color(0xFF0A0A09) // Background
+val AV = Color(0xFF131313) // BackgroundVariant
+val B = Color(0xFF1A1A19) // Surface
+val D = Color(0xFFDAAA63) // Primary
+val DV = Color(0xFF74593E) // PrimaryVariant
+val E = Color(0xFF484743) // Secondary
+val F = Color(0xFF1C1E1D) // Outlines
+val C = Color(0xFFF9F9F9) // OnBackground
+
+// Extra colors
+val G = Color(0xFF22110B) //
+val H = Color(0xFF5B7F83) //
+val HV = Color(0xFFB5D8E1) //
+
 // Colors
-val Primary = Blue
-val Secondary = Teal
-val Tertiary = Orange
-val Background = Black
-val Surface = DarkGray
+val Primary = D
+val PrimaryVariant = DV
+val Secondary = H
+val SecondaryVariant = HV
+val Background = A
+val BackgroundVariant = AV
+val Surface = B
+
+// On colors
+val OnPrimary = A
+val OnSecondary = A
+val OnBackground = C
+val OnSurface = C
 
 val LinkColor = Blue
 
-// On colors
-val OnPrimary = Black
-val OnSecondary = Gray
-val OnTertiary = Gray
-val OnBackground = LightGray
-val OnSurface = LightGray
+// OLD COLORS
+// // Colors
+// val Primary = Blue
+// val Secondary = Teal
+// val Tertiary = Orange
+// val Background = Black
+// val Surface = DarkGray
+//
+// // On colors
+// val OnPrimary = Black
+// val OnSecondary = Gray
+// val OnTertiary = Gray
+// val OnBackground = LightGray
+// val OnSurface = LightGray

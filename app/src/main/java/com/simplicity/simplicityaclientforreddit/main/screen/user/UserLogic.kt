@@ -28,7 +28,6 @@ class UserLogic : BaseComposeLogic<UserInput>() {
         Log.i(TAG, "Init is called with username: ${_input.userName}")
         background {
             fetchUser()
-            fetchPosts()
         }
     }
 
@@ -39,6 +38,7 @@ class UserLogic : BaseComposeLogic<UserInput>() {
                 override fun onSuccess(responseBody: UserResponse) {
                     responseBody.data.let { userData ->
                         _user = userData
+                        fetchPosts()
                     }
                 }
 
@@ -60,26 +60,13 @@ class UserLogic : BaseComposeLogic<UserInput>() {
         )
     }
 
-    fun goToReddit(post: RedditPost) {
-        val convertedUrl = "https://www.reddit.com${post.data.permalink}"
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
-        _input.navigationListener.navigate.invoke(browserIntent)
-    }
-
-    private fun updateUi() {
-        foreground {
-            Log.i("UserLogic", "Emitting posts $_posts")
-            _state.emit(UiState.Success(Data(user = _user, _posts)))
-        }
-    }
-
     private fun fetchPosts() {
         val call = APIAuthenticated().getUserPosts(_input.userName, _cursor)
         call.enqueue(object : CustomCallback<UserPostsResponse> {
             override fun onSuccess(responseBody: UserPostsResponse) {
                 responseBody.data.let { data ->
                     _cursor = data.after
-                    processFetchedPosts(data.children)
+                    _posts.addAll(data.children)
                     Log.i("UserLogic", "Posts fetched, showing list with a size of ${_posts.size}")
                     updateUi()
                 }
@@ -103,8 +90,17 @@ class UserLogic : BaseComposeLogic<UserInput>() {
         })
     }
 
-    private fun processFetchedPosts(children: List<RedditPost>) {
-        _posts.addAll(children)
+    fun goToReddit(post: RedditPost) {
+        val convertedUrl = "https://www.reddit.com${post.data.permalink}"
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
+        _input.navigationListener.navigate.invoke(browserIntent)
+    }
+
+    private fun updateUi() {
+        foreground {
+            Log.i("UserLogic", "Emitting posts $_posts")
+            _state.emit(UiState.Success(Data(user = _user, _posts)))
+        }
     }
 
     fun updateScreen() {
@@ -112,6 +108,6 @@ class UserLogic : BaseComposeLogic<UserInput>() {
     }
 
     companion object {
-        private val TAG = "UserLogic"
+        private const val TAG = "UserLogic"
     }
 }

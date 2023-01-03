@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,17 +55,27 @@ fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
             LinkColor
         )
         OnSurfaceText(text = "from ${post.data.domain}")
-        post.data.url?.let {
+        post.data.url?.let { url ->
             Spacer(modifier = Modifier.height(16.dp))
-            if (SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)) {
+            if (SettingsSP().loadSetting(
+                    SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST,
+                    true
+                )
+            ) {
                 val configuration = LocalConfiguration.current
                 val screenHeight = configuration.screenHeightDp.dp
                 val heightOfContent = Shape.BOTTOM_NAV_HEIGHT + 200.dp
                 val webViewHeight = screenHeight - heightOfContent
-                CWebView(
-                    modifier = Modifier.height(webViewHeight),
-                    url = it
-                )
+                val mutableUrl = mutableStateOf("")
+                LaunchedEffect(key1 = true, block = {
+                    mutableUrl.value = url
+                })
+                if (mutableUrl.value.isNotBlank()) {
+                    CWebView(
+                        modifier = Modifier.height(webViewHeight),
+                        url = mutableUrl.value
+                    )
+                }
             }
         }
     }
@@ -79,7 +91,10 @@ fun ShowPostLinkWithThumbnail(post: RedditPost, listener: RedditPostListener) {
             OnSurface
         )
         Spacer(Modifier.width(8.dp))
-        Column(Modifier.width(140.dp).background(Primary).clickable { listener.linkClick.invoke(post) }) {
+        Column(
+            Modifier.width(140.dp).background(Primary)
+                .clickable { listener.linkClick.invoke(post) }
+        ) {
             // Preview image
             Box(Modifier.width(140.dp).height(80.dp)) {
                 Image(
@@ -104,7 +119,10 @@ fun ShowPostLinkWithThumbnail(post: RedditPost, listener: RedditPostListener) {
 @Composable
 fun PostLinkPreview() {
     Column(Modifier.fillMaxWidth()) {
-        ShowPostLinkWithThumbnail(post = TesterHelper.getPost(), listener = RedditPostListener.preview())
+        ShowPostLinkWithThumbnail(
+            post = TesterHelper.getPost(),
+            listener = RedditPostListener.preview()
+        )
         ShowPostLink(post = TesterHelper.getPost(), listener = RedditPostListener.preview())
     }
 }

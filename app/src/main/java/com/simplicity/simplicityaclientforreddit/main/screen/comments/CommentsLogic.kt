@@ -15,7 +15,6 @@ class CommentsLogic : BaseComposeLogic<CommentsInput>() {
 
     override fun ready(input: CommentsInput) {
         background {
-            // Do something in the background
             val call = API(CommentResponse::class.java, CommentSerializer()).getComments(input.subreddit, input.postId)
             call.enqueue(object : CustomResponseCompose<ArrayList<CommentResponse>>(this) {
                 override fun success(responseBody: ArrayList<CommentResponse>) {
@@ -23,6 +22,10 @@ class CommentsLogic : BaseComposeLogic<CommentsInput>() {
                     foreground {
                         _stateFlow.emit(UiState.Success(Data(responseBody[1])))
                     }
+                }
+
+                override fun failed(reason: String) {
+                    Log.e(TAG, "Failed because of reason $reason")
                 }
             })
         }

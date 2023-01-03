@@ -24,8 +24,9 @@ enum class MarkDownType(val preFix: String?, val postFix: String?, val regExp: R
     ITALIC("*", "*", "(\\*).{0,99}(\\*)".toRegex()),
     ITALIC_SECONDARY("_", "_", "(_).{0,99}(_)".toRegex()),
     STRIKETHROUGH("~~", "~~", "(~~).{0,99}(~~)".toRegex()),
-    HEADER_1("#", "\n", "(#).{0,99}(\n)".toRegex()),
+    HEADER_1("#", "\n", "(#).{0,99}(\n)".toRegex()), // ^#.*
     LINK("[", ")", "\\[.{0,99}\\]\\(.{0,99}\\)".toRegex()),
+    URL(null, null, """(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))""".toRegex()),
     NONE(null, null, "".toRegex()),
     SKIP(null, null, "".toRegex())
 }

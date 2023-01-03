@@ -86,7 +86,7 @@ fun Show(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(data.posts) { post ->
-                            Post(post = post, listener = listener)
+                            Post(post = post, listener = listener, singlePost = false)
                         }
                     }
                 } else {

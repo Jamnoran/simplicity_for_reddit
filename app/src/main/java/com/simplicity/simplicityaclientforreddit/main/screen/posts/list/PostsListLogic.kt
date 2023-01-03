@@ -5,7 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
-import com.simplicity.simplicityaclientforreddit.main.io.retrofit.*
+import com.simplicity.simplicityaclientforreddit.main.io.retrofit.APIInterface
+import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
+import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseListCompose
+import com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.FetchPostsResponse
@@ -30,13 +33,22 @@ class PostsListLogic : BaseLogic() {
     var subReddit: String? = null
 
     private val singlePostUrl = getPostUrlVideoWithSound()
-    fun getPostUrlImage(): String = "/r/sweden/comments/xxqy0a/det_är_fredag_mina_bekanta_bör_vi_skicka_våra/"
-    fun getPostUrlYoutube(): String = "/r/videos/comments/xxls7u/im_a_voice_actor_i_edited_the_super_mario_bros/"
+    fun getPostUrlImage(): String =
+        "/r/sweden/comments/xxqy0a/det_är_fredag_mina_bekanta_bör_vi_skicka_våra/"
+
+    fun getPostUrlYoutube(): String =
+        "/r/videos/comments/xxls7u/im_a_voice_actor_i_edited_the_super_mario_bros/"
+
     fun getPostUrlGif(): String = "/r/gifs/comments/xvtkcc/spiderman/"
-    fun getPostUrlGallery(): String = "/r/valheim/comments/xyjvkw/first_build_that_i_put_a_few_hours_into/"
+    fun getPostUrlGallery(): String =
+        "/r/valheim/comments/xyjvkw/first_build_that_i_put_a_few_hours_into/"
+
     fun getPostUrlText(): String = "/r/homeassistant/comments/xxo8z5/thread_support_working/"
-    fun getPostUrlLink(): String = "/r/science/comments/xyfwjf/phone_snubbing_your_partner_can_lead_to_a_vicious/"
-    fun getPostUrlVideoWithSound(): String = "/r/aww/comments/xym0km/i_literally_felt_my_heart_melt_as_she_nodded_off/"
+    fun getPostUrlLink(): String =
+        "/r/science/comments/xyfwjf/phone_snubbing_your_partner_can_lead_to_a_vicious/"
+
+    fun getPostUrlVideoWithSound(): String =
+        "/r/aww/comments/xym0km/i_literally_felt_my_heart_melt_as_she_nodded_off/"
 
     fun start() {
         viewModelScope.launch(Dispatchers.Default) {
@@ -77,12 +89,16 @@ class PostsListLogic : BaseLogic() {
     private fun fetchPosts(cursor: String) {
         _requireUpdateSettingsValues.postValue(Unit)
         setIsFetching(true)
-        Log.i(Companion.TAG, "Getting reddit posts with this cursor: $cursor")
-        val service = com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
+        Log.i(TAG, "Getting reddit posts with this cursor: $cursor")
+        val service = RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
         val call = service.getPosts(subReddit ?: "all", cursor, "on")
         call.enqueue(object : CustomResponseCompose<FetchPostsResponse>(this) {
             override fun success(responseBody: FetchPostsResponse) {
                 handleResponse(responseBody)
+            }
+
+            override fun failed(reason: String) {
+                Log.e(TAG, "Failed because of reason $reason")
             }
         })
     }
@@ -119,6 +135,7 @@ class PostsListLogic : BaseLogic() {
             addPreloadedToList()
         }
     }
+
     private fun addPreloadedToList() {
         _activePosts.addAll(_preLoadedPosts)
         _redditPostsLiveData.postValue(_activePosts)

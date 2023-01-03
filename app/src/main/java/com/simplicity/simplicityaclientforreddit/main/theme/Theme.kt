@@ -1,9 +1,9 @@
-package com.simplicity.simplicityaclientforreddit.main.theme
+package com.simplicity.simplicityaclientforreddit.main.theme // ktlint-disable filename
 
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.* // ktlint-disable no-wildcard-imports
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
@@ -14,13 +14,13 @@ import androidx.core.view.ViewCompat
 private val DarkColorScheme = darkColorScheme(
     primary = Primary,
     secondary = Secondary,
-    tertiary = Tertiary
+    tertiary = PrimaryVariant
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = Secondary,
-    tertiary = Tertiary
+    tertiary = PrimaryVariant
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
