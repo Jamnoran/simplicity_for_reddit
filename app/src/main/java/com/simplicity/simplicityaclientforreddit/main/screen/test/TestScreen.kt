@@ -50,7 +50,6 @@ fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiStat
 @Composable
 fun Show(navigator: NavHostController, data: String) {
     Column(Modifier.fillMaxWidth().background(Background).verticalScroll(rememberScrollState())) {
-//        MarkDownText(Modifier.fillMaxSize(), body = data) {}
         MarkDownText(body = data) {
         }
     }

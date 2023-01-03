@@ -37,7 +37,8 @@ class TesterHelper {
                     ups = 100,
                     downs = 12,
                     score = 98172,
-                    crosspostParentList = null
+                    crosspostParentList = null,
+                    over_18 = true
                 )
             )
         }

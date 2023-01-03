@@ -22,7 +22,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.Typography.Companion
 
 class Typography {
     companion object {
-        val DEFAULT_TEXT_SIZE = 20.sp
+        val DEFAULT_TEXT_SIZE = 16.sp
         val HEADER_4_TEXT_SIZE = 40.sp
     }
 }

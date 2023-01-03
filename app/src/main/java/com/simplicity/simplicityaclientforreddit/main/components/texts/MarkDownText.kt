@@ -41,14 +41,14 @@ fun MarkDownText(modifier: Modifier = Modifier, body: String, linkClicked: (Stri
 
     // Add all markdown styles
     val annotatedLinkString: AnnotatedString = buildAnnotatedString {
-        pushStyle(style = SpanStyle(color = OnSurface))
+        pushStyle(style = SpanStyle(color = OnSurface, fontSize = DEFAULT_TEXT_SIZE))
         append(text)
         for (style in listOfMarkDowns) {
-//            Log.i("TestScreen", "Adding style : ${style.type} to index : ${style.startIndex} - ${style.endIndex}")
             addStyle(getStyleFromInfo(style), style.startIndex, style.endIndex)
         }
     }
 
+    // Add all the links possible (URL/USERS/SUBREDDITS)
     ClickableText(
         modifier = modifier,
         text = annotatedLinkString,
@@ -135,7 +135,6 @@ fun replaceBaseCharacters(body: String): String {
 }
 
 fun getStyleFromInfo(markdown: MarkDownInfo): SpanStyle {
-    // LocalTextStyle.current.copy(textDecoration = TextDecoration.LineThrough)
     var fontWeight = FontWeight.Normal
     var fontStyle = FontStyle.Normal
     var fontColor = OnBackground
