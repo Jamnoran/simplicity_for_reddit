@@ -138,13 +138,20 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
+        linkExternalBrowserClick = {
+            logic.openBrowser(url = it)
+        },
         subredditClick = { navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit)) },
         showError = {},
         hideSubClick = {},
         postHiddenFromView = {},
         nextPost = {},
         clearVote = {},
-        fullScreen = {}
+        fullScreen = {
+            it.data.url?.let { imageUrl ->
+                navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
+            }
+        }
     )
 }
 

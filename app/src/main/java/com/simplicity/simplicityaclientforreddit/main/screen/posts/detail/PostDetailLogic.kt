@@ -1,10 +1,13 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.posts.detail
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseListCompose
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
+import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +17,9 @@ class PostDetailLogic : BaseLogic() {
     private val _stateFlow = MutableStateFlow<UiState<RedditPost>>(UiState.Loading())
     val stateFlow: StateFlow<UiState<RedditPost>> = _stateFlow
 
-    private val singlePostUrl = redditPost()
+    private lateinit var _navigationListener: NavigationListener
+
+    private val singlePostUrl = getPostUrlImage()
     fun getPostMarkDownTest(): String = "/user/Jamnoran/comments/z3mz2a/markdown_test/"
     fun getPostUrlImage(): String = "/r/sweden/comments/xxqy0a/det_är_fredag_mina_bekanta_bör_vi_skicka_våra/"
     fun getPostUrlYoutube(): String = "/r/videos/comments/xxls7u/im_a_voice_actor_i_edited_the_super_mario_bros/"
@@ -34,6 +39,11 @@ class PostDetailLogic : BaseLogic() {
     fun postTextWithEncapsulated(): String = "/r/gonewildstories/comments/zx84a1/my_girlfriend_rode_me_on_the_beach_with_her_micro/"
     fun redditPost(): String = "/r/MadeMeSmile/comments/zym7fl/principal_shaves_his_head_for_bullied_student/"
     fun twitchPost(): String = "/r/LivestreamFail/comments/zyi9hu/andrew_tate_arrested_on_suspected_organised_crime/"
+    fun onlyWhitePageErrorPost(): String =
+        "/r/politics/comments/1031ye1/repelect_george_santos_admitted_to_using_stolen/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
+
+    fun spamPost(): String =
+        "/r/wholesomegifs/comments/102uw3a/every_day_camus_waits_patiently_for_his_friend/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
 
     // Non working posts
     fun redditLink(): String =
@@ -42,7 +52,8 @@ class PostDetailLogic : BaseLogic() {
     fun removedPost(): String =
         "/r/yesyesyesno/comments/zxxe45/damn_some_lucky_guy/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
 
-    fun start() {
+    fun start(navigationListener: NavigationListener) {
+        _navigationListener = navigationListener
         Log.i(TAG, "Fetch post called with a state of ${_stateFlow.value}")
         background {
             fetchPostWithComments(singlePostUrl)
@@ -74,6 +85,11 @@ class PostDetailLogic : BaseLogic() {
 
     fun downVote(it: RedditPost) {
         Log.i("PostListLogic", "downVote ${it.data.author}")
+    }
+
+    fun openBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        _navigationListener.navigate.invoke(browserIntent)
     }
 
     companion object {

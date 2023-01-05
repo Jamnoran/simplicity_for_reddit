@@ -131,6 +131,9 @@ fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListe
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
+        linkExternalBrowserClick = {
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
+        },
         subredditClick = {},
         showError = {},
         hideSubClick = {},

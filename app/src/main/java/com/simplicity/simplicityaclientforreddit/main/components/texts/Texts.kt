@@ -45,7 +45,6 @@ fun OnSurfaceText(modifier: Modifier = Modifier, text: String, textAlign: TextAl
     Text(modifier = modifier, textAlign = textAlign, text = text, color = Color.White, style = style)
 }
 
-
 // Here's an example of some reddit formatting tricks:
 // **Bold**, *italic*, `code`, [link](http://redditpreview.com), ~~strikethrough~~
 //
@@ -79,5 +78,6 @@ fun OnSurfaceText(modifier: Modifier = Modifier, text: String, textAlign: TextAl
 fun MarkDownPreview() {
     Column(Modifier.fillMaxWidth()) {
         CText("Some text")
+        CText(modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, text = "Centered text")
     }
 }

@@ -45,6 +45,15 @@ fun MarkDownText(modifier: Modifier = Modifier, body: String, linkClicked: (Stri
         append(text)
         for (style in listOfMarkDowns) {
             addStyle(getStyleFromInfo(style), style.startIndex, style.endIndex)
+            // Add link annotation
+            if (style.type == MarkDownType.LINK) {
+                addStringAnnotation(
+                    tag = "URL",
+                    annotation = style.extra ?: "",
+                    start = style.startIndex,
+                    end = style.endIndex
+                )
+            }
         }
     }
 
@@ -53,11 +62,16 @@ fun MarkDownText(modifier: Modifier = Modifier, body: String, linkClicked: (Stri
         modifier = modifier,
         text = annotatedLinkString,
         onClick = {
+            Log.i("MarkDownText", "Clicked on position $it")
             annotatedLinkString
                 .getStringAnnotations("URL", it, it)
                 .firstOrNull()?.let { markDownClickable ->
-                    Log.i("MarkDownText", "Open url: $markDownClickable")
-                    linkClicked.invoke(markDownClickable.item)
+                    if (markDownClickable.item.isNotBlank()) {
+                        Log.i("MarkDownText", "Open url: $markDownClickable")
+                        linkClicked.invoke(markDownClickable.item)
+                    } else {
+                        Log.i("MarkDownText", "No url in this markdown")
+                    }
                 }
         }
     )
@@ -70,7 +84,7 @@ fun replaceEncapsulatedCharacters(text: String): String {
     return replacedText
 }
 
-fun markDown(markDownType: MarkDownType, listOfMarkDowns: java.util.ArrayList<MarkDownInfo>, input: String): String {
+fun markDown(markDownType: MarkDownType, listOfMarkDowns: ArrayList<MarkDownInfo>, input: String): String {
     var text = input
     when (markDownType) {
         MarkDownType.BOLD_SECONDARY -> return text
@@ -84,7 +98,8 @@ fun markDown(markDownType: MarkDownType, listOfMarkDowns: java.util.ArrayList<Ma
     // Add all markdowns in an array
     iterator.forEachRemaining { markDownRegExpResult ->
         val endIndex = markDownRegExpResult.range.last - (markDownType.preFix?.length ?: 1) + 1
-        listOfMarkDowns.add(MarkDownInfo(markDownType, markDownRegExpResult.range.first, endIndex))
+        val markDownExtra = getMarkDownExtra(markDownType, markDownRegExpResult)
+        listOfMarkDowns.add(MarkDownInfo(markDownType, markDownRegExpResult.range.first, endIndex, markDownExtra))
     }
     // Remove all markdown characters in text making it presentable to user
     for (style in listOfMarkDowns) {
@@ -119,6 +134,13 @@ fun markDown(markDownType: MarkDownType, listOfMarkDowns: java.util.ArrayList<Ma
         }
     }
     return text
+}
+
+fun getMarkDownExtra(markDownType: MarkDownType, markDownRegExpResult: MatchResult): String? {
+    if (markDownType == MarkDownType.LINK) {
+        return markDownRegExpResult.value.substring((markDownRegExpResult.value.indexOf("(") + 1), markDownRegExpResult.value.indexOf(")"))
+    }
+    return null
 }
 
 fun styleEndsWithNewLine(type: MarkDownType): Boolean {

@@ -79,6 +79,7 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
+        linkExternalBrowserClick = { logic.openBrowser(url = it) },
         subredditClick = {},
         showError = {},
         hideSubClick = {},

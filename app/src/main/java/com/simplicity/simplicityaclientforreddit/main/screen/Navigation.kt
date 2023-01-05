@@ -60,7 +60,7 @@ fun Navigation(navigationListener: NavigationListener, navController: NavHostCon
         composable(SINGLE_LIST.withArgsFormat(SINGLE_LIST.subReddit), NavRoute.getArguments(SINGLE_LIST.subReddit)) { stack ->
             SingleListNavigation(navController, navigationListener, stack.arg(SINGLE_LIST.subReddit)).Launch()
         }
-        composable(POST_DETAIL.path) { PostDetailNavigation(navController).Launch() }
+        composable(POST_DETAIL.path) { PostDetailNavigation(navController, navigationListener).Launch() }
         composable(SETTINGS.path) { SettingsNavigation(navController).Launch() }
         composable(MY_PROFILE.path) { MyProfileNavigation(navController).Launch() }
         composable(USER.withArgsFormat(USER.userName), NavRoute.getArguments(USER.userName)) { stack ->

@@ -109,6 +109,11 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         navigationListener.navigate.invoke(browserIntent)
     }
 
+    fun openBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        navigationListener.navigate.invoke(browserIntent)
+    }
+
     fun hideReddit(subreddit: String) {
         background {
             RoomDB().hideSub(subreddit)

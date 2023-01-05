@@ -21,7 +21,7 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUs
 fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
     Column(Modifier.padding(start = 8.dp, end = 8.dp)) {
         // Title
-        Row(modifier = Modifier.padding(top = 4.dp)) {
+        Row(modifier = Modifier.padding(top = 8.dp)) {
             if (type != PostType.LINK) {
                 OnSurfaceText(
                     modifier = Modifier.padding(bottom = 4.dp)
@@ -32,21 +32,21 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
             }
         }
         Row {
-            // Author
-            CText(text = "By", color = OnSurface)
-            CText(
-                modifier = Modifier.padding(start = 4.dp)
-                    .clickable { listener.authorClick.invoke(post) },
-                text = "u/${post.data.author ?: "[deleted]"}",
-                color = Primary
-            )
             // SubReddit
-            CText(modifier = Modifier.padding(start = 8.dp), text = "in", color = OnSurface)
+            CText(modifier = Modifier, text = "In", color = OnSurface)
             CText(
                 modifier = Modifier.padding(start = 4.dp)
                     .clickable { listener.subredditClick.invoke(post) },
                 text = "r/${post.data.subreddit}",
                 color = Secondary
+            )
+            // Author
+            CText(modifier = Modifier.padding(start = 8.dp), text = "by", color = OnSurface)
+            CText(
+                modifier = Modifier.padding(start = 4.dp)
+                    .clickable { listener.authorClick.invoke(post) },
+                text = "u/${post.data.author ?: "[deleted]"}",
+                color = Primary
             )
         }
         // Created at

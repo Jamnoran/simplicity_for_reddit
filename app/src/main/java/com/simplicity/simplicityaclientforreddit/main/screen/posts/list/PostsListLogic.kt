@@ -1,5 +1,7 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.posts.list
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,6 +12,7 @@ import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponse
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseListCompose
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
+import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.FetchPostsResponse
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PostsListLogic : BaseLogic() {
+    private lateinit var _navigationListener: NavigationListener
     private val _stateFlow = MutableStateFlow<UiState<List<RedditPost>>>(UiState.Loading())
     val stateFlow: StateFlow<UiState<List<RedditPost>>> = _stateFlow
 
@@ -50,7 +54,8 @@ class PostsListLogic : BaseLogic() {
     fun getPostUrlVideoWithSound(): String =
         "/r/aww/comments/xym0km/i_literally_felt_my_heart_melt_as_she_nodded_off/"
 
-    fun start() {
+    fun start(navigationListener: NavigationListener) {
+        _navigationListener = navigationListener
         viewModelScope.launch(Dispatchers.Default) {
             fetchPost(singlePostUrl)
         }
@@ -148,6 +153,11 @@ class PostsListLogic : BaseLogic() {
 
     fun downVote(it: RedditPost) {
         Log.i("PostListLogic", "downVote ${it.data.author}")
+    }
+
+    fun openBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        _navigationListener.navigate.invoke(browserIntent)
     }
 
     companion object {

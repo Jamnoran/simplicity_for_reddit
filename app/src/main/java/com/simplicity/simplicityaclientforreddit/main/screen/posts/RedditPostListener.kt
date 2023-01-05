@@ -16,14 +16,16 @@ class RedditPostListener(
     val fullScreen: (post: RedditPost) -> Unit,
     val linkClick: (post: RedditPost) -> Unit,
     val linkUrlClick: (url: String) -> Unit,
+    val linkExternalBrowserClick: (url: String) -> Unit,
     val showError: (errorMessage: String) -> Unit,
     var postHiddenFromView: () -> Unit,
     var nextPost: () -> Unit
 ) {
     companion object {
-        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
     }
 }
+
 class RedditCommentListener(
     val downVote: (post: ChildrenData) -> Unit,
     val upVote: (post: ChildrenData) -> Unit,

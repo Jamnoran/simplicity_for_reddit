@@ -6,7 +6,7 @@ import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListen
 
 class PostsListNavigation(
     val navigator: NavHostController,
-    navigationListener: NavigationListener,
+    val navigationListener: NavigationListener,
     val subReddit: String
 ) {
     private val logic: PostsListLogic = PostsListLogic()
@@ -14,7 +14,7 @@ class PostsListNavigation(
     @Composable
     fun Launch() {
         val screen = PostsListScreen(navigator, logic)
-        logic.start()
+        logic.start(navigationListener)
         return screen
     }
 }

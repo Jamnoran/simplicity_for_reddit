@@ -16,7 +16,7 @@ val linkDescriptionRegexp = "^\\[.{0,99}\\]".toRegex()
 val linkRegexp = "\\(.{0,99}\\)".toRegex()
 
 data class MarkDownData(val type: MarkDownType, val skipToIndex: Int, val charToAdd: CharSequence?, val removeAtIndex: Int)
-data class MarkDownInfo(val type: MarkDownType, val startIndex: Int, val endIndex: Int)
+data class MarkDownInfo(val type: MarkDownType, val startIndex: Int, val endIndex: Int, val extra: String? = null)
 
 enum class MarkDownType(val preFix: String?, val postFix: String?, val regExp: Regex) {
     BOLD("**", "**", "(\\*\\*).{0,99}(\\*\\*)".toRegex()),

@@ -30,6 +30,9 @@ class GetPostTypeUseCase {
         return when (data.postHint) {
             "link" -> {
 //                Log.i("GetPostTypeUseCase", "PostType.LINK")
+                if (containsTwitch(data)) {
+                    return PostType.TWITCH_LINK
+                }
                 if (containsImgur(data)) {
                     return PostType.IMGUR_LINK
                 }
@@ -51,6 +54,13 @@ class GetPostTypeUseCase {
                 PostType.NONE
             }
         }
+    }
+
+    private fun containsTwitch(data: RedditPost.Data): Boolean {
+        if (data.url != null && data.url!!.contains("clips.twitch.tv")) {
+            return true
+        }
+        return false
     }
 
     private fun containsImgur(data: RedditPost.Data): Boolean {

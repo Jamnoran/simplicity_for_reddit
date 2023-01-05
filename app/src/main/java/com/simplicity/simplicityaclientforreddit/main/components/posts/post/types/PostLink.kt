@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,16 +64,16 @@ fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
                 val screenHeight = configuration.screenHeightDp.dp
                 val heightOfContent = Shape.BOTTOM_NAV_HEIGHT + 200.dp
                 val webViewHeight = screenHeight - heightOfContent
-                val mutableUrl = mutableStateOf("")
-                LaunchedEffect(key1 = true, block = {
-                    mutableUrl.value = url
-                })
-                if (mutableUrl.value.isNotBlank()) {
-                    CWebView(
-                        modifier = Modifier.height(webViewHeight),
-                        url = mutableUrl.value
-                    )
-                }
+//                val mutableUrl = mutableStateOf("")
+//                LaunchedEffect(key1 = true, block = {
+//                    mutableUrl.value = url
+//                })
+//                if (mutableUrl.value.isNotBlank()) {
+                CWebView(
+                    modifier = Modifier.height(webViewHeight),
+                    url = url
+                )
+//                }
             }
         }
     }

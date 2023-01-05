@@ -78,3 +78,11 @@ fun PreviewPost() {
         Post(TesterHelper.getPost(), RedditPostListener.preview())
     }
 }
+
+@Preview
+@Composable
+fun PreviewPostNone() {
+    Column(Modifier.background(Background)) {
+        Post(TesterHelper.getPost(null), RedditPostListener.preview())
+    }
+}

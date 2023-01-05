@@ -6,17 +6,9 @@ import com.simplicity.simplicityaclientforreddit.main.models.internal.enums.Post
 class HasPostVideoUseCase {
     fun execute(data: RedditPost.Data): Boolean {
         return when (GetPostTypeUseCase().execute(data)) {
-            PostType.LINK,
-            PostType.GALLERY,
-            PostType.IMAGE,
-            PostType.TOURNAMENT,
-            PostType.IMGUR_LINK,
-            PostType.NONE,
-            PostType.DELETED,
-            PostType.REDDIT_REPOST,
-            PostType.YOUTUBE -> false
             PostType.IS_VIDEO,
             PostType.RICH_VIDEO -> true
+            else -> { false }
         }
     }
 }

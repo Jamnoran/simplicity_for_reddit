@@ -1,6 +1,9 @@
 ﻿package com.simplicity.simplicityaclientforreddit.main.media
 
+import com.simplicity.simplicityaclientforreddit.main.models.external.posts.Media
+import com.simplicity.simplicityaclientforreddit.main.models.external.posts.Oembed
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
+import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditVideo
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Children
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.ChildrenData
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
@@ -14,24 +17,24 @@ import com.simplicity.simplicityaclientforreddit.main.models.internal.HiddenSubs
 class TesterHelper {
 
     companion object {
-        fun getPost(): RedditPost {
+        fun getPost(postHint: String? = "image"): RedditPost {
             return RedditPost(
                 data = RedditPost.Data(
                     id = "a1231f",
                     name = "Name of post",
-                    title = "Title of post",
+                    title = "Title of post of type $postHint",
                     author = "MisterPoster",
                     subreddit = "subreddit",
                     is_gallery = false,
                     is_video = false,
                     preview = null,
                     galleryData = null,
-                    media = null,
-                    selftext = "This is a selftext",
+                    media = getMedia(),
+                    selftext = "This is a selftext that can be quite long and have a lot of text in it for example **bold** text",
                     created = 1667757291805,
                     mediaMetadata = null,
                     secureMediaEmbed = null,
-                    postHint = "image",
+                    postHint = postHint,
                     tournament_data = null,
                     numComments = 1234,
                     ups = 100,
@@ -39,6 +42,39 @@ class TesterHelper {
                     score = 98172,
                     crosspostParentList = null,
                     over_18 = true
+                )
+            )
+        }
+
+        private fun getMedia(): Media {
+            return Media(
+                Oembed(
+                    html = "",
+                    thumbnail_url = "https://clips-media-assets2.twitch.tv/X34XlMBrgRx5ABJ3KfQbCQ/vod-1692181225-offset-9114-social-preview.jpg",
+                    author_name = "",
+                    description = "",
+                    height = 12,
+                    provider_name = "",
+                    provider_url = "",
+                    thumbnail_height = 12,
+                    thumbnail_width = 12,
+                    title = "",
+                    type = "",
+                    version = 12.toDouble(),
+                    width = 123
+                ),
+                type = "",
+                reddit_video = RedditVideo(
+                    bitrate_kbps = 0,
+                    width = 12,
+                    height = 12,
+                    dash_url = "",
+                    duration = 12,
+                    fallback_url = "",
+                    hls_url = "",
+                    is_gif = false,
+                    scrubber_media_url = "",
+                    transcoding_status = ""
                 )
             )
         }

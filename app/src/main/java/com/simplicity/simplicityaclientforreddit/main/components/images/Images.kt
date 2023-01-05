@@ -1,5 +1,6 @@
 package com.simplicity.simplicityaclientforreddit.main.components.images
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.simplicity.simplicityaclientforreddit.R
+import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 
 @Composable
 fun CImageButton(iconResource: Int, click: () -> Unit) {
@@ -55,22 +57,32 @@ fun CImage(modifier: Modifier = Modifier, url: String, contentScale: ContentScal
 
 @Composable
 fun CImageZoomable(modifier: Modifier = Modifier, url: String, contentScale: ContentScale = ContentScale.FillWidth) {
-    var scale by remember { mutableStateOf(1f) }
+    var scale by remember { mutableStateOf(5f) }
+//    var translateX by remember { mutableStateOf(1f) }
+//    var translateY by remember { mutableStateOf(1f) }
+    var translateX = 50f
+    var translateY = 1f
     Box {
         AsyncImage(
             modifier = modifier
                 .align(Alignment.Center)
                 .graphicsLayer(
                     scaleX = scale,
-                    scaleY = scale
+                    scaleY = scale,
+                    translationY = translateY,
+                    translationX = translateX
                 )
                 .pointerInput(Unit) {
-                    detectTransformGestures { _, _, zoom, _ ->
-                        scale = when {
-                            scale < 1f -> 1f
-                            scale > 5f -> 5f
-                            else -> scale * zoom
-                        }
+                    detectTransformGestures { _, pan, zoom, _ ->
+//                        translateX = pan.x
+//                        translateY = pan.y
+                        Log.i("Image", "PAN TO $translateX - $translateY")
+
+//                        scale = when {
+//                            scale < 1f -> 1f
+//                            scale > 5f -> 5f
+//                            else -> scale * zoom
+//                        }
                     }
                 },
             model = ImageRequest.Builder(LocalContext.current)
@@ -80,6 +92,7 @@ fun CImageZoomable(modifier: Modifier = Modifier, url: String, contentScale: Con
             contentScale = contentScale,
             contentDescription = "Image"
         )
+        CText("X- $translateX : Y - $translateY")
     }
 }
 

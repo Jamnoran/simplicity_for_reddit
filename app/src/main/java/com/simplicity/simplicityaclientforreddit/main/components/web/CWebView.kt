@@ -59,3 +59,49 @@ fun CWebView(modifier: Modifier = Modifier, url: String) {
         }, update = { webView -> webView.loadUrl(url) })
     }
 }
+
+@Composable
+fun CWebViewHtmlData(modifier: Modifier = Modifier, html: String) {
+    var visibleLoading = true
+
+    class CustomWebViewClient : WebViewClient() {
+
+        // Load the URL
+        @Deprecated("Deprecated in Java")
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            view.loadUrl(url)
+            return false
+        }
+
+        // ProgressBar will disappear once page is loaded
+        override fun onPageFinished(view: WebView, url: String) {
+            super.onPageFinished(view, url)
+            visibleLoading = false
+        }
+    }
+
+    val customWebViewClient = CustomWebViewClient()
+
+    val mimeType = "text/html"
+    val encoding = "UTF-8"
+
+    Column(modifier.fillMaxWidth()) {
+//        val context = LocalContext.current
+//        val state = rememberWebViewState(url)
+//        WebView(
+//            context
+//        ).loadUrl(url)
+
+        AndroidView(factory = {
+            ProgressBar(it).apply {
+                visibility = if (visibleLoading) View.VISIBLE else View.GONE
+            }
+            WebView(it).apply {
+                settings.javaScriptEnabled = true
+                settings.javaScriptCanOpenWindowsAutomatically = true
+                settings.domStorageEnabled = true
+                webViewClient = customWebViewClient
+            }
+        }, update = { webView -> webView.loadDataWithBaseURL("", html, mimeType, encoding, "") })
+    }
+}
