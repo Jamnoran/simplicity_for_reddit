@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
+import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownSimple
+import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownText
 import com.simplicity.simplicityaclientforreddit.main.components.texts.OnSurfaceText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
@@ -23,11 +27,11 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
         // Title
         Row(modifier = Modifier.padding(top = 8.dp)) {
             if (type != PostType.LINK) {
-                OnSurfaceText(
+                MarkDownSimple(
                     modifier = Modifier.padding(bottom = 4.dp)
                         .clickable { listener.redditClick.invoke(post) },
-                    text = post.data.title ?: "[deleted]",
-                    style = BodyNormalBold
+                    body = post.data.title ?: "[deleted]",
+                    style = SpanStyle(fontWeight = FontWeight.Bold)
                 )
             }
         }
