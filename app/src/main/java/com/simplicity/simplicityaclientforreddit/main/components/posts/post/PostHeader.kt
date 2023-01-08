@@ -12,8 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownSimple
-import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownText
-import com.simplicity.simplicityaclientforreddit.main.components.texts.OnSurfaceText
 import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.internal.enums.PostType

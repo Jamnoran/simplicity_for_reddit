@@ -45,7 +45,7 @@ fun PostLink(post: RedditPost, listener: RedditPostListener) {
 
 @Composable
 fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
-    Column(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp)) {
+    Column(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, top = 8.dp)) {
         CText(
             modifier = Modifier.fillMaxWidth().clickable { listener.linkClick.invoke(post) },
             text = "${post.data.title}",
