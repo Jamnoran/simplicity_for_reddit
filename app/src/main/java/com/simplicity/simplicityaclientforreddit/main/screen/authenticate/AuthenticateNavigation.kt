@@ -15,7 +15,7 @@ class AuthenticateNavigation(private val navController: NavHostController, priva
         val logic: AuthenticateLogic = viewModel()
         val state = logic.stateFlow.collectAsStateWithLifecycle()
         val screen = AuthenticateScreen(navController, logic, state.value)
-        logic.init(input = AuthenticateInput(navigationListener))
+        logic.init(input = AuthenticateInput(navigationListener), navController = navController, navigationListener = navigationListener)
         return screen
     }
 }

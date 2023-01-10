@@ -10,12 +10,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.simplicity.simplicityaclientforreddit.main.theme.BodyNormal
-import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 import com.simplicity.simplicityaclientforreddit.main.theme.OnPrimary
 import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
 
 @Composable
-fun CText(text: String, style: TextStyle = BodyNormal, color: Color = OnBackground, textAlign: TextAlign? = TextAlign.Start) {
+fun CText(text: String, style: TextStyle = BodyNormal, color: Color = OnSurface, textAlign: TextAlign? = TextAlign.Start) {
     Text(text = text, color = color, style = style, textAlign = textAlign)
 }
 
@@ -24,7 +23,7 @@ fun CText(
     modifier: Modifier = Modifier,
     text: String,
     style: TextStyle = BodyNormal,
-    color: Color = OnBackground,
+    color: Color = OnSurface,
     textAlign: TextAlign? = TextAlign.Start
 ) {
     Text(modifier = modifier, text = text, color = color, style = style, textAlign = textAlign)

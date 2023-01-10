@@ -58,10 +58,8 @@ fun CImage(modifier: Modifier = Modifier, url: String, contentScale: ContentScal
 @Composable
 fun CImageZoomable(modifier: Modifier = Modifier, url: String, contentScale: ContentScale = ContentScale.FillWidth) {
     var scale by remember { mutableStateOf(5f) }
-//    var translateX by remember { mutableStateOf(1f) }
-//    var translateY by remember { mutableStateOf(1f) }
-    var translateX = 50f
-    var translateY = 1f
+    var translateX by remember { mutableStateOf(1f) }
+    var translateY by remember { mutableStateOf(1f) }
     Box {
         AsyncImage(
             modifier = modifier

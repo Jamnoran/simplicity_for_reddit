@@ -20,7 +20,7 @@ fun PostImage(post: RedditPost, listener: RedditPostListener) {
         if (it.contains(".gif")) {
             ShowGif(it)
         } else {
-            post.data.url?.let { imageUrl -> ShowImage(imageUrl) { listener.fullScreen(post) } }
+            post.data.url?.let { imageUrl -> ShowImage(imageUrl) { listener.fullScreen(post.data) } }
         }
     }
 }

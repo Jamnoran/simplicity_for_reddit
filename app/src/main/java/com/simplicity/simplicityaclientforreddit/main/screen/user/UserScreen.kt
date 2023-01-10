@@ -29,7 +29,6 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.Default
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
-import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
@@ -40,12 +39,12 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun UserScreen(navigator: NavHostController, navigationListener: NavigationListener, logic: UserLogic, state: UiState<Data>) {
+fun UserScreen(navigator: NavHostController, logic: UserLogic, state: UiState<Data>) {
     when (state) {
         is UiState.Error -> ScreenError()
         is UiState.Loading -> ScreenLoading()
         is UiState.Empty -> {}
-        is UiState.Success -> Show(navigator, navigationListener, logic, state.data, getListener(logic, navigator))
+        is UiState.Success -> Show(navigator, logic, state.data, getListener(logic, navigator))
     }
 }
 
@@ -53,7 +52,6 @@ fun UserScreen(navigator: NavHostController, navigationListener: NavigationListe
 @Composable
 fun Show(
     navigator: NavHostController?,
-    navigationListener: NavigationListener,
     logic: UserLogic,
     data: Data,
     listener: RedditPostListener
@@ -126,7 +124,7 @@ fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListe
         shareClick = {},
         readComments = {},
         linkClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
         },
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
@@ -148,6 +146,6 @@ fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListe
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Show(rememberNavController(), NavigationListener.preview(), UserLogic(), Data.preview(), RedditPostListener.preview())
+        Show(rememberNavController(), UserLogic(), Data.preview(), RedditPostListener.preview())
     }
 }

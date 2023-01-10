@@ -13,6 +13,7 @@ class ${NAME}Logic : BaseComposeLogic<${NAME}Input>() {
         background {
             // Do something in the background
             foreground {
+                loggI("Emitting success to screen")
                 _stateFlow.emit(UiState.Success(Data(input.inputData)))
             }
         }

@@ -1,23 +1,14 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.settings
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,30 +20,26 @@ import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
-import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
-import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.HIDDEN_SUBS
-import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
-fun SettingsScreen(navController: NavHostController, logic: SettingsLogic) {
-    logic.stateFlow.collectAsState().value.let { state ->
-        when (state) {
-            is UiState.Loading -> ScreenLoading()
-            is UiState.Error -> ScreenError()
-            is UiState.Empty -> {}
-            is UiState.Success -> Show(navController, state.data) { logic.test(it) }
-        }
+fun SettingsScreen(navController: NavHostController, logic: SettingsLogic, state: UiState<Data>) {
+    when (state) {
+        is UiState.Error -> ScreenError()
+        is UiState.Loading -> ScreenLoading()
+        is UiState.Empty -> {}
+        is UiState.Success -> Show(navController, logic, state.data)
     }
 }
 
 @Composable
-fun Show(navController: NavHostController, data: String, test: (String) -> Unit) {
+fun Show(navController: NavHostController, logic: SettingsLogic, data: Data) {
     DefaultScreen(Modifier) {
         Column(Modifier.padding(8.dp).verticalScroll(rememberScrollState())) {
             Button(onClick = {
-                navController.navigate(HIDDEN_SUBS.path)
+                navController.navigate(NavRoute.HIDDEN_SUBS.path)
             }) {
                 Text("Show my hidden subs")
             }
@@ -85,20 +72,12 @@ fun Show(navController: NavHostController, data: String, test: (String) -> Unit)
                 stringResource(R.string.settings_expand_post_link_in_webview),
                 SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_SHOW_LINK_IN_WEB_VIEW_UNDER_POST, true)
             )
+            SettingsItem(
+                SettingsSP.KEY_SETTINGS_NSFW,
+                stringResource(R.string.settings_nsfw_content),
+                SettingsSP().loadSetting(SettingsSP.KEY_SETTINGS_NSFW, true)
+            )
         }
-    }
-}
-
-@Composable
-fun SettingsItem(settingsKey: String, text: String, defaultValue: Boolean) {
-    var value by remember { mutableStateOf(defaultValue) }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        CText(Modifier.fillMaxWidth(.8f), text = text, color = OnBackground)
-        Spacer(Modifier.weight(1f))
-        Checkbox(checked = value, onCheckedChange = {
-            value = it
-            SettingsSP().saveSetting(settingsKey, it)
-        })
     }
 }
 
@@ -106,6 +85,6 @@ fun SettingsItem(settingsKey: String, text: String, defaultValue: Boolean) {
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Show(rememberNavController(), "Test", {})
+        Show(rememberNavController(), SettingsLogic(), Data.preview())
     }
 }

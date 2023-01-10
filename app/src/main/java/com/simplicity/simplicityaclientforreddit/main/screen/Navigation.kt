@@ -2,11 +2,9 @@ package com.simplicity.simplicityaclientforreddit.main.screen
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NamedNavArgument
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.AUTHENTICATION
@@ -21,6 +19,7 @@ import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.POST_DETAI
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SEARCH
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SETTINGS
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SINGLE_LIST
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.SPLASH
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.TEST
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.USER
 import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute.WEB_VIEW
@@ -38,60 +37,60 @@ import com.simplicity.simplicityaclientforreddit.main.screen.profile.MyProfileNa
 import com.simplicity.simplicityaclientforreddit.main.screen.search.SearchNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.settings.SettingsNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.settings.hiddensubs.HiddenSubsNavigation
+import com.simplicity.simplicityaclientforreddit.main.screen.splash.SplashNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.test.TestNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.user.UserNavigation
 import com.simplicity.simplicityaclientforreddit.main.screen.webview.WebViewNavigation
+import com.simplicity.simplicityaclientforreddit.main.utils.extensions.arg
+import com.simplicity.simplicityaclientforreddit.main.utils.extensions.route
 
 @Composable
-fun Navigation(navigationListener: NavigationListener, navController: NavHostController) {
-    var startDestination = SINGLE_LIST.path
-    startDestination = TEST.path
-//    startDestination = POST_DETAIL.path
-    NavHost(navController = navController, startDestination = startDestination) { // SINGLE_LIST POST_DETAIL
-        composable(POSTS_LIST.path) {
-            PostsListNavigation(navController, navigationListener, "").Launch()
+fun Navigation(navigationListener: NavigationListener, navigator: NavHostController) {
+    NavHost(navController = navigator, startDestination = SPLASH.path) {
+        route(SPLASH) { SplashNavigation(navigator, navigationListener).Launch() }
+        route(POSTS_LIST) {
+            PostsListNavigation(navigator, navigationListener, "").Launch()
         }
-        composable(POSTS_LIST.withArgsFormat(SINGLE_LIST.subReddit), NavRoute.getArguments(SINGLE_LIST.subReddit)) { stack ->
-            PostsListNavigation(navController, navigationListener, stack.arg(SINGLE_LIST.subReddit)).Launch()
+        route(POSTS_LIST, listOf(POSTS_LIST.subReddit)) { stack ->
+            PostsListNavigation(navigator, navigationListener, stack.arg(POSTS_LIST.subReddit)).Launch()
         }
-        composable(SINGLE_LIST.path, NavRoute.getArguments(SINGLE_LIST.subReddit)) {
-            SingleListNavigation(navController, navigationListener, "").Launch()
+        route(SINGLE_LIST, listOf(SINGLE_LIST.subReddit)) {
+            SingleListNavigation(navigator, navigationListener, "").Launch()
         }
-        composable(SINGLE_LIST.withArgsFormat(SINGLE_LIST.subReddit), NavRoute.getArguments(SINGLE_LIST.subReddit)) { stack ->
-            SingleListNavigation(navController, navigationListener, stack.arg(SINGLE_LIST.subReddit)).Launch()
+        route(SINGLE_LIST, listOf(SINGLE_LIST.subReddit)) { stack ->
+            SingleListNavigation(navigator, navigationListener, stack.arg(SINGLE_LIST.subReddit)).Launch()
         }
-        composable(POST_DETAIL.path) { PostDetailNavigation(navController, navigationListener).Launch() }
-        composable(SETTINGS.path) { SettingsNavigation(navController).Launch() }
-        composable(MY_PROFILE.path) { MyProfileNavigation(navController).Launch() }
-        composable(USER.withArgsFormat(USER.userName), NavRoute.getArguments(USER.userName)) { stack ->
-            UserNavigation(navController, navigationListener, stack.arg(USER.userName)).Launch()
+        route(POST_DETAIL) { PostDetailNavigation(navigator, navigationListener).Launch() }
+        route(SETTINGS) { SettingsNavigation(navigator, navigationListener).Launch() }
+        route(MY_PROFILE) { MyProfileNavigation(navigator).Launch() }
+        route(USER, listOf(USER.userName)) { stack ->
+            UserNavigation(navigator, navigationListener, stack.arg(USER.userName)).Launch()
         }
-        composable(SEARCH.path) { SearchNavigation(navController).Launch() }
-        composable(
-            COMMENTS.withArgsFormat(COMMENTS.postId, COMMENTS.subReddit),
-            NavRoute.run { getArguments(listOf(COMMENTS.postId, COMMENTS.subReddit)) }
-        ) { stack ->
-            CommentsNavigation(navController).Launch(CommentsInput(stack.arg(COMMENTS.postId), stack.arg(COMMENTS.subReddit)))
+        route(SEARCH) { SearchNavigation(navigator, navigationListener).Launch() }
+        route(COMMENTS, listOf(COMMENTS.postId, COMMENTS.subReddit)) { stack ->
+            CommentsNavigation(navigator, navigationListener).Launch(
+                CommentsInput(
+                    stack.arg(COMMENTS.postId),
+                    stack.arg(COMMENTS.subReddit)
+                )
+            )
         }
-        composable(TEST.path) { TestNavigation(navController).Launch() }
-        composable(MENU.path) { MenuNavigation(navController).Launch() }
-        composable(AUTHENTICATION.path) { AuthenticateNavigation(navController, navigationListener).Launch() }
-        composable(AUTHENTICATION_RESULT.path) { AuthenticationResultNavigation(navController).Launch() }
-        composable(HIDDEN_SUBS.path) { HiddenSubsNavigation(navController).Launch() }
-        composable(WEB_VIEW.withArgsFormat(WEB_VIEW.url), NavRoute.getArguments(WEB_VIEW.url)) { stack ->
-            WebViewNavigation(navController, stack.arg(WEB_VIEW.url)).Launch()
+        route(TEST) { TestNavigation(navigator, navigationListener).Launch() }
+        route(MENU) { MenuNavigation(navigator, navigationListener).Launch() }
+        route(AUTHENTICATION) { AuthenticateNavigation(navigator, navigationListener).Launch() }
+        route(AUTHENTICATION_RESULT) { AuthenticationResultNavigation(navigator, navigationListener).Launch() }
+        route(HIDDEN_SUBS) { HiddenSubsNavigation(navigator).Launch() }
+        route(WEB_VIEW, listOf(WEB_VIEW.url)) { stack ->
+            WebViewNavigation(navigator, stack.arg(WEB_VIEW.url)).Launch()
         }
-        composable(FULL_SCREEN_IMAGE.withArgsFormat(FULL_SCREEN_IMAGE.url), NavRoute.getArguments(FULL_SCREEN_IMAGE.url)) { stack ->
-            FullScreenImageNavigation(navController).Launch(FullScreenImageInput(stack.arg(FULL_SCREEN_IMAGE.url)))
+        route(FULL_SCREEN_IMAGE, listOf(FULL_SCREEN_IMAGE.url)) { stack ->
+            FullScreenImageNavigation(navigator, navigationListener).Launch(FullScreenImageInput(stack.arg(FULL_SCREEN_IMAGE.url)))
         }
     }
 }
 
-fun NavBackStackEntry.arg(keyName: String): String {
-    return arguments?.getString(keyName) ?: ""
-}
-
 sealed class NavRoute(val path: String) {
+    object SPLASH : NavRoute("splash")
     object POSTS_LIST : NavRoute("posts_list") {
         const val subReddit = "sub_reddit"
     }
@@ -106,11 +105,13 @@ sealed class NavRoute(val path: String) {
     object USER : NavRoute("user") {
         const val userName = "user_name"
     }
+
     object SEARCH : NavRoute("search")
     object HIDDEN_SUBS : NavRoute("hiddenSubs")
     object WEB_VIEW : NavRoute("link") {
         const val url = "url"
     }
+
     object FULL_SCREEN_IMAGE : NavRoute("full_screen_image") {
         const val url = "url"
     }
@@ -126,7 +127,7 @@ sealed class NavRoute(val path: String) {
     object AUTHENTICATION_RESULT : NavRoute("authentication_result")
 
     // build navigation path (for screen navigation)
-    fun withArgs(vararg args: String): String {
+    fun withArgs(vararg args: String?): String {
         return buildString {
             append(path)
             args.forEach { arg ->
@@ -135,21 +136,7 @@ sealed class NavRoute(val path: String) {
         }
     }
 
-    // build and setup route format (in navigation graph)
-    fun withArgsFormat(vararg args: String): String {
-        return buildString {
-            append(path)
-            args.forEach { arg ->
-//                append("/{$arg}")
-                append("/{$arg}")
-            }
-        }
-    }
-
     companion object {
-        fun getArguments(argName: String): List<NamedNavArgument> {
-            return listOf(navArgument(argName) { type = NavType.StringType })
-        }
 
         fun getArguments(argsName: List<String>): List<NamedNavArgument> {
             val list = ArrayList<NamedNavArgument>()

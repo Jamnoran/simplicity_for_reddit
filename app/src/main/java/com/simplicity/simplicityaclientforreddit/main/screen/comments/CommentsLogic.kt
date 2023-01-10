@@ -1,10 +1,13 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.comments
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
+import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.ChildrenData
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +33,25 @@ class CommentsLogic : BaseComposeLogic<CommentsInput>() {
             })
         }
     }
+
+    fun downVote(childrenData: ChildrenData) {
+    }
+
+    fun upVote(childrenData: ChildrenData) {
+    }
+
+    fun clearVote(childrenData: ChildrenData) {
+    }
+
+    fun goToReddit(childrenData: ChildrenData) {
+        val convertedUrl = "https://www.reddit.com${childrenData.permalink}"
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
+        navListener(browserIntent)
+    }
+
+    fun sharePost(childrenData: ChildrenData) {
+    }
+
     companion object {
         private const val TAG = "CommentsLogic"
     }

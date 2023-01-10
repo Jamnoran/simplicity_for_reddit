@@ -16,6 +16,7 @@ class SettingsSP {
         editor?.putString(key, value)
         editor?.apply()
     }
+
     fun saveSetting(key: String, value: Int) {
         val editor = getPreferences()?.edit()
         editor?.putInt(key, value)
@@ -48,6 +49,7 @@ class SettingsSP {
     }
 
     companion object {
+        const val KEY_USER = "USER"
         const val KEY_DEVICE_HEIGHT = "DEVICE_HEIGHT"
         const val KEY_DEVICE_WIDTH = "DEVICE_WIDTH"
         const val KEY_MUTE_VIDEOS = "MUTE_VIDEOS"

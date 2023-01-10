@@ -14,7 +14,7 @@ class WebViewNavigation(private val navController: NavHostController, val url: S
         val logic: WebViewLogic = viewModel()
         val state = logic.state.collectAsStateWithLifecycle()
         val screen = WebViewScreen(navController, logic, state.value)
-        logic.init(url)
+        logic.ready(url)
         return screen
     }
 }

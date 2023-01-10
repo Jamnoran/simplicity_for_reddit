@@ -57,8 +57,8 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         background { redditListLogic.showPreviousPost() }
     }
 
-    fun upVote(post: RedditPost) {
-        val call = APIAuthenticated().upVote("t3_${post.data.id}")
+    fun upVote(post: RedditPost.Data) {
+        val call = APIAuthenticated().upVote("t3_${post.id}")
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "UpVoted")
@@ -70,8 +70,8 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         })
     }
 
-    fun downVote(post: RedditPost) {
-        val call = APIAuthenticated().downVote("t3_${post.data.id}")
+    fun downVote(post: RedditPost.Data) {
+        val call = APIAuthenticated().downVote("t3_${post.id}")
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "DownVote")
@@ -83,8 +83,8 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         })
     }
 
-    fun clearVote(post: RedditPost) {
-        val call = APIAuthenticated().clearVote("t3_${post.data.id}")
+    fun clearVote(post: RedditPost.Data) {
+        val call = APIAuthenticated().clearVote("t3_${post.id}")
         call.enqueue(object : CustomResponseCompose<JsonResponse>(this) {
             override fun success(responseBody: JsonResponse) {
                 Log.i(TAG, "Cleared vote")
@@ -96,22 +96,19 @@ class SingleListLogic : BaseComposeLogic<SingleListInput>() {
         })
     }
 
-    fun sharePost(redditPost: RedditPost) {
+    fun sharePost(post: RedditPost.Data) {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
-        shareIntent.putExtra(Intent.EXTRA_TEXT, redditPost.data.url)
-        navigationListener.navigate.invoke(shareIntent)
+//        shareIntent.putExtra(Intent.EXTRA_TEXT, post.url)
+//        shareIntent.putExtra(Intent.EXTRA_TEXT, post.urlOverriddenByDest)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "https://www.reddit.com${post.permalink}")
+        navListener(shareIntent)
     }
 
-    fun goToReddit(post: RedditPost) {
-        val convertedUrl = "https://www.reddit.com${post.data.permalink}"
+    fun goToReddit(post: RedditPost.Data) {
+        val convertedUrl = "https://www.reddit.com${post.permalink}"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
-        navigationListener.navigate.invoke(browserIntent)
-    }
-
-    fun openBrowser(url: String) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        navigationListener.navigate.invoke(browserIntent)
+        navListener(browserIntent)
     }
 
     fun hideReddit(subreddit: String) {

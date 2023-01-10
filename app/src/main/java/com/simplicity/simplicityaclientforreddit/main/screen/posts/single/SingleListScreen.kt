@@ -60,11 +60,9 @@ fun Screen(
     nextItem: () -> Unit,
     previousItem: () -> Unit
 ) {
-    Log.i("SingleListScreen", "Showing post with url : https://www.reddit.com${data.redditPost?.data?.permalink}")
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val scrollingEnabled = !IsPostRequiringFulLScreenUseCase(data.redditPost).execute()
-    Log.i("SingleListScreen", "Scrolling enabled = $scrollingEnabled!")
     data.scrollToTop?.let {
         coroutineScope.launch {
             scrollState.scrollTo(0)
@@ -106,26 +104,26 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         upVote = { logic.upVote(it) },
         clearVote = { logic.clearVote(it) },
         redditClick = { logic.goToReddit(it) },
-        authorClick = { it.data.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
+        authorClick = { it.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
         shareClick = { logic.sharePost(it) },
-        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.data.id, it.data.subreddit)) },
+        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.id, it.subreddit)) },
         linkClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
         },
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
         },
         linkExternalBrowserClick = { logic.openBrowser(url = it) },
         subredditClick = {
-            AddSubRedditVisitedUseCase(it.data.subreddit).execute()
-            navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit))
+            AddSubRedditVisitedUseCase(it.subreddit).execute()
+            navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.subreddit))
         },
         showError = { },
-        hideSubClick = { logic.hideReddit(it.data.subreddit) },
+        hideSubClick = { logic.hideReddit(it.subreddit) },
         postHiddenFromView = {},
         nextPost = { logic.nextPost() },
         fullScreen = {
-            it.data.url?.let { imageUrl ->
+            it.url?.let { imageUrl ->
                 navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
             }
         }

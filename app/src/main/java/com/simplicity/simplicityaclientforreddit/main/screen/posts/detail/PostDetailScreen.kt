@@ -129,11 +129,11 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         downVote = { logic.downVote(it) },
         upVote = { logic.upVote(it) },
         redditClick = {},
-        authorClick = { it.data.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
+        authorClick = { it.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
         shareClick = {},
-        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.data.id, it.data.subreddit)) },
+        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.id, it.subreddit)) },
         linkClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
         },
         linkUrlClick = {
             navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
@@ -141,14 +141,14 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         linkExternalBrowserClick = {
             logic.openBrowser(url = it)
         },
-        subredditClick = { navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.data.subreddit)) },
+        subredditClick = { navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.subreddit)) },
         showError = {},
         hideSubClick = {},
         postHiddenFromView = {},
         nextPost = {},
         clearVote = {},
         fullScreen = {
-            it.data.url?.let { imageUrl ->
+            it.url?.let { imageUrl ->
                 navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
             }
         }

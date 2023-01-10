@@ -11,7 +11,7 @@ class PostDetailNavigation(val navigator: NavHostController, val navigationListe
     fun Launch() {
         val logic: PostDetailLogic = viewModel()
         val screen = PostDetailScreen(navigator, logic)
-        logic.start(navigationListener)
+        logic.init(null, navigator, navigationListener)
         return screen
     }
 }

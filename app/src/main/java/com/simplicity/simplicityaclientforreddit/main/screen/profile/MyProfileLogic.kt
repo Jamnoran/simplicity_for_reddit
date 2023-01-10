@@ -1,9 +1,11 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.profile
 
 import android.util.Log
+import com.google.gson.Gson
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseCompose
+import com.simplicity.simplicityaclientforreddit.main.io.settings.SettingsSP
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +25,7 @@ class MyProfileLogic : BaseLogic() {
                 override fun success(responseBody: User) {
                     // Log a message indicating that the user was obtained
                     Log.i(TAG, "Got user $responseBody")
+                    SettingsSP().saveSetting(SettingsSP.KEY_USER, Gson().toJson(responseBody))
                     // Execute the following code in the main (foreground) thread
                     foreground {
                         // Update the state of the UI to show that the request was successful

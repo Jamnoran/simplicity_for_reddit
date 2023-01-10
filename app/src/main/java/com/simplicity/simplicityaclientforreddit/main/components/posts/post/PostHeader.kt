@@ -16,11 +16,14 @@ import com.simplicity.simplicityaclientforreddit.main.media.TesterHelper
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.internal.enums.PostType
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
-import com.simplicity.simplicityaclientforreddit.main.theme.* // ktlint-disable no-wildcard-imports
+import com.simplicity.simplicityaclientforreddit.main.theme.OnSurface
+import com.simplicity.simplicityaclientforreddit.main.theme.Primary
+import com.simplicity.simplicityaclientforreddit.main.theme.Red
+import com.simplicity.simplicityaclientforreddit.main.theme.Secondary
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUseCase
 
 @Composable
-fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
+fun PostHeader(post: RedditPost.Data, listener: RedditPostListener, type: PostType) {
     Column(Modifier.padding(start = 8.dp, end = 8.dp)) {
         // Title
         Row(modifier = Modifier.padding(top = 8.dp)) {
@@ -28,8 +31,8 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
                 MarkDownSimple(
                     modifier = Modifier.padding(bottom = 4.dp)
                         .clickable { listener.redditClick.invoke(post) },
-                    body = post.data.title ?: "[deleted]",
-                    style = SpanStyle(fontWeight = FontWeight.Bold)
+                    body = post.title ?: "[deleted]",
+                    style = SpanStyle(fontWeight = FontWeight.Bold, color = OnSurface)
                 )
             }
         }
@@ -39,7 +42,7 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
             CText(
                 modifier = Modifier.padding(start = 4.dp)
                     .clickable { listener.subredditClick.invoke(post) },
-                text = "r/${post.data.subreddit}",
+                text = "r/${post.subreddit}",
                 color = Secondary
             )
             // Author
@@ -47,17 +50,17 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
             CText(
                 modifier = Modifier.padding(start = 4.dp)
                     .clickable { listener.authorClick.invoke(post) },
-                text = "u/${post.data.author ?: "[deleted]"}",
+                text = "u/${post.author ?: "[deleted]"}",
                 color = Primary
             )
         }
         // Created at
         Row {
             CText(
-                text = GetTimeAgoUseCase().execute(post.data.created),
+                text = GetTimeAgoUseCase().execute(post.created),
                 color = OnSurface
             )
-            if (post.data.over_18 == true) {
+            if (post.over_18 == true) {
                 CText(
                     modifier = Modifier.padding(start = 8.dp),
                     text = "NSFW",
@@ -72,7 +75,7 @@ fun PostHeader(post: RedditPost, listener: RedditPostListener, type: PostType) {
 @Composable
 fun Preview() {
     PostHeader(
-        post = TesterHelper.getPost(),
+        post = TesterHelper.getPost().data,
         listener = RedditPostListener.preview(),
         type = PostType.IMAGE
     )

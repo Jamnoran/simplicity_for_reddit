@@ -47,7 +47,7 @@ fun PostLink(post: RedditPost, listener: RedditPostListener) {
 fun ShowPostLink(post: RedditPost, listener: RedditPostListener) {
     Column(Modifier.fillMaxWidth().padding(start = 8.dp, end = 8.dp, top = 8.dp)) {
         CText(
-            modifier = Modifier.fillMaxWidth().clickable { listener.linkClick.invoke(post) },
+            modifier = Modifier.fillMaxWidth().clickable { listener.linkClick.invoke(post.data) },
             text = "${post.data.title}",
             style = BodyNormalLink,
             LinkColor
@@ -91,7 +91,7 @@ fun ShowPostLinkWithThumbnail(post: RedditPost, listener: RedditPostListener) {
         Spacer(Modifier.width(8.dp))
         Column(
             Modifier.width(140.dp).background(Primary)
-                .clickable { listener.linkClick.invoke(post) }
+                .clickable { listener.linkClick.invoke(post.data) }
         ) {
             // Preview image
             Box(Modifier.width(140.dp).height(80.dp)) {

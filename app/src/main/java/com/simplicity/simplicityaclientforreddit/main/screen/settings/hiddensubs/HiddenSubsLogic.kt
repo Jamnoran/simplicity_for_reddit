@@ -3,6 +3,8 @@ package com.simplicity.simplicityaclientforreddit.main.screen.settings.hiddensub
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.room.RoomDB
+import com.simplicity.simplicityaclientforreddit.main.usecases.firebase.FirebaseGetUserUseCase
+import com.simplicity.simplicityaclientforreddit.main.usecases.firebase.FirebaseSaveUserUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.hidden.ShowSubUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,8 +48,14 @@ class HiddenSubsLogic : BaseLogic() {
     }
 
     fun saveSubList() {
+        background {
+            FirebaseSaveUserUseCase().execute()
+        }
     }
 
     fun loadSubList() {
+        background {
+            FirebaseGetUserUseCase().execute({}, {})
+        }
     }
 }

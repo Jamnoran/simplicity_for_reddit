@@ -43,7 +43,6 @@ fun NavigationDrawer(navigator: NavHostController, closeDrawer: () -> Unit, isLo
     ) {
         Profile(navigator = navigator, closeDrawer = closeDrawer, isLoggedIn = isLoggedIn)
         VisitedSubs(Modifier.weight(1F), navigator, closeDrawer)
-//        Spacer(modifier = Modifier.weight(1f))
         BottomNavigationButtons(navigator, closeDrawer)
     }
 }

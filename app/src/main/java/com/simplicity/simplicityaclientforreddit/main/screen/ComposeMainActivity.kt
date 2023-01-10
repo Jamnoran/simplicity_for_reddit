@@ -20,6 +20,10 @@ class ComposeMainActivity : BaseComposeActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Global.applicationContext = applicationContext
+        setUpCoil()
+    }
+
+    private fun setUpCoil() {
         // Set up coil gif handling
         val imageLoader = ImageLoader.Builder(this)
             .components {
@@ -53,7 +57,7 @@ class ComposeMainActivity : BaseComposeActivity() {
         }
         navController = rememberNavController()
         navController?.let { navigator ->
-            Navigation(navigationListener = navigationListener, navController = navigator)
+            Navigation(navigationListener = navigationListener, navigator = navigator)
         }
     }
 }

@@ -10,7 +10,6 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.AddCa
 import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.GetCachedPostUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.cachedPosts.RemoveCachedPostUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.post.FilterPostsUseCase
-import retrofit2.Call
 
 class RedditListLogic {
     private lateinit var _logic: BaseLogic
@@ -22,8 +21,9 @@ class RedditListLogic {
     private var _positionOfCurrentPost = 0
     private var _subReddit: String = ""
 
-    fun init(subReddit: String, api: APIInterface, logic: BaseLogic, listener: RedditListLogicListener) {
-        _subReddit = subReddit
+    fun init(subReddit: String?, api: APIInterface, logic: BaseLogic, listener: RedditListLogicListener) {
+        _subReddit = subReddit ?: ""
+        if (_subReddit == "null") _subReddit = ""
         _api = api
         _logic = logic
         _listener = listener

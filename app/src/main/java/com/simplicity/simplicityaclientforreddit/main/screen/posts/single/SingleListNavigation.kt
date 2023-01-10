@@ -19,7 +19,7 @@ class SingleListNavigation(
         val logic: SingleListLogic = viewModel()
         val state = logic.state.collectAsStateWithLifecycle()
         val screen = SingleListScreen(navigator, logic, state.value)
-        logic.init(SingleListInput(navigationListener = navigationListener, subReddit = subReddit))
+        logic.init(SingleListInput(navigationListener = navigationListener, subReddit = subReddit), navigator, navigationListener)
         return screen
     }
 }

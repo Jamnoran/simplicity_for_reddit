@@ -10,6 +10,7 @@ import com.simplicity.simplicityaclientforreddit.main.base.BasePostsListViewMode
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.APIInterface
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponse
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseList
+import com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.FetchPostsResponse
@@ -78,7 +79,7 @@ class SinglePostViewModel : BasePostsListViewModel<FragmentSinglePostBinding>() 
         _requireUpdateSettingsValues.postValue(Unit)
         setIsFetching(true)
         Log.i(TAG, "Getting reddit posts with this cursor: $cursor")
-        val service = com.simplicity.simplicityaclientforreddit.main.io.retrofit.RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
+        val service = RetrofitClientInstance.getRetrofitInstance().create(APIInterface::class.java)
         val call = service.getPosts(subReddit ?: "all", cursor, "on")
         call.enqueue(object : CustomResponse<FetchPostsResponse>(this) {
             override fun success(responseBody: FetchPostsResponse) {

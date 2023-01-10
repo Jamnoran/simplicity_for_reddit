@@ -28,13 +28,19 @@ import com.simplicity.simplicityaclientforreddit.main.components.screens.Default
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
+import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownText
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.Children
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.ChildrenData
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditCommentListener
 import com.simplicity.simplicityaclientforreddit.main.theme.Primary
+import com.simplicity.simplicityaclientforreddit.main.theme.Secondary
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 import com.simplicity.simplicityaclientforreddit.main.theme.Surface
+import com.simplicity.simplicityaclientforreddit.main.usecases.subreddits.AddSubRedditVisitedUseCase
 import com.simplicity.simplicityaclientforreddit.main.usecases.text.GetTimeAgoUseCase
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun CommentsScreen(navController: NavHostController, logic: CommentsLogic, state: UiState<Data>) {
@@ -47,7 +53,7 @@ fun CommentsScreen(navController: NavHostController, logic: CommentsLogic, state
 }
 
 @Composable
-fun Show(navController: NavHostController?, logic: CommentsLogic, data: Data) {
+fun Show(navigator: NavHostController, logic: CommentsLogic, data: Data) {
     val commentList: List<ChildrenData>? = data.response.commentResponseData?.children?.map { it.childrenData!! }
 
     DefaultScreen {
@@ -57,16 +63,39 @@ fun Show(navController: NavHostController?, logic: CommentsLogic, data: Data) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(listItems) { childData ->
-                    Comment(childData)
+                    Comment(childData, getListener(logic, navigator))
                 }
             }
         }
     }
 }
 
+fun getListener(logic: CommentsLogic, navigator: NavHostController): RedditCommentListener {
+    return RedditCommentListener(
+        downVote = { logic.downVote(it) },
+        upVote = { logic.upVote(it) },
+        clearVote = { logic.clearVote(it) },
+        redditClick = { logic.goToReddit(it) },
+        authorClick = { it.author?.let { author -> navigator.navigate(NavRoute.USER.withArgs(author)) } },
+        shareClick = { logic.sharePost(it) },
+        readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.id, it.subreddit)) },
+        linkClick = {
+            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
+        },
+        linkExternalBrowserClick = { logic.openBrowser(url = it) },
+        subredditClick = {
+            it.subreddit?.let { subreddit ->
+                AddSubRedditVisitedUseCase(subreddit).execute()
+                navigator.navigate(NavRoute.SINGLE_LIST.withArgs(it.subreddit))
+            }
+        },
+        showError = { }
+    )
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Comment(comment: ChildrenData) {
+fun Comment(comment: ChildrenData, listener: RedditCommentListener) {
     var showChildren by remember { mutableStateOf(true) }
     val interactionSource = remember { MutableInteractionSource() }
     Column(
@@ -80,19 +109,18 @@ fun Comment(comment: ChildrenData) {
             }
         )
     ) {
-        Row() {
+        Row {
             // Author + time
             CText(text = "r/${comment.author ?: "[deleted]"}", color = Primary)
             CText(text = " ${GetTimeAgoUseCase().execute(comment.createdUtc)}")
         }
         // Comment
-        CText(text = comment.body ?: "[deleted]")
+        MarkDownText(body = comment.body ?: "[deleted]", linkClicked = { listener.linkExternalBrowserClick.invoke(it) })
         // Bottom bar
-        val listener = RedditCommentListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
         CommentFooter(comment = comment, listener = listener)
         if (showChildren) {
             // Children
-            ShowChildren(comment.repliesCustomParsed?.repliesData?.children)
+            ShowChildren(comment.repliesCustomParsed?.repliesData?.children, listener)
         } else {
             CText("...........Long click to expand again..........")
         }
@@ -100,13 +128,13 @@ fun Comment(comment: ChildrenData) {
 }
 
 @Composable
-fun ShowChildren(replies: ArrayList<Children>?) {
+fun ShowChildren(replies: ArrayList<Children>?, listener: RedditCommentListener) {
     if (replies?.isNotEmpty() == true) {
         Row(Modifier.padding(start = 6.dp).fillMaxWidth()) {
-            Column(Modifier.background(Primary).padding(start = 2.dp)) {
+            Column(Modifier.background(Secondary).padding(start = 1.dp)) {
                 for (reply in replies) {
                     reply.childrenData?.let { childData ->
-                        Comment(childData)
+                        Comment(childData, listener)
                     }
                 }
             }

@@ -147,12 +147,12 @@ class PostsListLogic : BaseLogic() {
         _preLoadedPosts.clear()
     }
 
-    fun upVote(it: RedditPost) {
-        Log.i("PostListLogic", "UpVote ${it.data.author}")
+    fun upVote(it: RedditPost.Data) {
+        Log.i("PostListLogic", "UpVote ${it.author}")
     }
 
-    fun downVote(it: RedditPost) {
-        Log.i("PostListLogic", "downVote ${it.data.author}")
+    fun downVote(it: RedditPost.Data) {
+        Log.i("PostListLogic", "downVote ${it.author}")
     }
 
     fun openBrowser(url: String) {

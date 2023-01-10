@@ -1,25 +1,21 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.posts.detail
 
-import android.content.Intent
-import android.net.Uri
 import android.util.Log
-import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseLogic
+import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomResponseListCompose
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.serializers.CommentSerializer
-import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.comments.CommentResponse
+import com.simplicity.simplicityaclientforreddit.main.screen.splash.SplashInput
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class PostDetailLogic : BaseLogic() {
+class PostDetailLogic : BaseComposeLogic<SplashInput>() {
     private val _stateFlow = MutableStateFlow<UiState<RedditPost>>(UiState.Loading())
     val stateFlow: StateFlow<UiState<RedditPost>> = _stateFlow
 
-    private lateinit var _navigationListener: NavigationListener
-
-    private val singlePostUrl = getPostUrlImage()
+    private val singlePostUrl = spamPost()
     fun getPostMarkDownTest(): String = "/user/Jamnoran/comments/z3mz2a/markdown_test/"
     fun getPostUrlImage(): String = "/r/sweden/comments/xxqy0a/det_är_fredag_mina_bekanta_bör_vi_skicka_våra/"
     fun getPostUrlYoutube(): String = "/r/videos/comments/xxls7u/im_a_voice_actor_i_edited_the_super_mario_bros/"
@@ -45,15 +41,16 @@ class PostDetailLogic : BaseLogic() {
     fun spamPost(): String =
         "/r/wholesomegifs/comments/102uw3a/every_day_camus_waits_patiently_for_his_friend/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
 
-    // Non working posts
     fun redditLink(): String =
         "/r/worldnews/comments/zxz776/explosions_rock_ukrainian_cities_as_russia/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
 
     fun removedPost(): String =
         "/r/yesyesyesno/comments/zxxe45/damn_some_lucky_guy/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
 
-    fun start(navigationListener: NavigationListener) {
-        _navigationListener = navigationListener
+    fun textWithFormatting(): String =
+        "/r/BestofRedditorUpdates/comments/10685al/aita_for_for_taking_someones_full_cart_at_walmart/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=1&utm_content=share_button"
+
+    override fun ready() {
         Log.i(TAG, "Fetch post called with a state of ${_stateFlow.value}")
         background {
             fetchPostWithComments(singlePostUrl)
@@ -68,9 +65,8 @@ class PostDetailLogic : BaseLogic() {
             override fun success(responseBody: ArrayList<CommentResponse>) {
                 responseBody.let { commentsResponse ->
                     commentsResponse.first().redditPost?.let { redditPost ->
-//                        DownloadIfRequiredLinkedRedditPostUseCase(redditPost).execute()
                         foreground {
-                            Log.i(TAG, "We are emitting success to _stateflow")
+                            Log.i(TAG, "We are emitting success to _stateflow with type ${redditPost.data.postHint}")
                             _stateFlow.emit(UiState.Success(redditPost))
                         }
                     }
@@ -79,20 +75,15 @@ class PostDetailLogic : BaseLogic() {
         })
     }
 
-    fun upVote(it: RedditPost) {
-        Log.i("PostListLogic", "UpVote ${it.data.author}")
+    fun upVote(it: RedditPost.Data) {
+        Log.i("PostListLogic", "UpVote ${it.author}")
     }
 
-    fun downVote(it: RedditPost) {
-        Log.i("PostListLogic", "downVote ${it.data.author}")
-    }
-
-    fun openBrowser(url: String) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        _navigationListener.navigate.invoke(browserIntent)
+    fun downVote(it: RedditPost.Data) {
+        Log.i("PostListLogic", "downVote ${it.author}")
     }
 
     companion object {
-        private val TAG = "PostListLogic"
+        private const val TAG = "PostListLogic"
     }
 }

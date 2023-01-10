@@ -13,12 +13,10 @@ class GetPostTypeUseCase {
         }
 
         if (data.is_video) {
-//            Log.i("GetPostTypeUseCase", "PostType.IS_VIDEO")
             return PostType.IS_VIDEO
         }
 
         if (data.is_gallery) {
-//            Log.i("GetPostTypeUseCase", "PostType.GALLERY")
             return PostType.GALLERY
         }
         if (data.tournament_data != null) {
@@ -42,16 +40,18 @@ class GetPostTypeUseCase {
                 return PostType.LINK
             }
             "rich:video" -> {
-//                Log.i("GetPostTypeUseCase", "PostType.RICH_VIDEO")
                 PostType.RICH_VIDEO
             }
             "image" -> {
-//                Log.i("GetPostTypeUseCase", "PostType.IMAGE")
                 PostType.IMAGE
             }
             else -> {
-//                Log.i("GetPostTypeUseCase", "PostType.NONE")
+                // TODO: Find some way to sort out if postHint is sent as null but got content of other types
+//                if (data.url != null) {
+//                    PostType.LINK
+//                } else {
                 PostType.NONE
+//                }
             }
         }
     }
@@ -64,8 +64,10 @@ class GetPostTypeUseCase {
     }
 
     private fun containsImgur(data: RedditPost.Data): Boolean {
-        if (data.url != null && data.url!!.contains("imgur.com")) {
-            return true
+        data.url?.let {
+            if (it.contains("imgur.com") || it.contains("i.imgur.com")) {
+                return true
+            }
         }
         return false
     }

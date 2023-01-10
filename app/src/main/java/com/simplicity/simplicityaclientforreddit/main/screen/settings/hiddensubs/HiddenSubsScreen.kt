@@ -1,6 +1,5 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.settings.hiddensubs
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.* // ktlint-disable no-wildcard-imports
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +12,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -40,11 +38,6 @@ fun HiddenSubsScreen(navController: NavHostController, logic: HiddenSubsLogic = 
 
 @Composable
 fun Show(navController: NavHostController?, data: Data, logic: HiddenSubsLogic) {
-    Toast.makeText(
-        LocalContext.current,
-        "Got this many subs : ${data.hiddenSubs.size}",
-        Toast.LENGTH_LONG
-    ).show()
     DefaultScreen {
         Column {
             Row(

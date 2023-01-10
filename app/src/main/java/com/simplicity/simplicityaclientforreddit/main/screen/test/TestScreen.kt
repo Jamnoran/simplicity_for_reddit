@@ -32,11 +32,16 @@ fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiStat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Show(navigator: NavHostController, data: String) {
+    Log.i("TestScreen", "Showing screen!")
     Column(Modifier.fillMaxWidth().background(Background).verticalScroll(rememberScrollState())) {
         MarkDownText(body = data) {
             Log.i("TestScreen", "We got click on this url $it")
         }
+//        ShowGif(it = "https://i.imgur.com/kbIohCJ.gifv")
     }
+//    Column(Modifier.fillMaxWidth().background(Background)) {
+//        CWebView(url = "https://consent.yahoo.com/v2/collectConsent?sessionId=3_cc-session_777246a8-9f31-461a-877b-12273d1e1552")
+//    }
 
 //    val scaffoldState = rememberScaffoldState()
 //    Scaffold(

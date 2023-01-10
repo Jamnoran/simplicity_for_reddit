@@ -11,7 +11,7 @@ class WebViewLogic : BaseLogic() {
     private val _state = MutableStateFlow<UiState<Data>>(UiState.Loading())
     val state: StateFlow<UiState<Data>> = _state
 
-    fun init(url: String) {
+    fun ready(url: String) {
         background {
             val urlDecoded = GetWebUrlDecodedUseCase(url).invoke()
             foreground {

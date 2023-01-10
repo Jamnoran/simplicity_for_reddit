@@ -11,6 +11,6 @@ class MarkDownSigns {
         const val CHAR_QUOTE = ">"
         const val CHAR_QUOTE_VALUE = "|   "
         const val CHAR_LINE = "&amp;#x200B;"
-        const val CHAR_LINE_VALUE = "-----------------------"
+        const val CHAR_LINE_VALUE = "--------------------------------"
     }
 }

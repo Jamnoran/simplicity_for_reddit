@@ -20,8 +20,8 @@ class UserNavigation(
         val logic: UserLogic = viewModel()
         val state = logic.state.collectAsStateWithLifecycle()
         Log.i("UserNavigation", "Getting updated state with posts: ${state.value}")
-        val screen = UserScreen(navController, navigationListener, logic, state.value)
-        logic.init(UserInput(userName, navigationListener))
+        val screen = UserScreen(navController, logic, state.value)
+        logic.init(UserInput(userName), navController, navigationListener)
         return screen
     }
 }

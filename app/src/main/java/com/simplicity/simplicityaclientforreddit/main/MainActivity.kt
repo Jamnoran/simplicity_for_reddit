@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         setContentView(binding.root)
-        com.simplicity.simplicityaclientforreddit.main.Global.applicationContext = applicationContext
+        Global.applicationContext = applicationContext
 
         if (savedInstanceState == null) {
             intent.extras?.let {

@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.simplicity.simplicityaclientforreddit.main.components.posts.post.PostBody
+import com.simplicity.simplicityaclientforreddit.main.components.posts.post.PostHeader
 import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.screen.posts.RedditPostListener
@@ -15,6 +16,7 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.post.GetPostTypeU
 fun PostRepost(post: RedditPost, listener: RedditPostListener) {
     post.data.crosspostParentList?.first()?.let { repost ->
         Column(modifier = Modifier.padding(8.dp)) {
+            PostHeader(post = repost, listener = listener, type = GetPostTypeUseCase().execute(repost))
             CText("Repost from u/${repost.author} in r/${repost.subreddit}")
             CText(text = repost.title ?: "[Deleted]")
         }

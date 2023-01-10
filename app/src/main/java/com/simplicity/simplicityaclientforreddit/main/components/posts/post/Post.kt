@@ -41,7 +41,7 @@ fun Post(post: RedditPost, listener: RedditPostListener, singlePost: Boolean = t
 @Composable
 fun PostAtBottom(post: RedditPost, listener: RedditPostListener, type: PostType) {
     Column(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
-        PostHeader(post, listener, type)
+        PostHeader(post.data, listener, type)
         PostBody(post, listener, type)
         ShowSelfText(type, post)
         PostFooter(post, listener)
@@ -53,7 +53,7 @@ fun PostAtTop(post: RedditPost, listener: RedditPostListener, type: PostType) {
     Column(Modifier.fillMaxWidth().padding(bottom = 8.dp)) {
         PostBody(post, listener, type)
         ShowSelfText(type, post)
-        PostHeader(post, listener, type)
+        PostHeader(post.data, listener, type)
         PostFooter(post, listener)
     }
 }

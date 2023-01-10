@@ -72,7 +72,7 @@ fun getListener(logic: PostsListLogic, navigator: NavHostController): RedditPost
         shareClick = {},
         readComments = {},
         linkClick = {
-            val encodedUrl = URLEncoder.encode(it.data.url, StandardCharsets.UTF_8.toString())
+            val encodedUrl = URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())
 //            navigator.navigate(LINK.plus("/").plus(encodedUrl))
 //            navigator.navigate((navigator, encodedUrl))
         },

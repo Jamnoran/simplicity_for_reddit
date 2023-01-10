@@ -1,6 +1,5 @@
 package com.simplicity.simplicityaclientforreddit.main.components.posts.post.types
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,7 +46,6 @@ fun PostGallery(post: RedditPost, listener: RedditPostListener) {
         val galleryData = GetGalleryImageUrlUseCase().execute(post.data, position)
         Box {
             // ShowImage
-            Log.i("PostGallery", "Showing gallery item with position $position")
             ShowImage(galleryData = galleryData, screenWidth) { contentHeight = it }
             // Navigation
             Row(Modifier.height(contentHeight)) {
@@ -104,7 +102,6 @@ fun ShowImage(galleryData: GalleryItem, screenWidth: Dp, contentHeightModified: 
             imageHeight = screenWidth.div(ratio)
         }
         contentHeightModified.invoke(imageHeight)
-        Log.i("PostGallery", "Calculating height with ${mediaData.imageRatio} and width $screenWidth resulting in $imageHeight")
         Image(
             painter = rememberAsyncImagePainter(mediaData.mediaUrl),
             contentDescription = null,

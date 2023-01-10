@@ -8,8 +8,8 @@ import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
 import com.simplicity.simplicityaclientforreddit.main.io.retrofit.CustomCallback
 import com.simplicity.simplicityaclientforreddit.main.models.external.posts.RedditPost
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.User
-import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.UserResponse
 import com.simplicity.simplicityaclientforreddit.main.models.external.responses.user.posts.UserPostsResponse
+import com.simplicity.simplicityaclientforreddit.main.utils.extensions.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -33,28 +33,17 @@ class UserLogic : BaseComposeLogic<UserInput>() {
 
     private fun fetchUser() {
         val call = APIAuthenticated().getUser(_input.userName)
-        call.enqueue(
-            object : CustomCallback<UserResponse> {
-                override fun onSuccess(responseBody: UserResponse) {
-                    responseBody.data.let { userData ->
-                        _user = userData
-                        fetchPosts()
-                    }
+        call.fold(
+            onSuccess = { responseBody ->
+                responseBody.data.let { userData ->
+                    _user = userData
+                    fetchPosts()
                 }
-
-                override fun onUnauthorized() {
-                    Log.e(TAG, "onUnauthorized")
-                    networkError.postValue(Unit)
-                    foreground {
-                        _state.emit(UiState.Error("onUnauthorized"))
-                    }
-                }
-
-                override fun onFailed(throwable: Throwable) {
-                    Log.e(TAG, "Error: ", throwable)
-                    foreground {
-                        _state.emit(UiState.Error(throwable.toString()))
-                    }
+            },
+            onFailure = {
+                Log.e(TAG, "Error: ", it.throwable)
+                foreground {
+                    _state.emit(UiState.Error(it.throwable.toString()))
                 }
             }
         )
@@ -90,10 +79,10 @@ class UserLogic : BaseComposeLogic<UserInput>() {
         })
     }
 
-    fun goToReddit(post: RedditPost) {
-        val convertedUrl = "https://www.reddit.com${post.data.permalink}"
+    fun goToReddit(post: RedditPost.Data) {
+        val convertedUrl = "https://www.reddit.com${post.permalink}"
         val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(convertedUrl))
-        _input.navigationListener.navigate.invoke(browserIntent)
+        navListener(browserIntent)
     }
 
     private fun updateUi() {

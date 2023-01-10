@@ -5,8 +5,9 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.simplicity.simplicityaclientforreddit.main.listeners.NavigationListener
 
-class CommentsNavigation(private val navController: NavHostController) {
+class CommentsNavigation(private val navController: NavHostController, val navigationListener: NavigationListener) {
 
     @OptIn(ExperimentalLifecycleComposeApi::class)
     @Composable
@@ -14,7 +15,7 @@ class CommentsNavigation(private val navController: NavHostController) {
         val logic: CommentsLogic = viewModel()
         val state = logic.stateFlow.collectAsStateWithLifecycle()
         val screen = CommentsScreen(navController, logic, state.value)
-        logic.init(input)
+        logic.init(input, navController, navigationListener)
         return screen
     }
 }

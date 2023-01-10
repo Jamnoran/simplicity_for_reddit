@@ -44,13 +44,13 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
         Comments(post, listener)
         Spacer(Modifier.weight(1f))
         // Share
-        CImageButton(iconResource = android.R.drawable.ic_menu_share) { listener.shareClick.invoke(post) }
+        CImageButton(iconResource = android.R.drawable.ic_menu_share) { listener.shareClick.invoke(post.data) }
 //        CTextButton(text = "Share") { listener.shareClick.invoke(post) }
         Spacer(Modifier.width(8.dp))
         // Hide
         CImageButton(iconResource = android.R.drawable.ic_menu_close_clear_cancel) {
             Toast.makeText(context, "Hiding sub ${post.data.subredditPrefixed}", Toast.LENGTH_LONG).show()
-            listener.hideSubClick.invoke(post)
+            listener.hideSubClick.invoke(post.data)
         }
 //        CTextButton(text = "Hide") {
 //            Toast.makeText(context, "Hiding sub ${post.data.subredditPrefixed}", Toast.LENGTH_LONG).show()
@@ -59,7 +59,7 @@ fun PostFooter(post: RedditPost, listener: RedditPostListener) {
         Spacer(Modifier.width(8.dp))
         // Go to reddit
 //        CTextButton(text = "Red") { listener.redditClick.invoke(post) }
-        CImageButton(iconResource = R.drawable.reddit_logo) { listener.redditClick.invoke(post) }
+        CImageButton(iconResource = R.drawable.reddit_logo) { listener.redditClick.invoke(post.data) }
         Spacer(Modifier.width(8.dp))
     }
 }
@@ -132,7 +132,7 @@ fun Comments(post: RedditPost, listener: RedditPostListener) {
         CImage(iconResource = R.drawable.chat_icon)
         Spacer(Modifier.width(4.dp))
         val numberOfComments = NumberFormat.getInstance().format((post.data.numComments))
-        CTextButton(text = numberOfComments) { listener.readComments.invoke(post) }
+        CTextButton(text = numberOfComments) { listener.readComments.invoke(post.data) }
     }
 }
 
