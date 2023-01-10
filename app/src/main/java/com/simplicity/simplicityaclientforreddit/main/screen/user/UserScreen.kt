@@ -136,6 +136,7 @@ fun getListener(logic: UserLogic, navigator: NavHostController): RedditPostListe
         showError = {},
         hideSubClick = {},
         postHiddenFromView = {},
+        postShownFromView = {},
         nextPost = {},
         clearVote = {},
         fullScreen = {}

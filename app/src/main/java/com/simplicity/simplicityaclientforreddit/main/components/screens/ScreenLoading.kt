@@ -17,17 +17,15 @@ import com.simplicity.simplicityaclientforreddit.main.theme.OnBackground
 
 @Composable
 fun ScreenLoading(loadingMessage: String? = null) {
-    DefaultScreen(modifier = Modifier) {
-        Column {
-            Spacer(modifier = Modifier.height(400.dp))
-            CText(
-                modifier = Modifier
-                    .fillMaxWidth().fillMaxHeight(),
-                text = loadingMessage ?: "Loading",
-                color = OnBackground,
-                textAlign = TextAlign.Center
-            )
-        }
+    Column {
+        Spacer(modifier = Modifier.height(400.dp))
+        CText(
+            modifier = Modifier
+                .fillMaxWidth().fillMaxHeight(),
+            text = loadingMessage ?: "Loading",
+            color = OnBackground,
+            textAlign = TextAlign.Center
+        )
     }
 }
 

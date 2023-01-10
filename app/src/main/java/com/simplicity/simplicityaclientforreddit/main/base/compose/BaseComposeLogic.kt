@@ -11,7 +11,11 @@ open class BaseComposeLogic<Input> : BaseLogic() {
     private var navigator: NavHostController? = null
     private var navListener: NavigationListener? = null
 
-    fun init(input: Input? = null, navController: NavHostController, navigationListener: NavigationListener) {
+    fun init(
+        input: Input? = null,
+        navController: NavHostController,
+        navigationListener: NavigationListener
+    ) {
         navigator = navController
         navListener = navigationListener
         if (!checkIfStarted()) {

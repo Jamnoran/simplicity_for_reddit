@@ -15,8 +15,9 @@ import java.io.IOException
 class AudioPlayer(val post: RedditPost) {
 
     private var audioMediaPlayer: MediaPlayer? = null
+    private var preparedAudio = false
 
-    private fun initAudio() {
+    private fun initAudio(audioPrepared: () -> Unit) {
         // Check that we have not started a new video before this tries to play
         val postMediaData = GetMediaDataUseCase().execute(post.data)
 
@@ -35,31 +36,60 @@ class AudioPlayer(val post: RedditPost) {
                 mediaPlayer.prepare()
                 mediaPlayer.setOnPreparedListener {
                     Log.i(TAG, "Has prepared audio")
-//                audioMediaPlayer.start()
-                    it.start()
+                    audioMediaPlayer = it
+                    preparedAudio = true
+                    audioPrepared.invoke()
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Could not play audio$e")
                 //            videoPlayer.play();
+                preparedAudio = true
+                audioPrepared.invoke()
             }
         }
     }
 
-    fun checkIfVideoHasAudio(context: Context) {
+    fun checkIfVideoHasAudio(context: Context, audioPrepared: () -> Unit) {
         val postMediaData = GetMediaDataUseCase().execute(post.data)
         val queue = Volley.newRequestQueue(context)
         // Request a string response from the provided URL.
-        val stringRequest = StringRequest(Request.Method.GET, postMediaData.audioUrl, { response: String? ->
-            Log.i(TAG, "Volley request success")
-            initAudio()
-        }) { error: VolleyError? -> Log.i(TAG, "Volley request failed") }
+        val stringRequest =
+            StringRequest(Request.Method.GET, postMediaData.audioUrl, { response: String? ->
+                Log.i(TAG, "Volley request success")
+                initAudio(audioPrepared)
+            }) { error: VolleyError? ->
+                Log.i(TAG, "Volley request failed $error")
+                preparedAudio = true
+                audioPrepared.invoke()
+            }
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest)
     }
 
     fun pause() {
-        audioMediaPlayer?.stop()
+        audioMediaPlayer?.let {
+            it.pause()
+            Log.i(TAG, "Pausing audio")
+        }
+    }
+
+    fun start() {
+        audioMediaPlayer?.let {
+            it.start()
+            Log.i(TAG, "Resuming audio")
+        }
+    }
+
+    fun hasPreparedAudio(): Boolean {
+        return preparedAudio
+    }
+
+    fun restart() {
+        audioMediaPlayer?.let {
+            it.seekTo(0)
+            it.start()
+        }
     }
 
     companion object {

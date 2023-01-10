@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
@@ -36,11 +33,13 @@ import com.simplicity.simplicityaclientforreddit.main.usecases.post.IsPostRequir
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun PostDetailScreen(navigator: NavHostController, logic: PostDetailLogic) {
-    val uiState: UiState<RedditPost> by logic.stateFlow.collectAsStateWithLifecycle()
-    uiState.let {
+fun PostDetailScreen(
+    navigator: NavHostController,
+    logic: PostDetailLogic,
+    state: UiState<RedditPost>
+) {
+    state.let {
         when (it) {
             is UiState.Loading -> ScreenLoading(it.loadingMessage)
             is UiState.Error -> ScreenError()
@@ -54,7 +53,6 @@ fun PostDetailScreen(navigator: NavHostController, logic: PostDetailLogic) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Screen(
     navController: NavHostController,
@@ -80,7 +78,10 @@ fun BottomBar(modifier: Modifier, navigateToNext: () -> Unit, navigateToPrevious
                 .fillMaxWidth()
                 .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(0.3f)
-                .clickable(interactionSource = interactionSource, indication = null) { navigateToPrevious.invoke() }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { navigateToPrevious.invoke() }
         )
         Box(
             Modifier
@@ -88,13 +89,21 @@ fun BottomBar(modifier: Modifier, navigateToNext: () -> Unit, navigateToPrevious
                 .fillMaxWidth()
                 .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(0.7f)
-                .clickable(interactionSource = interactionSource, indication = null) { navigateToNext.invoke() }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { navigateToNext.invoke() }
         )
     }
 }
 
 @Composable
-fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigateToPrevious: () -> Unit, navigateToSettings: () -> Unit) {
+fun BottomNavigationBar(
+    modifier: Modifier,
+    navigateToNext: () -> Unit,
+    navigateToPrevious: () -> Unit,
+    navigateToSettings: () -> Unit
+) {
     val interactionSource = remember { MutableInteractionSource() }
     Row(modifier.fillMaxWidth()) {
         Box(
@@ -103,7 +112,10 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
                 .fillMaxWidth()
                 .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
-                .clickable(interactionSource = interactionSource, indication = null) { navigateToPrevious.invoke() }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { navigateToPrevious.invoke() }
         )
         Box(
             Modifier
@@ -111,7 +123,10 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
                 .fillMaxWidth()
                 .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
-                .clickable(interactionSource = interactionSource, indication = null) { navigateToSettings.invoke() }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { navigateToSettings.invoke() }
         )
         Box(
             Modifier
@@ -119,7 +134,10 @@ fun BottomNavigationBar(modifier: Modifier, navigateToNext: () -> Unit, navigate
                 .fillMaxWidth()
                 .height(Shape.BOTTOM_NAV_HEIGHT)
                 .weight(1f)
-                .clickable(interactionSource = interactionSource, indication = null) { navigateToNext.invoke() }
+                .clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { navigateToNext.invoke() }
         )
     }
 }
@@ -133,10 +151,24 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         shareClick = {},
         readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.id, it.subreddit)) },
         linkClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(
+                NavRoute.WEB_VIEW.withArgs(
+                    URLEncoder.encode(
+                        it.url,
+                        StandardCharsets.UTF_8.toString()
+                    )
+                )
+            )
         },
         linkUrlClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(
+                NavRoute.WEB_VIEW.withArgs(
+                    URLEncoder.encode(
+                        it,
+                        StandardCharsets.UTF_8.toString()
+                    )
+                )
+            )
         },
         linkExternalBrowserClick = {
             logic.openBrowser(url = it)
@@ -145,11 +177,19 @@ fun getListener(logic: PostDetailLogic, navigator: NavHostController): RedditPos
         showError = {},
         hideSubClick = {},
         postHiddenFromView = {},
+        postShownFromView = {},
         nextPost = {},
         clearVote = {},
         fullScreen = {
             it.url?.let { imageUrl ->
-                navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
+                navigator.navigate(
+                    NavRoute.FULL_SCREEN_IMAGE.withArgs(
+                        URLEncoder.encode(
+                            imageUrl,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                    )
+                )
             }
         }
     )

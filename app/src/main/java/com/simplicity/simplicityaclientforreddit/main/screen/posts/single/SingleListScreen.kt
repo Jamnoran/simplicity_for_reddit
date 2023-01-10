@@ -36,24 +36,29 @@ import java.nio.charset.StandardCharsets
 @Composable
 fun SingleListScreen(navigator: NavHostController, logic: SingleListLogic, uiState: UiState<Data>) {
     val listener = getListener(logic, navigator)
-    when (uiState) {
-        is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
-        is UiState.Error -> ScreenError(uiState.errorMessage)
-        is UiState.Empty -> {
-            ScreenEmpty()
+    DefaultScreen(
+        onStop = { listener.postHiddenFromView.invoke() },
+        onStart = { listener.postShownFromView.invoke() }
+    ) {
+        when (uiState) {
+            is UiState.Loading -> ScreenLoading(uiState.loadingMessage)
+            is UiState.Error -> ScreenError(uiState.errorMessage)
+            is UiState.Empty -> {
+                ScreenEmpty()
+            }
+            is UiState.Success -> Show(
+                navigator = navigator,
+                data = uiState.data,
+                listener = listener,
+                nextItem = { logic.nextPost() },
+                previousItem = { logic.previousPost() }
+            )
         }
-        is UiState.Success -> Screen(
-            navigator = navigator,
-            data = uiState.data,
-            listener = listener,
-            nextItem = { logic.nextPost() },
-            previousItem = { logic.previousPost() }
-        )
     }
 }
 
 @Composable
-fun Screen(
+fun Show(
     navigator: NavHostController,
     data: Data,
     listener: RedditPostListener,
@@ -68,33 +73,26 @@ fun Screen(
             scrollState.scrollTo(0)
         }
     }
-    DefaultScreen(Modifier) {
-        Box(
-            Modifier.fillMaxSize()
-        ) {
-            val modifier = if (scrollingEnabled) Modifier.verticalScroll(scrollState) else Modifier
-            Column(modifier) {
-                data.redditPost?.let { Post(post = it, listener) }
-                Spacer(modifier = Modifier.height(Shape.BOTTOM_NAV_HEIGHT))
-            }
-            BottomNavigationBar(
-                modifier = Modifier.align(Alignment.BottomCenter),
-                navigateToNext = {
-                    listener.postHiddenFromView.invoke()
-                    nextItem.invoke()
-                    Log.i("TestScreen", "Next")
-                },
-                navigateToPrevious = {
-                    listener.postHiddenFromView.invoke()
-                    previousItem.invoke()
-                    Log.i("TestScreen", "Previous")
-                },
-                navigateToSettings = {
-                    Log.i("TestScreen", "Open Settings")
-                    navigator.navigate(NavRoute.MENU.path)
-                }
-            )
+    Box(
+        Modifier.fillMaxSize()
+    ) {
+        val modifier = if (scrollingEnabled) Modifier.verticalScroll(scrollState) else Modifier
+        Column(modifier) {
+            data.redditPost?.let { Post(post = it, listener) }
+            Spacer(modifier = Modifier.height(Shape.BOTTOM_NAV_HEIGHT))
         }
+        BottomNavigationBar(modifier = Modifier.align(Alignment.BottomCenter), navigateToNext = {
+            listener.postHiddenFromView.invoke()
+            nextItem.invoke()
+            Log.i("TestScreen", "Next")
+        }, navigateToPrevious = {
+                listener.postHiddenFromView.invoke()
+                previousItem.invoke()
+                Log.i("TestScreen", "Previous")
+            }, navigateToSettings = {
+                Log.i("TestScreen", "Open Settings")
+                navigator.navigate(NavRoute.MENU.path)
+            })
     }
 }
 
@@ -108,10 +106,24 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         shareClick = { logic.sharePost(it) },
         readComments = { navigator.navigate(NavRoute.COMMENTS.withArgs(it.id, it.subreddit)) },
         linkClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it.url, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(
+                NavRoute.WEB_VIEW.withArgs(
+                    URLEncoder.encode(
+                        it.url,
+                        StandardCharsets.UTF_8.toString()
+                    )
+                )
+            )
         },
         linkUrlClick = {
-            navigator.navigate(NavRoute.WEB_VIEW.withArgs(URLEncoder.encode(it, StandardCharsets.UTF_8.toString())))
+            navigator.navigate(
+                NavRoute.WEB_VIEW.withArgs(
+                    URLEncoder.encode(
+                        it,
+                        StandardCharsets.UTF_8.toString()
+                    )
+                )
+            )
         },
         linkExternalBrowserClick = { logic.openBrowser(url = it) },
         subredditClick = {
@@ -121,10 +133,18 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
         showError = { },
         hideSubClick = { logic.hideReddit(it.subreddit) },
         postHiddenFromView = {},
+        postShownFromView = {},
         nextPost = { logic.nextPost() },
         fullScreen = {
             it.url?.let { imageUrl ->
-                navigator.navigate(NavRoute.FULL_SCREEN_IMAGE.withArgs(URLEncoder.encode(imageUrl, StandardCharsets.UTF_8.toString())))
+                navigator.navigate(
+                    NavRoute.FULL_SCREEN_IMAGE.withArgs(
+                        URLEncoder.encode(
+                            imageUrl,
+                            StandardCharsets.UTF_8.toString()
+                        )
+                    )
+                )
             }
         }
     )
@@ -134,6 +154,12 @@ fun getListener(logic: SingleListLogic, navigator: NavHostController): RedditPos
 @Composable
 fun DefaultPreview() {
     SimplicityAClientForRedditTheme {
-        Screen(rememberNavController(), Data(TesterHelper.getPost()), RedditPostListener.preview(), nextItem = {}, previousItem = {})
+        Show(
+            rememberNavController(),
+            Data(TesterHelper.getPost()),
+            RedditPostListener.preview(),
+            nextItem = {},
+            previousItem = {}
+        )
     }
 }

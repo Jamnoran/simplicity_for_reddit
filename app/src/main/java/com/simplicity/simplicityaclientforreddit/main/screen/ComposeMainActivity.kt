@@ -43,7 +43,10 @@ class ComposeMainActivity : BaseComposeActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.i("ComposeMainActivity", "We got a resume with code : ${SettingsSP().loadSetting(SettingsSP.KEY_CODE, null)}")
+        Log.i(
+            "ComposeMainActivity",
+            "We got a resume with code : ${SettingsSP().loadSetting(SettingsSP.KEY_CODE, null)}"
+        )
         if (SettingsSP().loadSetting(SettingsSP.KEY_CODE, null) != null) {
             Log.i("ComposeMainActivity", "Starting AUTHENTICATION_RESULT")
             navController?.navigate(NavRoute.AUTHENTICATION_RESULT.path)

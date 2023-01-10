@@ -16,4 +16,22 @@ class TestLogic : BaseComposeLogic<Unit>() {
             _stateFlow.emit(UiState.Success(text))
         }
     }
+
+    fun onPause() {
+        loggI("OnPause is called")
+    }
+
+    fun onStart() {
+        loggI("OnStart called")
+        foreground {
+            _stateFlow.emit(UiState.Success("OnStart called"))
+        }
+    }
+
+    fun onStop() {
+        loggI("OnStop called")
+        foreground {
+            _stateFlow.emit(UiState.Success("OnStop called"))
+        }
+    }
 }

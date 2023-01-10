@@ -11,9 +11,7 @@ import com.simplicity.simplicityaclientforreddit.main.theme.Background
 
 @Composable
 fun ScreenEmpty(emptyMessage: String? = null) {
-    DefaultScreen(modifier = Modifier) {
-        Column {
-        }
+    Column {
     }
 }
 

@@ -15,7 +15,7 @@ class PostDetailLogic : BaseComposeLogic<SplashInput>() {
     private val _stateFlow = MutableStateFlow<UiState<RedditPost>>(UiState.Loading())
     val stateFlow: StateFlow<UiState<RedditPost>> = _stateFlow
 
-    private val singlePostUrl = spamPost()
+    private val singlePostUrl = getPostUrlVideoWithSound()
     fun getPostMarkDownTest(): String = "/user/Jamnoran/comments/z3mz2a/markdown_test/"
     fun getPostUrlImage(): String = "/r/sweden/comments/xxqy0a/det_är_fredag_mina_bekanta_bör_vi_skicka_våra/"
     fun getPostUrlYoutube(): String = "/r/videos/comments/xxls7u/im_a_voice_actor_i_edited_the_super_mario_bros/"

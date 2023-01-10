@@ -19,10 +19,11 @@ class RedditPostListener(
     val linkExternalBrowserClick: (url: String) -> Unit,
     val showError: (errorMessage: String) -> Unit,
     var postHiddenFromView: () -> Unit,
+    var postShownFromView: () -> Unit,
     var nextPost: () -> Unit
 ) {
     companion object {
-        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+        fun preview() = RedditPostListener({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
     }
 }
 
