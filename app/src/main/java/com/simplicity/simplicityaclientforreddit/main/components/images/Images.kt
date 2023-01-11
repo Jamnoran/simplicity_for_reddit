@@ -2,7 +2,9 @@ package com.simplicity.simplicityaclientforreddit.main.components.images
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.MutatePriority
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +29,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.simplicity.simplicityaclientforreddit.R
-import com.simplicity.simplicityaclientforreddit.main.components.texts.CText
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.launch
 
 @Composable
 fun CImageButton(iconResource: Int, click: () -> Unit) {
@@ -57,30 +61,43 @@ fun CImage(modifier: Modifier = Modifier, url: String, contentScale: ContentScal
 
 @Composable
 fun CImageZoomable(modifier: Modifier = Modifier, url: String, contentScale: ContentScale = ContentScale.FillWidth) {
-    var scale by remember { mutableStateOf(5f) }
-    var translateX by remember { mutableStateOf(1f) }
-    var translateY by remember { mutableStateOf(1f) }
+    val scrollState: ScrollableState? = null
+    var scale by remember { mutableStateOf(1f) }
+    val offsetX = remember { mutableStateOf(1f) }
+    val offsetY = remember { mutableStateOf(1f) }
+
+    val coroutineScope = rememberCoroutineScope()
+
     Box {
         AsyncImage(
             modifier = modifier
-                .align(Alignment.Center)
+                .align(Alignment.TopCenter)
                 .graphicsLayer(
                     scaleX = scale,
                     scaleY = scale,
-                    translationY = translateY,
-                    translationX = translateX
+                    translationX = offsetX.value,
+                    translationY = offsetY.value
                 )
                 .pointerInput(Unit) {
                     detectTransformGestures { _, pan, zoom, _ ->
-//                        translateX = pan.x
-//                        translateY = pan.y
-                        Log.i("Image", "PAN TO $translateX - $translateY")
-
-//                        scale = when {
-//                            scale < 1f -> 1f
-//                            scale > 5f -> 5f
-//                            else -> scale * zoom
-//                        }
+                        scrollState?.run {
+                            coroutineScope.launch {
+                                setScrolling(false)
+                            }
+                        }
+                        offsetX.value += pan.x
+                        offsetY.value += pan.y
+                        Log.i("Images", "Offset ${offsetX.value}x${offsetY.value} pan: ${pan.x}x${pan.y}")
+                        scrollState?.run {
+                            coroutineScope.launch {
+                                setScrolling(true)
+                            }
+                        }
+                        scale = when {
+                            scale < 1f -> 1f
+                            scale > 5f -> 5f
+                            else -> scale * zoom
+                        }
                     }
                 },
             model = ImageRequest.Builder(LocalContext.current)
@@ -90,7 +107,15 @@ fun CImageZoomable(modifier: Modifier = Modifier, url: String, contentScale: Con
             contentScale = contentScale,
             contentDescription = "Image"
         )
-        CText("X- $translateX : Y - $translateY")
+    }
+}
+
+suspend fun ScrollableState.setScrolling(value: Boolean) {
+    scroll(scrollPriority = MutatePriority.PreventUserInput) {
+        when (value) {
+            true -> Unit
+            else -> awaitCancellation()
+        }
     }
 }
 

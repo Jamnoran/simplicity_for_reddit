@@ -3,6 +3,7 @@ package com.simplicity.simplicityaclientforreddit.main.screen.splash
 import com.google.firebase.auth.FirebaseAuth
 import com.simplicity.simplicityaclientforreddit.main.base.compose.BaseComposeLogic
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
+import com.simplicity.simplicityaclientforreddit.main.screen.NavRoute
 import com.simplicity.simplicityaclientforreddit.main.usecases.compose.NavigationToShowPostsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +19,8 @@ class SplashLogic : BaseComposeLogic<SplashInput>() {
             // Do something in the background
             foreground {
                 navigate()?.let {
-                    NavigationToShowPostsUseCase(it, "").execute()
-//                    it.navigate(NavRoute.TEST.path)
+//                    NavigationToShowPostsUseCase(it, "").execute()
+                    it.navigate(NavRoute.TEST.path)
 //                    it.navigate(NavRoute.POST_DETAIL.path)
                 }
             }

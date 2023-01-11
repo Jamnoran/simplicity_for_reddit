@@ -1,24 +1,18 @@
 package com.simplicity.simplicityaclientforreddit.main.screen.test
 
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.simplicity.simplicityaclientforreddit.main.base.compose.UiState
+import com.simplicity.simplicityaclientforreddit.main.components.images.CImageZoomable
 import com.simplicity.simplicityaclientforreddit.main.components.screens.DefaultScreen
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenError
 import com.simplicity.simplicityaclientforreddit.main.components.screens.ScreenLoading
 import com.simplicity.simplicityaclientforreddit.main.components.texts.MarkDownText
-import com.simplicity.simplicityaclientforreddit.main.theme.Background
 import com.simplicity.simplicityaclientforreddit.main.theme.SimplicityAClientForRedditTheme
 
 @Composable
@@ -33,14 +27,14 @@ fun TestScreen(navController: NavHostController, logic: TestLogic, state: UiStat
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Show(navigator: NavHostController, data: String) {
     Log.i("TestScreen", "Showing screen!")
-    Column(Modifier.fillMaxWidth().background(Background).verticalScroll(rememberScrollState())) {
-        MarkDownText(body = data) {
-            Log.i("TestScreen", "We got click on this url $it")
-        }
+    DefaultScreen {
+        CImageZoomable(modifier = Modifier.fillMaxSize(), url = "https://images.pexels.com/photos/235986/pexels-photo-235986.jpeg?auto=compress&cs=tinysrgb&w=600")
+//        MarkDownText(body = data) {
+//            Log.i("TestScreen", "We got click on this url $it")
+//        }
     }
 }
 
